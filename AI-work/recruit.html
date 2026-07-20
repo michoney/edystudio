@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Studio · 合伙人招募</title>
+<style>
+  * { margin: 0; padding: 0; }
+  body { background: #080808; overflow: hidden; font-family: 'Courier New', monospace; }
+  canvas { display: block; position: fixed; top: 0; left: 0; }
+
+  @keyframes glowPulse {
+    0%,100% { text-shadow:0 0 4px #e07090,0 0 8px #c4567a,0 0 14px #9a3050; }
+    50%     { text-shadow:0 0 10px #f0a0b8,0 0 22px #e07090,0 0 36px #c4567a; }
+  }
+  @keyframes crtFlicker {
+    0%,100% { opacity:1; } 93% { opacity:0.82; } 94% { opacity:1; } 96% { opacity:0.88; } 97% { opacity:1; }
+  }
+  @keyframes glitchShift {
+    0%,92%,100% { transform:translate(0); }
+    93% { transform:translate(-3px,0); } 94% { transform:translate(2px,-1px); }
+  }
+  @keyframes scanSweep {
+    0% { top:-10%; } 100% { top:110%; }
+  }
+  @keyframes floatBoat {
+    0%,100% { transform:translateY(0); } 50% { transform:translateY(-2px); }
+  }
+  @keyframes staticNoise {
+    0%,100% { opacity:1; } 5% { opacity:0.92; } 15% { opacity:0.88; } 25% { opacity:0.95; } 35% { opacity:0.9; }
+  }
+
+  .overlay {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 1;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+
+  .content {
+    text-align: center;
+    pointer-events: auto;
+  }
+
+  .back-link {
+    position: fixed; top: 30px; left: 30px;
+    z-index: 2;
+    color: #777; text-decoration: none;
+    font-size: 13px; letter-spacing: 1px;
+  }
+  .back-link:hover { color: #c4567a; }
+</style>
+</head>
+<body>
+<!-- Water ripple canvas -->
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+
+let W, H, COLS, ROWS;
+const CELL = 16;
+
+let h0, h1, v;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  COLS = Math.ceil(W / CELL) + 2;
+  ROWS = Math.ceil(H / CELL) + 2;
+  h0 = new Float32Array(COLS * ROWS);
+  h1 = new Float32Array(COLS * ROWS);
+  v  = new Float32Array(COLS * ROWS);
+}
+resize();
+window.addEventListener('resize', resize);
+
+function idx(x, y) { return y * COLS + x; }
+
+function drop() {
+  const x = 2 + Math.floor(Math.random() * (COLS - 4));
+  const y = 2 + Math.floor(Math.random() * (ROWS - 4));
+  const r = 3;
+  for (let dy = -r; dy <= r; dy++) {
+    for (let dx = -r; dx <= r; dx++) {
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist <= r) {
+        const i = idx(x + dx, y + dy);
+        if (i >= 0 && i < h1.length) {
+          h1[i] += (1 - dist/r) * 4;
+        }
+      }
+    }
+  }
+}
+
+for (let i = 0; i < 3; i++) drop();
+setInterval(drop, 15000);
+
+const CHARS = '·∘○◎●◉◈◇◆□■△▲▽▼☆★';
+
+function draw() {
+  const damp = 0.999;
+  for (let y = 1; y < ROWS - 1; y++) {
+    for (let x = 1; x < COLS - 1; x++) {
+      const i = idx(x, y);
+      const laplacian = (h1[idx(x-1,y)] + h1[idx(x+1,y)] + h1[idx(x,y-1)] + h1[idx(x,y+1)]) / 2 - 2 * h1[i];
+      v[i] = (v[i] + laplacian * 0.02) * damp;
+    }
+  }
+  for (let i = 0; i < h0.length; i++) {
+    h0[i] = h1[i] + v[i];
+    h1[i] = h0[i];
+  }
+
+  ctx.fillStyle = 'rgba(8, 8, 8, 0.03)';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.font = (CELL - 2) + 'px "Courier New"';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  for (let y = 1; y < ROWS - 1; y++) {
+    for (let x = 1; x < COLS - 1; x++) {
+      const i = idx(x, y);
+      const val = h1[i];
+      if (Math.abs(val) < 0.05) continue;
+
+      const absVal = Math.min(Math.abs(val), 3);
+      const charIdx = Math.floor(absVal / 3 * (CHARS.length - 1));
+      const char = CHARS[Math.min(charIdx, CHARS.length - 1)];
+
+      const px = x * CELL + val * 3;
+      const py = y * CELL + val * 2;
+
+      const alpha = 0.15 + absVal * 0.25;
+      ctx.fillStyle = `rgba(40,80,40,${alpha.toFixed(2)})`;
+      ctx.fillText(char, px, py);
+    }
+  }
+
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+<a class="back-link" href="index.html">← back</a>
+
+<div class="overlay">
+  <div class="content">
+
+    <!-- Pink AI Studio title -->
+    <div style="position:relative;overflow:hidden;display:inline-block;margin-bottom:10px;">
+      <div style="position:absolute;top:-10%;left:0;width:100%;height:3px;background:rgba(196,86,122,0.20);animation:scanSweep 4s linear infinite;pointer-events:none;z-index:2;"></div>
+      <pre style="color:#c4567a;-webkit-text-stroke:0.3px #9a3050;font-weight:900;font-size:8px;line-height:1;margin-bottom:24px;font-family:'Courier New',monospace;animation:glowPulse 3s ease-in-out infinite,crtFlicker 8s linear infinite,glitchShift 9s linear infinite,floatBoat 5s ease-in-out infinite,staticNoise 6s linear infinite;">
+    ___    ____   _____ _             _       
+   / _ \  |  _ \ |_   _| |_  ___  ___| |_  ___ 
+  / /_\ \ | | | |  | | | . || . ||  _|  _|| . |
+ / ___  \| |_| | _| |_| |_||___||___|_|  |___|
+/_/   \_\\____/ |_____|___|                   
+      </pre>
+    </div>
+
+    <!-- 合伙人招募 -->
+    <h2 style="color:#e07090;font-size:22px;letter-spacing:4px;margin-bottom:30px;animation:glowPulse 4s ease-in-out infinite;">
+      合伙人招募
+    </h2>
+
+    <p style="color:#999;font-size:14px;letter-spacing:2px;line-height:2;margin-bottom:40px;">
+      我们在找 AI 时代的共创者<br>
+      如果你热爱设计与代码的交汇<br>
+      欢迎加入 Edy.Ai.Studio
+    </p>
+
+    <a href="https://github.com/michoney" target="_blank" style="display:inline-block;padding:14px 48px;border:1px solid #9a3050;border-radius:4px;color:#c4567a;text-decoration:none;font-size:14px;letter-spacing:2px;text-transform:uppercase;font-family:'Courier New',monospace;">
+      联系我
+    </a>
+
+    <p style="margin-top:50px;font-size:11px;color:#555;letter-spacing:1.5px;">
+      <a href="index.html" style="color:#666;text-decoration:none;">← Edy.Ai.Studio</a>
+    </p>
+
+  </div>
+</div>
+
+</body>
+</html>
