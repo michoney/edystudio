@@ -3,213 +3,117 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edy.Ai.Studio — ASCII</title>
+<title>Edy.Ai.Studio</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: #0d0d0d;
-    color: #cccccc;
-    font-family: 'Courier New', 'SF Mono', 'Fira Code', monospace;
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .container {
-    text-align: center;
-    padding: 20px;
-    max-width: 900px;
-    width: 100%;
-  }
-
-  /* ── Sailboat ASCII Logo ── */
-  .logo pre {
-    color: #7cfc7c;
-    font-size: 5px;
-    line-height: 1;
-    letter-spacing: 0;
-    margin-bottom: 20px;
-  }
-
-  /* ── MIDJOURNEY Title ── */
-  .title pre {
-    color: #7cfc7c;
-    font-size: 7px;
-    line-height: 1;
-    margin-bottom: 16px;
-    text-shadow: 0 0 40px rgba(255,255,255,0.15);
-  }
-
-  /* ── Tagline ── */
-  .tagline {
-    font-size: 15px;
-    color: #7cfc7c;
-    letter-spacing: 2px;
-    margin-bottom: 50px;
-  }
-
-  .tagline em {
-    font-style: normal;
-    color: #90ee90;
-  }
-
-  /* ── Nav ── */
-  .nav {
-    display: flex;
-    justify-content: center;
-    gap: 32px;
-    margin-bottom: 50px;
-    font-size: 13px;
-    color: #5a9e5a;
-    letter-spacing: 1.5px;
-    text-transform: uppercase;
-  }
-
-  .nav a {
-    color: #6baa6b;
-    text-decoration: none;
-    transition: color 0.2s;
-  }
-
-  .nav a:hover {
-    color: #aaffaa;
-  }
-
-  /* ── CTA button ── */
-  .btn {
-    display: inline-block;
-    padding: 14px 48px;
-    border: 1px solid #4a8a4a;
-    border-radius: 4px;
-    color: #7cfc7c;
-    text-decoration: none;
-    font-size: 14px;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    transition: all 0.2s;
-    cursor: pointer;
-  }
-
-  .btn:hover {
-    border-color: #aaffaa;
-    color: #aaffaa;
-  }
-
-  /* ── Footer ── */
-  .footer {
-    margin-top: 60px;
-    font-size: 11px;
-    color: #4a8a4a;
-    letter-spacing: 1.5px;
-  }
-
-  .footer a {
-    color: #5a9e5a;
-    text-decoration: none;
-  }
-
-  .footer a:hover {
-    color: #7cfc7c;
-  }
-
-  /* ── Animations ── */
-  .fade-in {
-    opacity: 0;
-    animation: fadeIn 1.8s ease-out forwards;
-  }
-
-  .fade-in.d1 { animation-delay: 0.2s; }
-  .fade-in.d2 { animation-delay: 0.5s; }
-  .fade-in.d3 { animation-delay: 0.8s; }
-  .fade-in.d4 { animation-delay: 1.1s; }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
-
-
-
-  /* ── Subtle cursor at bottom right ── */
-  .cursor {
-    display: inline-block;
-    width: 6px;
-    height: 14px;
-    background: #7cfc7c;
-    animation: blink 1s step-end infinite;
-    vertical-align: middle;
-    margin-left: 2px;
-  }
-
-  @keyframes blink {
-    50% { opacity: 0; }
-  }
-
-  /* ── Responsive scaling ── */
-  @media (max-width: 600px) {
-    .logo pre { font-size: 2.5px; }
-    .title pre { font-size: 3.5px; }
-    .nav { gap: 14px; font-size: 10px; }
-    .tagline { font-size: 12px; }
-  }
+  * { margin: 0; padding: 0; }
+  body { background: #080808; overflow: hidden; }
+  canvas { display: block; }
 </style>
 </head>
 <body>
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
 
-<div class="container">
+let W, H, COLS, ROWS;
+const CELL = 16;
+const CHARS = '·∘○◎●◉◈◇◆□■△▲▽▼☆★♢♤♧♡♢♦♥♣♠•◦◯◉◈◇◆';
 
-  <!-- ⛵ Sailboat Logo — faithful ASCII art of Midjourney's paper boat -->
-  <div class="logo fade-in d1">
-<pre>
-                                 ..                                 
-                                ,,'.                                
-                               .',,,                                
-                              .',,,,,                               
-                             .',,,,,,,                              
-                           .,'.,,,,,,.                              
-                          .','..',,,,,'.                            
-                         .,,'...'.,,,,,'.                           
-                       ..,','...'.,,,,,,,'..                        
-                     ..,,','...''.',,,,,,,,'..                      
-                   ..,,,','...'''.',,,,,,,,,,'..                    
-                 ..,,,,','...''''..',,,,,,,,,,,,'..                 
-               ..,,,,,','...'''''...',,,,,,,,,,,,,,'.               
-             ..,,,,,,','...''''''..'',,,,,,,,,,,,,,,,..             
-           ..,,,,,,,','...''''''..''',,,,,,,,,,,,,,,,,,'.           
-          ..,,,,,,,,'....''''''..''''..,,,,,,,,,,,,,,,,,'.          
-         .',,,,,,,,'......''''..'''''..',,,,,,,,,,,,,,,,,'.         
-        .',,,,,,,,'.......''''..''''''..',,,,,,,,,,,,,,,,,,'.       
-       .',,,,,,,,'........''''..''''''..',,,,,,,,,,,,,,,,,,,,'      
-      .',,,,,,,,'.........'''...''''''..',,,,,,,,,,,,,,,,,,,,,,'    
-     .',,,,,,,,'..........'''...'''''''..'',,,,,,,,,,,,,,,,,,,,,'   
-    .',,,,,,,,'...........'''...'''''''...',,,,,,,,,,,,,,,,,,,,,,'  
-   .',,,,,,,,'..........','''...'''''''...',,,,,,,,,,,,,,,,,,,,,,,' 
-  .',,,,,,,'.........',' ','''...'''''''..'',,,,,,,,,,,,,,,,,,,,,,,'
-  .',,,,,,'.......',' ;kd:. '''...''''''...'',,,,,,,,,,,,,,,,,,,,,,'
-  .',,,,,,'...''';:xXXk,   .'''''''''''...'',,,,,,,,,,,,,,,,,,,,,,,'
-  .',,,,,'..'':d0Xk:.      .''''''''''..''',,,,,,,,,,,,,,,,,,,,,,,'
-  .',,,,'..;dKKd;.         .'''''''''''..''',,,,,,,,,,,,,,,,,,,,,,,'
-  .',,,,'..:kOl'            '''''''''''..''',,,,,,,,,,,,,,,,,,,,,,,'
-  .,,,,,'...'..             .''''''''''..''',,,,,,,,,,,,,,,,,,,,,,' 
-   .,,,,,,'...              .''''''''''..'''',,,,,,,,,,,,,,,,,,,,'  
-    .',,,,,,'..             .''''''''''..''''',,,,,,,,,,,,,,,,,,'   
-     .',,,,,,,'.            ..'''''''''..''''',,,,,,,,,,,,,,,,,'    
-      .',,,,,,,'...',,,'... ..''''''''..''''.'''',,,,,,,,,,,,,'     
-       .',,,,,,,,'.'',,,,''.'.''''''..'''''..'''''',,,,,,,,,,'      
-        .',,,,,,,,,,,',,,,'........'''''''...''''''''''',,,,,'      
-         .',,,,,,,,,,,,,,,,,,'....'''''''...''''''''''''''','       
-          ..'',,,,,,,,,,,,,,,,,,,'''''''..''''''''''''''''.         
-            ...',,,,,,,,,,,,,,,,,,,,,,,,'''''''''''''''..           
-               ....''''''''''''''''''''''''''''''''....             
-                   ...............................                  
-</pre>
-  </div>
+// Wave buffers (height + velocity)
+let h0, h1, v;
 
-  <!-- MIDJOURNEY — ASCII block-letter title -->
-  <div class="title fade-in d2">
-<pre>
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  COLS = Math.ceil(W / CELL) + 2;
+  ROWS = Math.ceil(H / CELL) + 2;
+  h0 = new Float32Array(COLS * ROWS);
+  h1 = new Float32Array(COLS * ROWS);
+  v  = new Float32Array(COLS * ROWS);
+}
+resize();
+window.addEventListener('resize', resize);
+
+function idx(x, y) { return y * COLS + x; }
+
+// Drop a ripple
+function drop() {
+  const x = 2 + Math.floor(Math.random() * (COLS - 4));
+  const y = 2 + Math.floor(Math.random() * (ROWS - 4));
+  const r = 3;
+  for (let dy = -r; dy <= r; dy++) {
+    for (let dx = -r; dx <= r; dx++) {
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist <= r) {
+        const i = idx(x + dx, y + dy);
+        if (i >= 0 && i < h1.length) {
+          h1[i] += (1 - dist/r) * 4;
+        }
+      }
+    }
+  }
+}
+
+// Initial drops
+for (let i = 0; i < 3; i++) drop();
+setInterval(drop, 15000);
+
+function draw() {
+
+  // Wave equation step
+  const damp = 0.999;
+  for (let y = 1; y < ROWS - 1; y++) {
+    for (let x = 1; x < COLS - 1; x++) {
+      const i = idx(x, y);
+      const laplacian = (h1[idx(x-1,y)] + h1[idx(x+1,y)] + h1[idx(x,y-1)] + h1[idx(x,y+1)]) / 2 - 2 * h1[i];
+      v[i] = (v[i] + laplacian * 0.02) * damp;
+    }
+  }
+  for (let i = 0; i < h0.length; i++) {
+    h0[i] = h1[i] + v[i];
+    h1[i] = h0[i];
+  }
+
+  // Render
+  ctx.fillStyle = 'rgba(8, 8, 8, 0.03)';
+  ctx.fillRect(0, 0, W, H);
+
+  ctx.font = (CELL - 2) + 'px "Courier New"';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+
+  for (let y = 1; y < ROWS - 1; y++) {
+    for (let x = 1; x < COLS - 1; x++) {
+      const i = idx(x, y);
+      const val = h1[i];
+      if (Math.abs(val) < 0.05) continue;
+
+      const absVal = Math.min(Math.abs(val), 3);
+      const charIdx = Math.floor(absVal / 3 * (CHARS.length - 1));
+      const char = CHARS[Math.min(charIdx, CHARS.length - 1)];
+
+      const px = x * CELL + val * 3;
+      const py = y * CELL + val * 2;
+
+      const alpha = 0.15 + absVal * 0.25;
+      ctx.fillStyle = `rgba(40,80,40,${alpha.toFixed(2)})`;
+      ctx.fillText(char, px, py);
+    }
+  }
+
+  requestAnimationFrame(draw);
+}
+
+draw();
+</script>
+
+<div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+  <div style="text-align:center;pointer-events:auto;">
+
+    <div style="position:relative;overflow:hidden;display:inline-block;">
+      <div style="position:absolute;top:-10%;left:0;width:100%;height:3px;background:rgba(155,89,182,0.20);animation:scanSweep 4s linear infinite;pointer-events:none;z-index:2;"></div>
+      <pre style="color:#c084dc;-webkit-text-stroke:0.3px #6b2d8b;font-weight:900;font-size:7px;line-height:1;margin-bottom:16px;font-family:'Courier New',monospace;animation:glowPulse 3s ease-in-out infinite,crtFlicker 8s linear infinite,glitchShift 9s linear infinite,floatBoat 5s ease-in-out infinite,staticNoise 6s linear infinite;">
  ______    _                  _    _____ _             _ _       
 |  ____|  | |           /\   (_)  / ____| |           | (_)      
 | |__   __| |_   _     /  \   _  | (___ | |_ _   _  __| |_  ___  
@@ -217,35 +121,29 @@
 | |___| (_| | |_| |_ / ____ \| |_ ____) | |_| |_| | (_| | | (_) |
 |______\__,_|\__, (_)_/    \_\_(_)_____/ \__|\__,_|\__,_|_|\___/ 
               __/ |                                              
-             |___/   
-</pre>
-  </div>
+             |___/                                               
+      </pre>
+    </div>
 
-  <!-- Tagline -->
-  <div class="tagline fade-in d3">
-    Create <em>stunning images</em> from text descriptions<span class="cursor"></span>
-  </div>
+    <p style="font-size:15px;color:#aaa;letter-spacing:2px;margin-bottom:50px;font-family:'Courier New',monospace;">
+      Create <em style="font-style:normal;color:#ddd;">stunning images</em> from text
+    </p>
 
-  <!-- Navigation -->
-  <div class="nav fade-in d3">
-    <a href="#">Showcase</a>
-    <a href="#">Docs</a>
-    <a href="#">Pricing</a>
-    <a href="#">Sign In</a>
-  </div>
+    <div style="display:flex;justify-content:center;gap:32px;margin-bottom:50px;font-size:13px;color:#777;letter-spacing:1.5px;text-transform:uppercase;font-family:'Courier New',monospace;">
+      <a href="#" style="color:#999;text-decoration:none;">Showcase</a>
+      <a href="#" style="color:#999;text-decoration:none;">Docs</a>
+      <a href="#" style="color:#999;text-decoration:none;">Pricing</a>
+      <a href="#" style="color:#999;text-decoration:none;">Sign In</a>
+    </div>
 
-  <!-- CTA -->
-  <div class="fade-in d4">
-    <a class="btn" href="#">Start Creating</a>
-  </div>
+    <a href="#" style="display:inline-block;padding:14px 48px;border:1px solid #666;border-radius:4px;color:#ccc;text-decoration:none;font-size:14px;letter-spacing:2px;text-transform:uppercase;font-family:'Courier New',monospace;">Start Creating</a>
 
-  <!-- Footer -->
-  <div class="footer fade-in d4">
-    Creative AI Studio · <a href="#">Discord</a> · <a href="#">Twitter</a> · <a href="#">GitHub</a>
-  </div>
+    <p style="margin-top:60px;font-size:11px;color:#666;letter-spacing:1.5px;font-family:'Courier New',monospace;">
+      Creative AI Studio &middot; <a href="#" style="color:#777;text-decoration:none;">Discord</a> &middot; <a href="#" style="color:#777;text-decoration:none;">Twitter</a> &middot; <a href="https://github.com/michoney" target="_blank" style="color:#777;text-decoration:none;">GitHub</a>
+    </p>
 
+  </div>
 </div>
-
 
 </body>
 </html>
