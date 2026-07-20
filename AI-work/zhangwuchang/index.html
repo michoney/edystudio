@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>张五常 · 代总 DEMO</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#000;font-family:'Georgia','SimSun','STSong',serif;color:#0f0}
+
+/* 黑客帝国代码雨 canvas */
+#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0}
+
+/* 主内容 */
+.content{position:relative;z-index:1;width:100%;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+
+/* 主标题 - 彩虹渐变 + 3D旋转 + 辉光 + 大号 */
+.main-title{
+  font-size:clamp(3.5rem,10vw,7rem);
+  font-weight:900;
+  background:linear-gradient(90deg,#ff0000,#ff7700,#ffff00,#00ff00,#0077ff,#8b00ff,#ff0077);
+  background-size:300% 100%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:rainbowMove 3s linear infinite,spin3D 8s ease-in-out infinite,glowPulse 2s ease-in-out infinite alternate;
+  display:inline-block;
+  transform-style:preserve-3d;
+  perspective:800px;
+  letter-spacing:12px;
+  margin-bottom:20px;
+  filter:drop-shadow(0 0 30px rgba(255,255,255,0.3));
+}
+@keyframes rainbowMove{
+  0%{background-position:0% 50%}
+  100%{background-position:300% 50%}
+}
+@keyframes glowPulse{
+  0%{filter:drop-shadow(0 0 20px rgba(255,255,255,0.2))}
+  100%{filter:drop-shadow(0 0 50px rgba(255,255,255,0.6))}
+}
+@keyframes spin3D{
+  0%,100%{transform:rotateX(0deg) rotateY(0deg) scale(1)}
+  25%{transform:rotateX(10deg) rotateY(15deg) scale(1.08)}
+  50%{transform:rotateX(-5deg) rotateY(-10deg) scale(1)}
+  75%{transform:rotateX(8deg) rotateY(8deg) scale(1.05)}
+}
+
+/* JAVA 字幕 - 加粗加大 */
+.subtitle{
+  font-family:'Courier New',monospace;
+  font-size:clamp(1.5rem,4vw,2.5rem);
+  font-weight:700;
+  background:linear-gradient(90deg,#ff0000,#ff7700,#ffff00,#00ff00,#0077ff,#8b00ff,#ff0077);
+  background-size:300% 100%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:rainbowMove 3s linear infinite;
+  margin:10px 0 30px;
+  height:3em;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  filter:drop-shadow(0 0 15px rgba(255,255,255,0.2));
+}
+.typing-cursor::after{
+  content:'|';
+  background:linear-gradient(90deg,#ff0000,#ff7700,#ffff00,#00ff00,#0077ff,#8b00ff,#ff0077);
+  background-size:300% 100%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:rainbowMove 3s linear infinite,blink 0.7s infinite;
+}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+
+/* 描述框 */
+.desc{
+  font-size:clamp(1rem,2.5vw,1.5rem);
+  font-weight:600;
+  background:linear-gradient(90deg,#ff0000,#ff7700,#ffff00,#00ff00,#0077ff,#8b00ff,#ff0077);
+  background-size:300% 100%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:rainbowMove 3s linear infinite;
+  max-width:80%;
+  line-height:2;
+  margin-top:20px;
+  border:2px solid rgba(255,255,255,0.3);
+  padding:24px 36px;
+  border-radius:12px;
+  background:rgba(0,0,0,0.6);
+  backdrop-filter:blur(4px);
+  filter:drop-shadow(0 0 10px rgba(255,255,255,0.15));
+}
+
+/* 底部 */
+.footer{
+  position:fixed;bottom:20px;z-index:1;width:100%;text-align:center;
+  font-size:14px;font-family:'Courier New',monospace;
+  background:linear-gradient(90deg,#ff0000,#ff7700,#ffff00,#00ff00,#0077ff,#8b00ff,#ff0077);
+  background-size:300% 100%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  animation:rainbowMove 3s linear infinite;
+}
+
+/* 进入按钮 */
+.enter-btn{
+  display:inline-block;
+  margin-top:36px;
+  padding:14px 50px;
+  border:2px solid rgba(255,255,255,0.5);
+  font-size:1.2rem;
+  font-weight:700;
+  font-family:'Courier New',monospace;
+  cursor:pointer;
+  text-decoration:none;
+  border-radius:6px;
+  background:linear-gradient(90deg,rgba(255,0,0,0.15),rgba(255,119,0,0.15),rgba(255,255,0,0.15),rgba(0,255,0,0.15),rgba(0,119,255,0.15),rgba(139,0,255,0.15),rgba(255,0,119,0.15));
+  background-size:300% 100%;
+  animation:rainbowMove 3s linear infinite;
+  box-shadow:0 0 20px rgba(255,255,255,0.2);
+  transition:all 0.3s;
+  color:#fff;
+  -webkit-text-fill-color:#fff;
+}
+.enter-btn:hover{
+  transform:scale(1.08);
+  box-shadow:0 0 40px rgba(255,255,255,0.4);
+  border-color:rgba(255,255,255,0.8);
+}
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div class="content">
+  <div class="main-title">张 五 常</div>
+  <div class="subtitle typing-cursor" id="typedText"></div>
+  <div class="desc">
+    JAVA 代总 DEMO 展示<br>
+    字体旋转 · 彩虹辉光 · 黑客帝国代码雨
+  </div>
+  <a class="enter-btn" href="./toc.html" onclick="event.preventDefault();window.location.href='toc.html'">▶ 进 入 文 集</a>
+</div>
+
+<div class="footer">JAVA · DEMO · 张五常 · 新浪博客合集</div>
+
+<script>
+const canvas=document.getElementById('matrix');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight});
+
+const chars='ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789$+-*/=%"\'#&_()|{}[]<>~!@^·¥张五常经济学艺术教育学术演讲采访评论文集自由价格';
+const charArr=chars.split('');
+const fontSize=16;
+const columns=Math.floor(canvas.width/fontSize);
+const drops=Array(columns).fill(1);
+
+function drawMatrix(){
+  ctx.fillStyle='rgba(0,0,0,0.04)';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.font=fontSize+'px monospace';
+  for(let i=0;i<drops.length;i++){
+    const text=charArr[Math.floor(Math.random()*charArr.length)];
+    ctx.fillStyle='rgba(0,255,0,'+(Math.random()*0.5+0.3)+')';
+    ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+    if(drops[i]*fontSize>canvas.height&&Math.random()>0.975){
+      drops[i]=0;
+    }
+    drops[i]++;
+    if(i%2===0){
+      ctx.fillStyle='rgba(180,255,180,0.8)';
+      ctx.fillText(text,i*fontSize,(drops[i]-1)*fontSize);
+    }
+  }
+}
+setInterval(drawMatrix,50);
+
+const texts=[
+  'JAVA 代总 DEMO 展示',
+  '代总 · 技术架构演示',
+  '张五常 · 经济学文集',
+  '新 浪 博 客 合 集',
+  '字 体 旋 转 · 彩 虹 辉 光',
+  '欢 迎 进 入 J A V A 世 界'
+];
+let textIdx=0,charIdx=0,isDeleting=false;
+const typedEl=document.getElementById('typedText');
+
+function typeEffect(){
+  const current=texts[textIdx];
+  if(!isDeleting){
+    typedEl.textContent=current.substring(0,charIdx+1);
+    charIdx++;
+    if(charIdx===current.length){
+      isDeleting=true;
+      setTimeout(typeEffect,2000);
+      return;
+    }
+  }else{
+    typedEl.textContent=current.substring(0,charIdx-1);
+    charIdx--;
+    if(charIdx===0){
+      isDeleting=false;
+      textIdx=(textIdx+1)%texts.length;
+    }
+  }
+  const speed=isDeleting?60:120;
+  setTimeout(typeEffect,speed);
+}
+typeEffect();
+</script>
+</body>
+</html>
