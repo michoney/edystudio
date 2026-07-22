@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=1080,height=1920">
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+<style>
+@font-face{font-family:"PingFang SC";src:local("PingFang SC")}@font-face{font-family:"Arial Rounded MT Bold";src:local("Arial Rounded MT Bold")}@font-face{font-family:"SFMono-Regular";src:local("SFMono-Regular")}
+*{box-sizing:border-box}html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#0B1115}body{font-family:"PingFang SC","Arial Rounded MT Bold",sans-serif}.mono{font-family:"SFMono-Regular",Consolas,monospace}
+#root{position:relative;width:1080px;height:1920px;overflow:hidden;background:#0B1115;color:#E9EEF0}.scene-content{display:flex;flex-direction:column;width:100%;height:100%;padding:54px 36px;gap:24px;position:relative;overflow:hidden}
+.grid{position:absolute;inset:0;background-image:linear-gradient(#18292F 2px,transparent 2px),linear-gradient(90deg,#18292F 2px,transparent 2px);background-size:40px 40px;opacity:.78}.glow{position:absolute;width:760px;height:760px;border-radius:50%;background:radial-gradient(circle,rgba(83,216,243,.2),rgba(83,216,243,0) 68%);left:160px;top:-220px}.ghost{position:absolute;left:18px;top:420px;font:900 220px/1 "Arial Rounded MT Bold",sans-serif;color:rgba(233,238,240,.025);writing-mode:vertical-rl}.scan{position:absolute;left:0;right:0;height:4px;top:0;background:#53D8F3;box-shadow:0 0 24px #53D8F3;opacity:.45}
+.hero{z-index:4;display:flex;flex-direction:column;align-items:center;gap:24px;padding-top:34px}.signal{padding:15px 34px;border:2px solid #39464B;border-radius:99px;background:#172127;color:#53D8F3;font:900 22px/1 "SFMono-Regular",monospace;letter-spacing:4px;box-shadow:0 0 28px rgba(83,216,243,.16)}.title-wrap{display:flex;align-items:center;justify-content:center;position:relative;width:100%;height:170px}.title-shadow,.title{position:absolute;font-size:104px;font-weight:900;letter-spacing:-8px;white-space:nowrap}.title-shadow{color:#8FA0A6;margin:11px 0 0 12px}.title{color:#E9EEF0}.subtitle{font-size:30px;font-weight:900;letter-spacing:2px;text-align:center}.spectrum{width:760px;height:5px;background:#53D8F3;box-shadow:0 0 18px #53D8F3}
+.board-wrap{position:absolute;z-index:3;left:28px;right:28px;top:480px;height:2700px}.board{display:grid;grid-template-columns:1fr 1fr;gap:28px 26px;align-items:start}.card{height:300px;border:5px solid #080B0D;border-radius:30px;padding:24px;background:var(--c);color:#080B0D;box-shadow:14px 16px 0 #030506;position:relative;overflow:hidden}.card:nth-child(even){margin-top:86px}.card:after{content:"";position:absolute;width:150px;height:150px;border-radius:50%;right:-30px;top:-55px;background:rgba(255,255,255,.22)}.card-head{height:42px;border-bottom:5px solid #080B0D;font-size:19px;font-weight:900;letter-spacing:1px}.card h2{margin:24px 0 15px;font:900 48px/1 "Arial Rounded MT Bold",sans-serif;letter-spacing:-3px;overflow-wrap:anywhere}.card.long h2{font-size:35px;letter-spacing:-2px}.stats{display:flex;gap:10px}.stat{padding:9px 14px;border:4px solid #080B0D;border-radius:99px;background:#E9EEF0;color:#080B0D;font:900 17px/1 "SFMono-Regular",monospace}.gain{background:#080B0D;color:#E9EEF0}.desc{font-size:20px;font-weight:900;margin-top:21px;white-space:nowrap}.bubble{position:absolute;z-index:2;right:36px;top:36px;width:18px;height:18px;border-radius:50%;background:rgba(255,255,255,.72)}
+.pink{--c:#FF6C9F}.yellow{--c:#FFD13B}.cyan{--c:#53D8F3}.purple{--c:#AA82F4}.green{--c:#68E69A}.orange{--c:#FF9C4A}
+.cta{position:absolute;z-index:8;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:34px;background:#080B0D;text-align:center;opacity:0}.cta-small{font:900 25px/1 "SFMono-Regular",monospace;letter-spacing:6px;color:#53D8F3}.cta h3{font-size:64px;line-height:1.15;margin:0;max-width:900px}.brand{font:900 48px/1 "Arial Rounded MT Bold",sans-serif;letter-spacing:4px;color:#FFD13B}.follow{font-size:32px;font-weight:900;color:#E9EEF0}
+</style></head><body>
+<div id="root" data-composition-id="github-weekly-001" data-start="0" data-duration="14" data-width="1080" data-height="1920">
+<div class="scene-content clip" id="scene" data-start="0" data-duration="14" data-track-index="1">
+  <div class="grid" data-layout-ignore></div><div class="glow" data-layout-ignore></div><div class="ghost" data-layout-ignore>WEEKLY 001</div><div class="scan" data-layout-ignore></div>
+  <header class="hero" data-layout-allow-overflow><div class="signal">GITHUB WEEKLY TRENDING</div><div class="title-wrap" data-layout-allow-overlap><div class="title-shadow">GitHub 本周热榜</div><div class="title">GitHub 本周热榜</div></div><div class="subtitle">AI Agent 和编码工具集体霸榜</div><div class="spectrum"></div></header>
+  <div class="board-wrap" data-layout-allow-overflow data-layout-allow-occlusion><div class="board">
+    <article class="card pink" id="c1"><i class="bubble"></i><div class="card-head mono">#01 · OPENCUT</div><h2>opencut</h2><div class="stats"><span class="stat">★ 77.1K</span><span class="stat gain">↗ +8.3K</span></div><div class="desc">开源版剪映替代，跨三端</div></article>
+    <article class="card yellow" id="c2"><i class="bubble"></i><div class="card-head mono">#02 · SKILLS</div><h2>skills</h2><div class="stats"><span class="stat">★ 180.8K</span><span class="stat gain">↗ +10.7K</span></div><div class="desc">工程师实战 Skills 合集</div></article>
+    <article class="card cyan" id="c3"><i class="bubble"></i><div class="card-head mono">#03 · HALLMARK</div><h2>hallmark</h2><div class="stats"><span class="stat">★ 15.1K</span><span class="stat gain">↗ +8.9K</span></div><div class="desc">治疗 AI 网页的塑料味</div></article>
+    <article class="card purple" id="c4"><i class="bubble"></i><div class="card-head mono">#04 · CODE-GRAPH</div><h2>code graph</h2><div class="stats"><span class="stat">★ 24.7K</span><span class="stat gain">↗ +4.8K</span></div><div class="desc">代码仓库变知识图谱</div></article>
+    <article class="card green long" id="c5"><i class="bubble"></i><div class="card-head mono">#05 · AWESOME-LLM-APPS</div><h2>awesome-llm-apps</h2><div class="stats"><span class="stat">★ 125.9K</span><span class="stat gain">↗ +5.4K</span></div><div class="desc">100+ 开箱即用 AI Agent</div></article>
+    <article class="card orange" id="c6"><i class="bubble"></i><div class="card-head mono">#06 · VIBE-TRADING</div><h2>vibe-trading</h2><div class="stats"><span class="stat">★ 26.2K</span><span class="stat gain">↗ +3.7K</span></div><div class="desc">一句话驱动交易 Agent</div></article>
+    <article class="card purple" id="c7"><i class="bubble"></i><div class="card-head mono">#07 · ORCA</div><h2>orca</h2><div class="stats"><span class="stat">★ 25.2K</span><span class="stat gain">↗ +5.7K</span></div><div class="desc">并行运行多个 Coding Agent</div></article>
+    <article class="card pink" id="c8"><i class="bubble"></i><div class="card-head mono">#08 · OFFICECLI</div><h2>officecli</h2><div class="stats"><span class="stat">★ 20.7K</span><span class="stat gain">↗ +4.0K</span></div><div class="desc">AI 读写 Word、Excel 和 PPT</div></article>
+    <article class="card cyan long" id="c9"><i class="bubble"></i><div class="card-head mono">#09 · OPENINTERPRETER</div><h2>openinterpreter</h2><div class="stats"><span class="stat">★ 67.1K</span><span class="stat gain">↗ +2.2K</span></div><div class="desc">开源模型编码 Agent</div></article>
+    <article class="card green" id="c10"><i class="bubble"></i><div class="card-head mono">#10 · CODEX</div><h2>codex</h2><div class="stats"><span class="stat">★ 100.5K</span><span class="stat gain">↗ +2.4K</span></div><div class="desc">OpenAI 官方终端编码 Agent</div></article>
+  </div></div>
+  <section class="cta" data-layout-allow-overflow><div class="cta-small">WEEKLY OPEN SOURCE SIGNAL</div><h3>每周精选 10 个开源项目</h3><div class="brand">EDY.AI.STUDIO</div><div class="follow">关注我 · 开源不迷路</div></section>
+</div></div>
+<script>
+window.__timelines=window.__timelines||{};
+const tl=gsap.timeline({paused:true});
+tl.fromTo('.scan',{y:-20},{y:1940,duration:14,ease:'none'},0);
+tl.fromTo('.glow',{scale:.84,opacity:.35},{scale:1.08,opacity:.8,duration:7,yoyo:true,repeat:1,ease:'sine.inOut'},0);
+tl.fromTo('.ghost',{y:80,opacity:0},{y:-100,opacity:1,duration:10,ease:'none'},.2);
+tl.fromTo('.signal',{y:-60,opacity:0,scale:.86},{y:0,opacity:1,scale:1,duration:.65,ease:'back.out(1.8)'},.2);
+tl.fromTo('.title-shadow',{x:60,opacity:0},{x:0,opacity:1,duration:.7,ease:'expo.out'},.42);
+tl.fromTo('.title',{y:90,opacity:0,scale:.92},{y:0,opacity:1,scale:1,duration:.72,ease:'back.out(1.45)'},.5);
+tl.fromTo('.subtitle',{y:36,opacity:0},{y:0,opacity:1,duration:.52,ease:'power3.out'},.86);
+tl.fromTo('.spectrum',{scaleX:0,opacity:0},{scaleX:1,opacity:1,duration:.7,ease:'power2.inOut'},1.05);
+const starts=[1.7,2.05,2.6,2.95,3.6,3.95,4.6,4.95,5.6,5.95];
+for(let i=1;i<=10;i++){let el='#c'+i,side=i%2===1?-620:620,rot=i%2===1?-7:7;tl.fromTo(el,{x:side,y:80,rotation:rot,opacity:0},{x:0,y:0,rotation:0,opacity:1,duration:.7,ease:i%3===0?'elastic.out(1,.7)':'back.out(1.45)'},starts[i-1]);tl.fromTo(el+' .stat',{scale:.5,opacity:0},{scale:1,opacity:1,duration:.32,stagger:.08,ease:'back.out(2)'},starts[i-1]+.42);tl.fromTo(el+' .bubble',{scale:.35,opacity:0},{scale:1,opacity:1,duration:.35,ease:'power2.out'},starts[i-1]+.25)}
+tl.to('.board-wrap',{y:-1720,duration:7.8,ease:'power1.inOut'},3.15);
+tl.to('.hero',{y:-340,opacity:.16,duration:2.2,ease:'power2.inOut'},3.1);
+tl.fromTo('.cta',{y:1920,opacity:1},{y:0,opacity:1,duration:.72,ease:'expo.out'},11.45);
+tl.set('.hero,.board-wrap',{opacity:0},12.17);
+tl.fromTo('.cta-small',{y:45,opacity:0},{y:0,opacity:1,duration:.45,ease:'power3.out'},11.85);
+tl.fromTo('.cta h3',{scale:.72,opacity:0},{scale:1,opacity:1,duration:.62,ease:'back.out(1.7)'},12.0);
+tl.fromTo('.brand',{x:-90,opacity:0},{x:0,opacity:1,duration:.48,ease:'expo.out'},12.25);
+tl.fromTo('.follow',{y:32,opacity:0},{y:0,opacity:1,duration:.42,ease:'power2.out'},12.42);
+tl.to('.cta',{opacity:0,duration:.35,ease:'power2.in'},13.65);
+window.__timelines['github-weekly-001']=tl;
+</script></body></html>

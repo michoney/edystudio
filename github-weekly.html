@@ -1,110 +1,36 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="description" content="Edy.Ai.Studio 每周 GitHub 科技选题榜：为中文科技博主筛选值得拍、值得试的开源项目。">
-  <title>GitHub Weekly 001 · Edy.Ai.Studio</title>
-  <style>
-    :root{--bg:#080808;--panel:#0e0d10;--line:#29242d;--text:#d8d2dc;--muted:#7f7785;--purple:#c084dc;--green:#85d39b;--amber:#e0bd73}
-    *{box-sizing:border-box} html{scroll-behavior:smooth}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:"SFMono-Regular",Consolas,"Liberation Mono","Noto Sans Mono CJK SC",monospace;line-height:1.65}
-    body:before{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0,rgba(255,255,255,.018) 1px,transparent 1px,transparent 4px);mix-blend-mode:screen}
-    .scan{position:fixed;z-index:10;left:0;right:0;height:2px;top:-3px;background:rgba(192,132,220,.22);box-shadow:0 0 18px rgba(192,132,220,.25);animation:scan 7s linear infinite;pointer-events:none}
-    @keyframes scan{to{transform:translateY(105vh)}}
-    a{color:inherit}.wrap{width:min(1120px,calc(100% - 36px));margin:auto}
-    header{padding:64px 0 38px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
-    header:after{content:"01";position:absolute;right:5vw;top:6px;font-size:clamp(120px,24vw,330px);font-weight:900;color:rgba(192,132,220,.035);line-height:1}
-    nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:70px;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
-    nav a{text-decoration:none}nav a:hover{color:var(--purple)}
-    .signal{display:flex;align-items:center;gap:8px}.dot{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 10px var(--green)}
-    .eyebrow{color:var(--purple);font-size:12px;letter-spacing:.18em;margin-bottom:14px}
-    h1{font-size:clamp(42px,8vw,94px);line-height:.95;letter-spacing:-.06em;margin:0 0 26px;max-width:850px}
-    .lede{max-width:650px;color:#aaa2ad;font-size:15px}.meta{display:flex;flex-wrap:wrap;gap:24px;margin-top:38px;font-size:11px;color:var(--muted);letter-spacing:.1em}
-    main{padding:42px 0 80px}.toolbar{display:flex;justify-content:space-between;gap:20px;align-items:center;margin-bottom:24px}
-    .filters{display:flex;gap:8px;flex-wrap:wrap}.filter{border:1px solid var(--line);background:transparent;color:var(--muted);padding:8px 13px;font:inherit;font-size:11px;cursor:pointer}.filter:hover,.filter.active{color:var(--bg);border-color:var(--purple);background:var(--purple)}
-    .count{font-size:11px;color:var(--muted)}
-    .list{border-top:1px solid var(--line)}
-    .repo{display:grid;grid-template-columns:74px 1fr 190px;gap:24px;padding:32px 10px;border-bottom:1px solid var(--line);transition:.2s ease;position:relative}
-    .repo:hover{background:#0c0b0d;padding-left:18px;padding-right:18px}.rank{font-size:38px;line-height:1;color:#403746;font-weight:800}.repo:first-child .rank{color:var(--purple);text-shadow:0 0 18px rgba(192,132,220,.28)}
-    .repo-name{font-size:19px;font-weight:700;text-decoration:none}.repo-name:hover{color:var(--purple)}
-    .desc{margin:8px 0 15px;color:#928a97;font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:14px}
-    .tags{display:flex;flex-wrap:wrap;gap:7px}.tag{border:1px solid #312b35;padding:3px 8px;font-size:10px;color:#827889}.tag.hot{border-color:#4d3a54;color:var(--purple)}
-    .idea{border-left:1px solid #332d37;padding-left:18px;align-self:center}.idea b{display:block;color:var(--amber);font-size:11px;letter-spacing:.08em;margin-bottom:6px}.idea span{font-family:-apple-system,BlinkMacSystemFont,"PingFang SC",sans-serif;font-size:13px;color:#a79fac}
-    .growth{font-size:11px;color:var(--green);margin-top:10px}.growth:before{content:"↗ ";}
-    .note{margin-top:50px;border:1px solid var(--line);padding:24px;color:var(--muted);font-size:12px}.note strong{color:var(--text)}
-    footer{border-top:1px solid var(--line);padding:28px 0 40px;color:#625b67;font-size:11px;display:flex;justify-content:space-between;gap:20px}
-    @media(max-width:760px){header{padding-top:30px}nav{margin-bottom:50px}h1{font-size:48px}.repo{grid-template-columns:48px 1fr;gap:12px;padding:24px 4px}.rank{font-size:26px}.idea{grid-column:2;border-left:0;border-top:1px dashed #302a33;padding:13px 0 0}.toolbar{align-items:flex-start;flex-direction:column}.count{display:none}footer{flex-direction:column}}
-    @media(prefers-reduced-motion:reduce){.scan{display:none}*{scroll-behavior:auto}}
-  </style>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b1115"><meta name="description" content="Edy.Ai.Studio GitHub 本周热榜">
+<title>GitHub 本周热榜 · Edy.Ai.Studio</title>
+<style>
+:root{--ink:#080b0d;--paper:#e9eef0;--cyan:#53d8f3;--pink:#ff6c9f;--yellow:#ffd13b;--purple:#aa82f4;--green:#68e69a;--orange:#ff9c4a}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--paper);background-color:#0b1115;background-image:linear-gradient(rgba(94,153,165,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(94,153,165,.12) 1px,transparent 1px),radial-gradient(circle at 50% 0,rgba(32,134,159,.18),transparent 40%);background-size:28px 28px,28px 28px,100% 100%;font-family:"Arial Rounded MT Bold","PingFang SC","Microsoft YaHei",sans-serif;min-height:100vh}
+body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.018) 4px);mix-blend-mode:screen}
+.shell{width:min(1120px,calc(100% - 30px));margin:auto}.topbar{height:66px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(105,199,219,.22);font:700 12px/1 monospace;letter-spacing:.12em}.topbar a{text-decoration:none;color:#a8bcc2}.live{color:#67daf1;text-shadow:0 0 12px #2ba6c2}.hero{text-align:center;padding:66px 10px 56px;position:relative}.pill{display:inline-block;padding:8px 22px;border:1px solid #273941;border-radius:99px;background:#172127;box-shadow:inset 0 0 16px rgba(74,196,224,.08),0 0 22px rgba(70,195,226,.08);color:#5bd7f3;font:800 12px/1 monospace;letter-spacing:.18em}.hero h1{margin:22px 0 12px;font-size:clamp(48px,10vw,104px);line-height:.95;letter-spacing:-.07em;color:#edf1f2;text-shadow:4px 4px 0 #35434a,0 0 30px rgba(219,245,255,.12);transform:rotate(-1deg)}.hero p{margin:0 auto;max-width:740px;font-size:clamp(14px,2vw,20px);font-weight:800;letter-spacing:.06em}.rainbow{width:min(650px,88%);height:4px;margin:38px auto 0;background:linear-gradient(90deg,transparent,#4dd8f3,#8d70f5,#ff639e,transparent);box-shadow:0 0 13px #5fd9ee}
+.controls{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 0 26px}.filters{display:flex;gap:8px;flex-wrap:wrap}.filter,.video-link{border:2px solid #39464b;border-radius:999px;padding:9px 15px;background:#10171b;color:#9eb0b5;font:800 11px/1 monospace;cursor:pointer;text-decoration:none}.filter.active,.filter:hover,.video-link:hover{background:#56d7ef;border-color:#080b0d;color:#080b0d;box-shadow:3px 3px 0 #080b0d}.board{display:grid;grid-template-columns:1fr 1fr;gap:20px 34px;padding-bottom:70px}.card{--c:#fff;min-height:260px;padding:22px 24px 25px;border:3px solid var(--ink);border-radius:27px;background:var(--c);color:var(--ink);box-shadow:10px 11px 0 rgba(0,0,0,.92);position:relative;overflow:hidden;transition:transform .2s ease}.card:nth-child(even){transform:translateY(74px)}.card:hover{transform:translate(-3px,-5px) rotate(-.4deg)}.card:nth-child(even):hover{transform:translate(-3px,68px) rotate(.4deg)}.card:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;right:-22px;top:-38px;background:rgba(255,255,255,.22)}.card-head{display:flex;justify-content:space-between;border-bottom:3px solid var(--ink);padding-bottom:10px;font:900 12px/1 monospace;letter-spacing:.04em}.lang{opacity:.56}.card h2{font:900 clamp(28px,4.5vw,48px)/1 "Arial Rounded MT Bold","Trebuchet MS",sans-serif;letter-spacing:-.06em;margin:24px 0 16px;overflow-wrap:anywhere}.stats{display:flex;gap:8px;flex-wrap:wrap}.stat{display:inline-flex;align-items:center;padding:7px 11px;border:3px solid var(--ink);border-radius:999px;background:white;font:900 11px/1 monospace;box-shadow:2px 3px 0 var(--ink)}.stat.gain{background:var(--ink);color:white}.card p{margin:22px 0 0;font-size:15px;line-height:1.55;font-weight:800;max-width:90%}.topic{margin-top:12px;font:800 11px/1.4 monospace;opacity:.62}.card a{position:absolute;inset:0;z-index:2;font-size:0}.pink{--c:var(--pink)}.yellow{--c:var(--yellow)}.cyan{--c:var(--cyan)}.purple{--c:var(--purple)}.green{--c:var(--green)}.orange{--c:var(--orange)}
+.foot{border-top:1px solid rgba(105,199,219,.22);padding:30px 0 50px;color:#71868c;font:700 11px/1.6 monospace;display:flex;justify-content:space-between}.hidden{display:none!important}
+@media(max-width:650px){.shell{width:min(100% - 22px,560px)}.topbar{height:54px}.hero{padding:48px 0 38px}.hero h1{font-size:54px}.hero p{font-size:14px}.controls{align-items:flex-start;flex-direction:column}.board{gap:12px 10px}.card{min-height:235px;padding:15px 14px;border-radius:20px;box-shadow:6px 7px 0 #000}.card:nth-child(even){transform:translateY(42px)}.card:nth-child(even):hover{transform:translateY(42px)}.card h2{font-size:clamp(22px,7vw,34px);margin:19px 0 13px}.card p{font-size:12px;max-width:100%;margin-top:18px}.card-head{font-size:9px}.stat{padding:6px 8px;font-size:9px;border-width:2px}.foot{margin-top:30px;flex-direction:column;gap:8px}}
+</style>
 </head>
-<body>
-  <div class="scan"></div>
-  <header>
-    <div class="wrap">
-      <nav><a href="index.html">← EDY.AI.STUDIO</a><span class="signal"><i class="dot"></i> WEEKLY SIGNAL ONLINE</span></nav>
-      <div class="eyebrow">GITHUB SIGNAL / WEEK 30 / 2026</div>
-      <h1>开源不降噪<br>也会变成噪音。</h1>
-      <p class="lede">这不是 Star 数字复读机。这是从本周 GitHub 热度中，为中文科技创作者筛出的 10 个可演示、可评测、有观点的开源项目。</p>
-      <div class="meta"><span>ISSUE 001</span><span>2026.07.22</span><span>EDITOR: EDY.AI.STUDIO</span><span>SOURCE: GITHUB WEEKLY TRENDING</span></div>
-    </div>
-  </header>
-
-  <main class="wrap">
-    <div class="toolbar">
-      <div class="filters" aria-label="项目筛选">
-        <button class="filter active" data-filter="all">全部</button>
-        <button class="filter" data-filter="creator">创作工具</button>
-        <button class="filter" data-filter="agent">AI AGENT</button>
-        <button class="filter" data-filter="dev">开发效率</button>
-      </div>
-      <span class="count">10 REPOS / EDITORIAL RANKING</span>
-    </div>
-
-    <section class="list">
-      <article class="repo" data-cat="creator">
-        <div class="rank">01</div><div><a class="repo-name" href="https://github.com/OpenCut-app/OpenCut" target="_blank" rel="noreferrer">OpenCut-app / OpenCut ↗</a><p class="desc">开源版 CapCut，直击剪映替代这个天然大选题。</p><div class="tags"><span class="tag hot">TOP PICK</span><span class="tag">TypeScript</span><span class="tag">77.1K Stars</span></div><div class="growth">8,341 stars this week</div></div><div class="idea"><b>● 博主选题</b><span>《免费开源剪映真能用吗？》<br>10 分钟现场剪一条视频。</span></div>
-      </article>
-      <article class="repo" data-cat="creator dev">
-        <div class="rank">02</div><div><a class="repo-name" href="https://github.com/Nutlope/hallmark" target="_blank" rel="noreferrer">Nutlope / hallmark ↗</a><p class="desc">专治 AI 味网页的设计 Skill，拒绝“一眼 AI”。</p><div class="tags"><span class="tag">Design Skill</span><span class="tag">Codex</span><span class="tag">15K Stars</span></div><div class="growth">8,948 stars this week</div></div><div class="idea"><b>● 博主选题</b><span>同一个提示词 AB 对比：装前与装后的 AI 网页。</span></div>
-      </article>
-      <article class="repo" data-cat="agent dev">
-        <div class="rank">03</div><div><a class="repo-name" href="https://github.com/Shubhamsaboo/awesome-llm-apps" target="_blank" rel="noreferrer">awesome-llm-apps ↗</a><p class="desc">100+ 个能直接跑起来的 Agent 和 RAG 项目，选题仓库本仓。</p><div class="tags"><span class="tag hot">灵感库</span><span class="tag">Python</span><span class="tag">125.8K Stars</span></div><div class="growth">5,385 stars this week</div></div><div class="idea"><b>● 博主选题</b><span>做成连载：每周实测一个能真正干活的 AI Agent。</span></div>
-      </article>
-      <article class="repo" data-cat="dev agent">
-        <div class="rank">04</div><div><a class="repo-name" href="https://github.com/tirth8205/code-review-graph" target="_blank" rel="noreferrer">code-review-graph ↗</a><p class="desc">本地代码知识图谱，让 AI 先理解仓库，再评审代码。</p><div class="tags"><span class="tag">MCP</span><span class="tag">Local-first</span><span class="tag">24.7K Stars</span></div><div class="growth">4,791 stars this week</div></div><div class="idea"><b>● 博主选题</b><span>《为什么 AI 总是读不懂大项目？》与 Codebase Memory 横评。</span></div>
-      </article>
-      <article class="repo" data-cat="creator agent">
-        <div class="rank">05</div><div><a class="repo-name" href="https://github.com/iOfficeAI/OfficeCLI" target="_blank" rel="noreferrer">iOfficeAI / OfficeCLI ↗</a><p class="desc">让 AI 通过命令行读写 Word、Excel 和 PPT，不需要安装 Office。</p><div class="tags"><span class="tag hot">实用</span><span class="tag">Office</span><span class="tag">20.7K Stars</span></div><div class="growth">4,047 stars this week</div></div><div class="idea"><b>● 博主选题</b><span>用一句话修改 100 份 PPT，展示办公自动化的冲击力。</span></div>
-      </article>
-      <article class="repo" data-cat="creator agent">
-        <div class="rank">06</div><div><a class="repo-name" href="https://github.com/HKUDS/DeepTutor" target="_blank" rel="noreferrer">HKUDS / DeepTutor ↗</a><p class="desc">可持续记住学习进度的个性化 AI 导师。</p><div class="tags"><span class="tag">Education</span><span class="tag">Python</span><span class="tag">28.9K Stars</span></div><div class="growth">2,908 stars this week</div></div><div class="idea"><b>● 博主选题</b><span>让它连续教你 7 天：AI 家教是真懂你，还是只会聊天？</span></div>
-      </article>
-      <article class="repo" data-cat="agent">
-        <div class="rank">07</div><div><a class="repo-name" href="https://github.com/stablyai/orca" target="_blank" rel="noreferrer">stablyai / orca ↗</a><p class="desc">在桌面、手机和 VPS 上指挥一群并行编程 Agent。</p><div class="tags"><span class="tag">Multi-agent</span><span class="tag">TypeScript</span><span class="tag">25.2K Stars</span></div><div class="growth">5,733 stars this week</div></div><div class="idea"><b>● 博主选题</b><span>一个人指挥 5 个 AI 同时开发：效率是否真的翻倍？</span></div>
-      </article>
-      <article class="repo" data-cat="creator agent">
-        <div class="rank">08</div><div><a class="repo-name" href="https://github.com/kangarooking/cangjie-skill" target="_blank" rel="noreferrer">cangjie-skill ↗</a><p class="desc">把书、长视频和播客蒸馏成能执行的 Agent Skills。</p><div class="tags"><span class="tag hot">中文项目</span><span class="tag">Knowledge</span><span class="tag">4.3K Stars</span></div><div class="growth">1,364 stars this week</div></div><div class="idea"><b>● 博主选题</b><span>把一期两小时播客变成 AI 会做的事，全流程实测。</span></div>
-      </article>
-      <article class="repo" data-cat="dev">
-        <div class="rank">09</div><div><a class="repo-name" href="https://github.com/Dicklesworthstone/destructive_command_guard" target="_blank" rel="noreferrer">destructive_command_guard ↗</a><p class="desc">阻止 AI Agent 执行危险的 Git 和 Shell 命令。</p><div class="tags"><span class="tag">Security</span><span class="tag">Rust</span><span class="tag">5.3K Stars</span></div><div class="growth">1,167 stars this week</div></div><div class="idea"><b>● 博主选题</b><span>《AI 差点删了我的电脑》：开发者必须知道的安全护栏。</span></div>
-      </article>
-      <article class="repo" data-cat="agent dev">
-        <div class="rank">10</div><div><a class="repo-name" href="https://github.com/MoonshotAI/kimi-cli" target="_blank" rel="noreferrer">MoonshotAI / kimi-cli ↗</a><p class="desc">Kimi 的终端编程 Agent，国产 CLI 模型战场的新变量。</p><div class="tags"><span class="tag">国产 AI</span><span class="tag">CLI Agent</span><span class="tag">10.5K Stars</span></div><div class="growth">1,294 stars this week</div></div><div class="idea"><b>● 博主选题</b><span>Kimi CLI vs Codex：同一个项目、同一份需求、同一块计时器。</span></div>
-      </article>
-    </section>
-
-    <aside class="note"><strong>EDITOR'S NOTE —</strong> 榜单数据截至 2026-07-22，参考 GitHub Weekly Trending；顺序为 Edy.Ai.Studio 根据选题可视化、中文受众关联度和实用性进行的编辑排名，不等同于 Star 排名。</aside>
-  </main>
-  <footer class="wrap"><span>© 2026 EDY.AI.STUDIO</span><span>CURATED IN SHENZHEN / BUILT FOR CURIOUS MINDS</span></footer>
-  <script>
-    const buttons=[...document.querySelectorAll('.filter')];
-    const repos=[...document.querySelectorAll('.repo')];
-    buttons.forEach(button=>button.addEventListener('click',()=>{
-      buttons.forEach(item=>item.classList.remove('active'));button.classList.add('active');
-      const filter=button.dataset.filter;
-      repos.forEach(repo=>repo.hidden=filter!=='all'&&!repo.dataset.cat.split(' ').includes(filter));
-    }));
-  </script>
-</body>
-</html>
+<body><div class="shell">
+<nav class="topbar"><a href="index.html">← EDY.AI.STUDIO</a><span class="live">● WEEKLY SIGNAL ONLINE</span></nav>
+<header class="hero"><span class="pill">GITHUB WEEKLY TRENDING</span><h1>GitHub 本周热榜</h1><p>AI Agent 和编码工具集体霸榜，OpenCut、Skills、Code Graph 一周涨势最猛。</p><div class="rainbow"></div></header>
+<div class="controls"><div class="filters"><button class="filter active" data-filter="all">全部 10</button><button class="filter" data-filter="creator">创作工具</button><button class="filter" data-filter="agent">AI AGENT</button><button class="filter" data-filter="dev">编码工具</button></div><a class="video-link" href="assets/github-weekly-001.mp4" download>▶ 下载竖屏视频</a></div>
+<main class="board">
+<article class="card pink" data-cat="creator"><div class="card-head"><span>#01 · OPENCUT</span><span class="lang">TS</span></div><h2>opencut</h2><div class="stats"><span class="stat">★ 77.1K</span><span class="stat gain">↗ 本周 +8.3K</span></div><p>开源版剪映替代，跨 Web、桌面和移动端。</p><div class="topic">选题：免费剪映真能用吗？</div><a href="https://github.com/OpenCut-app/OpenCut" target="_blank" rel="noreferrer">OpenCut</a></article>
+<article class="card yellow" data-cat="dev"><div class="card-head"><span>#02 · SKILLS</span><span class="lang">SH</span></div><h2>skills</h2><div class="stats"><span class="stat">★ 180.8K</span><span class="stat gain">↗ 本周 +10.7K</span></div><p>真正工程师在用的 Agent Skills 集合。</p><div class="topic">选题：给 Codex 装上工程师大脑</div><a href="https://github.com/mattpocock/skills" target="_blank" rel="noreferrer">Skills</a></article>
+<article class="card cyan" data-cat="creator dev"><div class="card-head"><span>#03 · HALLMARK</span><span class="lang">CSS</span></div><h2>hallmark</h2><div class="stats"><span class="stat">★ 15.1K</span><span class="stat gain">↗ 本周 +8.9K</span></div><p>治疗 AI 生成页面“塑料味”的设计 Skill。</p><div class="topic">选题：一眼 AI 的网页怎么救？</div><a href="https://github.com/Nutlope/hallmark" target="_blank" rel="noreferrer">Hallmark</a></article>
+<article class="card purple" data-cat="dev agent"><div class="card-head"><span>#04 · CODE-GRAPH</span><span class="lang">PY</span></div><h2>code graph</h2><div class="stats"><span class="stat">★ 24.7K</span><span class="stat gain">↗ 本周 +4.8K</span></div><p>把代码仓库变成 AI 可查询的知识图谱。</p><div class="topic">选题：AI 为什么读不懂大项目？</div><a href="https://github.com/tirth8205/code-review-graph" target="_blank" rel="noreferrer">Code Graph</a></article>
+<article class="card green" data-cat="agent"><div class="card-head"><span>#05 · AWESOME-LLM-APPS</span><span class="lang">PY</span></div><h2>awesome-llm-apps</h2><div class="stats"><span class="stat">★ 125.9K</span><span class="stat gain">↗ 本周 +5.4K</span></div><p>100+ 开箱即用的 AI Agent 和 RAG 应用。</p><div class="topic">选题：每周实测一个 AI Agent</div><a href="https://github.com/Shubhamsaboo/awesome-llm-apps" target="_blank" rel="noreferrer">Awesome LLM Apps</a></article>
+<article class="card orange" data-cat="agent"><div class="card-head"><span>#06 · VIBE-TRADING</span><span class="lang">PY</span></div><h2>vibe-trading</h2><div class="stats"><span class="stat">★ 26.2K</span><span class="stat gain">↗ 本周 +3.7K</span></div><p>一句话驱动的个人交易 Agent。</p><div class="topic">选题：AI 交易员能不能赚到钱？</div><a href="https://github.com/HKUDS/Vibe-Trading" target="_blank" rel="noreferrer">Vibe Trading</a></article>
+<article class="card purple" data-cat="agent dev"><div class="card-head"><span>#07 · ORCA</span><span class="lang">TS</span></div><h2>orca</h2><div class="stats"><span class="stat">★ 25.2K</span><span class="stat gain">↗ 本周 +5.7K</span></div><p>并行运行多个 Coding Agent 的桌面端。</p><div class="topic">选题：一个人指挥 5 个 AI 开发</div><a href="https://github.com/stablyai/orca" target="_blank" rel="noreferrer">Orca</a></article>
+<article class="card pink" data-cat="creator agent"><div class="card-head"><span>#08 · OFFICECLI</span><span class="lang">C#</span></div><h2>officecli</h2><div class="stats"><span class="stat">★ 20.7K</span><span class="stat gain">↗ 本周 +4.0K</span></div><p>让 AI 读写 Word、Excel 和 PPT 的单二进制工具。</p><div class="topic">选题：一句话批量改 100 份 PPT</div><a href="https://github.com/iOfficeAI/OfficeCLI" target="_blank" rel="noreferrer">OfficeCLI</a></article>
+<article class="card cyan" data-cat="agent dev"><div class="card-head"><span>#09 · OPENINTERPRETER</span><span class="lang">RS</span></div><h2>openinterpreter</h2><div class="stats"><span class="stat">★ 67.1K</span><span class="stat gain">↗ 本周 +2.2K</span></div><p>为便宜模型代打的开源编码 Agent。</p><div class="topic">选题：开源模型能替代 Codex 吗？</div><a href="https://github.com/openinterpreter/openinterpreter" target="_blank" rel="noreferrer">OpenInterpreter</a></article>
+<article class="card green" data-cat="dev agent"><div class="card-head"><span>#10 · CODEX</span><span class="lang">RS</span></div><h2>codex</h2><div class="stats"><span class="stat">★ 100.5K</span><span class="stat gain">↗ 本周 +2.4K</span></div><p>OpenAI 官方终端轻量编码 Agent。</p><div class="topic">选题：Codex 最值得安装的 5 个插件</div><a href="https://github.com/openai/codex" target="_blank" rel="noreferrer">Codex</a></article>
+</main>
+<footer class="foot"><span>ISSUE 001 · 2026.07.22 · SHENZHEN</span><span>数据参考 GITHUB WEEKLY TRENDING · 编辑排名</span></footer>
+</div><script>
+const buttons=[...document.querySelectorAll('.filter')],cards=[...document.querySelectorAll('.card')];buttons.forEach(b=>b.onclick=()=>{buttons.forEach(x=>x.classList.remove('active'));b.classList.add('active');let f=b.dataset.filter;cards.forEach(c=>c.classList.toggle('hidden',f!=='all'&&!c.dataset.cat.split(' ').includes(f)))})
+</script></body></html>
