@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Practice Training — Edy.AI.Studio</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { background: #0a0a0a; color: #e0e0e0; font-family: 'Courier New', monospace; min-height: 100vh; }
+  .container { max-width: 1100px; margin: 0 auto; padding: 60px 24px; }
+
+  .header { text-align: center; margin-bottom: 60px; }
+  .header h1 { font-size: 28px; color: #c084dc; font-weight: 900; letter-spacing: 3px; margin-bottom: 12px; text-shadow: 0 0 20px rgba(155,89,182,0.4); }
+  .header .subtitle { color: #888; font-size: 13px; letter-spacing: 2px; }
+  .header .divider { width: 80px; height: 2px; background: #9b59b6; margin: 20px auto; }
+
+  .section-title { font-size: 16px; color: #9b59b6; letter-spacing: 2px; margin-bottom: 24px; padding-bottom: 10px; border-bottom: 1px solid #1a1a1a; }
+
+  .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 24px; margin-bottom: 60px; }
+
+  .module-card { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 6px; padding: 28px; transition: all 0.3s; position: relative; overflow: hidden; }
+  .module-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #9b59b6, #3498db); opacity: 0; transition: opacity 0.3s; }
+  .module-card:hover::before { opacity: 1; }
+  .module-card:hover { border-color: #9b59b6; transform: translateY(-2px); box-shadow: 0 8px 30px rgba(155,89,182,0.15); }
+
+  .module-tag { display: inline-block; font-size: 10px; color: #3498db; background: rgba(52,152,219,0.1); padding: 3px 10px; border-radius: 3px; letter-spacing: 1.5px; margin-bottom: 14px; }
+  .module-card h3 { font-size: 17px; color: #fff; margin-bottom: 10px; font-weight: 700; }
+  .module-card p { font-size: 13px; color: #777; line-height: 1.7; margin-bottom: 16px; }
+  .module-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding-top: 14px; border-top: 1px solid #1a1a1a; font-size: 11px; color: #555; letter-spacing: 1px; }
+  .module-meta .level { color: #2ecc71; }
+  .module-meta .level.advanced { color: #e67e22; }
+  .module-meta .level.expert { color: #e74c3c; }
+
+  .case-study { background: #0f0f0f; border: 1px solid #1a1a1a; border-radius: 6px; padding: 36px; margin-bottom: 60px; }
+  .case-study-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 30px; flex-wrap: wrap; gap: 16px; }
+  .case-study h2 { font-size: 20px; color: #fff; font-weight: 700; }
+  .case-study h2 span { color: #9b59b6; }
+
+  .stock-code-box { display: flex; gap: 16px; flex-wrap: wrap; }
+  .stock-chip { display: flex; align-items: center; gap: 10px; background: #0a0a0a; border: 1px solid #222; padding: 10px 18px; border-radius: 4px; }
+  .stock-chip .code { font-size: 18px; font-weight: 900; color: #3498db; letter-spacing: 2px; }
+  .stock-chip .name { font-size: 12px; color: #aaa; }
+
+  .stat-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 16px; margin-bottom: 30px; }
+  .stat { background: #0a0a0a; border: 1px solid #1a1a1a; border-radius: 4px; padding: 16px; }
+  .stat .label { font-size: 10px; color: #666; letter-spacing: 1.5px; margin-bottom: 6px; }
+  .stat .value { font-size: 18px; color: #fff; font-weight: 700; }
+  .stat .value.green { color: #2ecc71; }
+  .stat .value.red { color: #e74c3c; }
+
+  .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 13px; }
+  .data-table th { background: #111; color: #9b59b6; padding: 12px 16px; text-align: left; font-weight: 700; font-size: 11px; letter-spacing: 1.5px; border-bottom: 1px solid #222; }
+  .data-table td { padding: 12px 16px; border-bottom: 1px solid #111; color: #ccc; }
+  .data-table tr:hover td { background: #0d0d0d; }
+  .data-table .highlight { color: #2ecc71; font-weight: 700; }
+
+  .key-points { margin-top: 24px; padding: 24px; background: #0d0d0d; border-left: 3px solid #9b59b6; border-radius: 0 6px 6px 0; }
+  .key-points h4 { font-size: 13px; color: #9b59b6; letter-spacing: 2px; margin-bottom: 14px; }
+  .key-points ul { list-style: none; }
+  .key-points li { font-size: 13px; color: #aaa; padding: 8px 0; padding-left: 18px; position: relative; }
+  .key-points li::before { content: '▸'; position: absolute; left: 0; color: #9b59b6; }
+
+  .links-section { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 30px; }
+  .link-btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border: 1px solid #9b59b6; color: #c084dc; text-decoration: none; border-radius: 4px; font-size: 12px; letter-spacing: 1.5px; transition: all 0.3s; }
+  .link-btn:hover { background: #9b59b6; color: #fff; }
+
+  .footer { text-align: center; padding: 40px 0; color: #444; font-size: 11px; letter-spacing: 1.5px; border-top: 1px solid #111; }
+  .footer a { color: #666; text-decoration: none; }
+
+  @media (max-width: 700px) {
+    .container { padding: 40px 16px; }
+    .module-grid { grid-template-columns: 1fr; }
+    .case-study-header { flex-direction: column; }
+    .header h1 { font-size: 22px; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <div class="header">
+    <h1>FINANCIAL PRACTICE TRAINING</h1>
+    <p class="subtitle">A.I. &nbsp;×&nbsp; FINANCE &nbsp;·&nbsp; DATA-DRIVEN INVESTING</p>
+    <div class="divider"></div>
+  </div>
+
+  <div class="section-title">▸ TRAINING MODULES</div>
+
+  <div class="module-grid">
+
+    <div class="module-card">
+      <span class="module-tag">MODULE 01</span>
+      <h3>Stock Code 300502 — Eoptolink Tech</h3>
+      <p>Deep-dive case study on 新易盛 — an AI optical transceiver (CPO) leader riding the LLM inference boom. Analyze financials, industry position, and growth catalysts.</p>
+      <div class="key-points" style="margin-top:0;padding:16px 18px;">
+        <h4 style="margin-bottom:8px;">KEY DATA POINTS</h4>
+        <ul>
+          <li>Core business: high-speed optical transceivers (400G/800G/1.6T)</li>
+          <li>Key driver: AI data center optical interconnect demand</li>
+          <li>Recent price: ¥406.49 (as of 2026-07-28)</li>
+          <li>52-week range: ¥120 — ¥600+</li>
+        </ul>
+      </div>
+      <div class="module-meta">
+        <span class="level advanced">ADVANCED</span>
+        <span>CASE STUDY · FULL</span>
+      </div>
+    </div>
+
+    <div class="module-card">
+      <span class="module-tag">MODULE 02</span>
+      <h3>Financial Statement Analysis</h3>
+      <p>Reading the three core statements — income statement, balance sheet, cash flow. Ratio analysis: ROE, ROIC, D/A, current ratio. Spot the red flags.</p>
+      <div class="module-meta">
+        <span class="level">INTERMEDIATE</span>
+        <span>IN PROGRESS</span>
+      </div>
+    </div>
+
+    <div class="module-card">
+      <span class="module-tag">MODULE 03</span>
+      <h3>AI-Driven Trading Signals</h3>
+      <p>Building momentum, mean-reversion, and breakout models. Integration with data APIs (East Money, Wind, Tushare). Backtesting frameworks and risk management.</p>
+      <div class="module-meta">
+        <span class="level advanced">ADVANCED</span>
+        <span>IN PROGRESS</span>
+      </div>
+    </div>
+
+    <div class="module-card">
+      <span class="module-tag">MODULE 04</span>
+      <h3>Macro &amp; Sector Rotation</h3>
+      <p>CPI, PPI, M2, interest rate cycles. How macro data drives sector rotation. AI-assisted earnings call sentiment analysis and event-driven strategies.</p>
+      <div class="module-meta">
+        <span class="level expert">EXPERT</span>
+        <span>COMING SOON</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="case-study">
+    <div class="case-study-header">
+      <h2><span>▸</span> FEATURED CASE: 新易盛 Eoptolink Technology</h2>
+      <div class="stock-code-box">
+        <div class="stock-chip">
+          <span class="code">300502</span>
+          <span class="name">SZ · ChiNext</span>
+        </div>
+        <div class="stock-chip">
+          <span class="code">Eoptolink</span>
+          <span class="name">CPO / Optical Module</span>
+        </div>
+      </div>
+    </div>
+
+    <p style="font-size:14px;color:#999;line-height:1.8;margin-bottom:30px;">
+      新易盛 (Eoptolink Technology) is one of China's leading optical transceiver module manufacturers, specializing in high-speed data communication components. As AI large-model training and inference demand skyrockets, the company's 400G/800G/1.6T optical modules are critical components in AI data center infrastructure — positioning 300502 as a direct beneficiary of the global AI compute build-out.
+    </p>
+
+    <div class="stat-row">
+      <div class="stat">
+        <div class="label">LATEST PRICE</div>
+        <div class="value red">¥406.49</div>
+      </div>
+      <div class="stat">
+        <div class="label">CHANGE</div>
+        <div class="value red">-17.13%</div>
+      </div>
+      <div class="stat">
+        <div class="label">52W HIGH</div>
+        <div class="value green">¥600+</div>
+      </div>
+      <div class="stat">
+        <div class="label">52W LOW</div>
+        <div class="value green">¥120</div>
+      </div>
+      <div class="stat">
+        <div class="label">SECTOR</div>
+        <div class="value">Communication</div>
+      </div>
+      <div class="stat">
+        <div class="label">MARKET</div>
+        <div class="value">ChiNext (300xxx)</div>
+      </div>
+    </div>
+
+    <table class="data-table">
+      <tr>
+        <th>METRIC</th>
+        <th>VALUE</th>
+        <th>NOTE</th>
+      </tr>
+      <tr>
+        <td>Core Product</td>
+        <td class="highlight">Optical Transceiver Modules</td>
+        <td>400G / 800G / 1.6T speeds</td>
+      </tr>
+      <tr>
+        <td>Key Customers</td>
+        <td>Cloud &amp; AI Data Centers</td>
+        <td>Hyperscalers, AI infrastructure</td>
+      </tr>
+      <tr>
+        <td>Industry Theme</td>
+        <td class="highlight">CPO / AI Optics</td>
+        <td>Co-Packaged Optics trend</td>
+      </tr>
+      <tr>
+        <td>Exchange</td>
+        <td>Shenzhen · ChiNext</td>
+        <td>20% daily price limit</td>
+      </tr>
+      <tr>
+        <td>Catalyst</td>
+        <td class="highlight">AI Inference Boom</td>
+        <td>LLM data center build-out</td>
+      </tr>
+      <tr>
+        <td>Risk</td>
+        <td>Valuation multiple high</td>
+        <td>20% limit → high volatility</td>
+      </tr>
+    </table>
+
+    <div class="key-points">
+      <h4>▸ INVESTMENT THESIS (FOR TRAINING)</h4>
+      <ul>
+        <li>AI data center interconnect demand growing at 30%+ CAGR</li>
+        <li>Eoptolink is a top-3 domestic optical module supplier</li>
+        <li>1.6T product cycle starting → revenue acceleration visible</li>
+        <li>Watch: quarterly revenue growth, gross margin trend, customer concentration</li>
+        <li>Volatility warning: ChiNext 20% limit can produce 15-20% daily swings</li>
+      </ul>
+    </div>
+
+    <div class="links-section">
+      <a class="link-btn" href="https://quote.eastmoney.com/300502.html" target="_blank">EAST MONEY</a>
+      <a class="link-btn" href="https://xueqiu.com/SZ300502" target="_blank">XUEQIU / SNOWBALL</a>
+      <a class="link-btn" href="https://finance.sina.com.cn/realstock/company/sz300502" target="_blank">SINA FINANCE</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    Edy.AI.Studio &nbsp;·&nbsp; Financial Practice Training &nbsp;·&nbsp;
+    <a href="https://github.com/michoney/edystudio" target="_blank">GitHub</a>
+    &nbsp;·&nbsp; 2026
+  </div>
+
+</div>
+</body>
+</html>
