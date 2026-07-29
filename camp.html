@@ -3,425 +3,522 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Edy.AI.Studio · 实战训练营</title>
+<title>Edy.AI.Studio · 实战训练营 · 报名</title>
 <style>
-* { margin: 0; padding: 0; }
+* { margin: 0; padding: 0; box-sizing: border-box; }
 body {
   background: #0a0a0a;
   color: #e0e0e0;
   font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
-  line-height: 1.8;
+  line-height: 1.7;
 }
 
-/* ===== 横幅水印 ===== */
-.bulletin-banner {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 9999;
-  background: linear-gradient(90deg, #ff1a1a, #ff4d4d);
-  color: #fff;
-  text-align: center;
-  font-size: 13px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  padding: 8px 16px;
-  box-shadow: 0 2px 12px rgba(255,26,26,0.5);
-}
-.bulletin-banner span { margin: 0 8px; }
-.bulletin-banner .tag { 
-  display: inline-block; 
-  background: rgba(0,0,0,0.3); 
-  padding: 2px 8px; 
-  border-radius: 3px; 
-  font-size: 11px; 
-  letter-spacing: 1px;
-}
-
-/* ===== 免责声明 ===== */
-.disclaimer-box {
-  background: linear-gradient(135deg, #1a0505, #0d0d0d);
-  border-left: 3px solid #ff4444;
-  margin: 70px 32px 20px;
-  padding: 16px 20px;
-  border-radius: 0 8px 8px 0;
-  font-size: 13px;
-  color: #cc8888;
-}
-.disclaimer-box .head {
-  color: #ff6666;
-  font-weight: 700;
-  font-size: 14px;
-  margin-bottom: 6px;
-  letter-spacing: 1px;
-}
-.disclaimer-box p { margin: 4px 0; color: #aa7777; font-size: 12px; }
-
-/* ===== 内容容器 ===== */
-.container { max-width: 880px; margin: 0 auto; padding: 0 20px 60px; }
-
-.header-section {
-  text-align: center;
-  padding: 40px 0 30px;
-  border-bottom: 1px solid #1f1f1f;
-  margin-bottom: 30px;
-}
-.header-section h1 {
-  font-size: 28px;
-  color: #f5f5f5;
-  letter-spacing: 4px;
-  font-weight: 300;
-}
-.header-section .sub {
-  color: #666;
-  font-size: 13px;
-  margin-top: 8px;
-  letter-spacing: 2px;
-  font-family: 'Courier New', monospace;
-}
-
-/* ===== 章节 ===== */
-.section { margin-bottom: 40px; }
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  font-size: 18px;
-  color: #d4d4d4;
-  margin-bottom: 16px;
-  padding-bottom: 8px;
-  border-bottom: 1px solid #1a1a1a;
-}
-.section-title .num {
-  display: inline-block;
-  width: 28px; height: 28px;
-  background: #2a2a2a;
-  color: #88cc88;
-  border-radius: 4px;
-  text-align: center;
-  line-height: 28px;
-  font-size: 13px;
-  font-weight: 700;
-  font-family: 'Courier New', monospace;
-}
-
-/* ===== 数据卡片 ===== */
-.data-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 10px;
-  margin-bottom: 16px;
-}
-.data-card {
-  background: #111;
-  border: 1px solid #1f1f1f;
-  border-radius: 6px;
-  padding: 12px 14px;
-}
-.data-card .label {
-  font-size: 11px;
-  color: #666;
-  letter-spacing: 1px;
-  text-transform: uppercase;
-}
-.data-card .value {
-  font-size: 20px;
-  color: #c8f7c5;
-  font-weight: 700;
-  margin-top: 4px;
-  font-family: 'Courier New', monospace;
-}
-.data-card .value.negative { color: #ff6b6b; }
-.data-card .value.neutral { color: #ccaa55; }
-.data-card .sub {
-  font-size: 11px;
-  color: #555;
-  margin-top: 2px;
-}
-
-/* ===== 情景表格 ===== */
-.scenario {
-  background: #111;
-  border: 1px solid #1f1f1f;
-  border-radius: 6px;
-  padding: 14px;
-  margin-bottom: 10px;
-}
-.scenario .row {
+/* ===== 顶部导航 ===== */
+.nav {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
-  padding: 8px 4px;
-  border-bottom: 1px solid #161616;
+  align-items: center;
+  padding: 16px 32px;
+  border-bottom: 1px solid #1a1a1a;
+  background: #0d0d0d;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-.scenario .row:last-child { border-bottom: none; }
-.scenario .tag-prob {
+.nav .brand {
+  font-size: 16px;
+  font-weight: 300;
+  letter-spacing: 4px;
+  color: #f5f5f5;
+  text-decoration: none;
+}
+.nav .brand span { color: #ff3333; font-weight: 700; }
+.nav .links { display: flex; gap: 24px; }
+.nav .links a {
+  color: #888;
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 1px;
+  transition: color 0.2s;
+}
+.nav .links a:hover { color: #f5f5f5; }
+.nav .links a.camp { color: #ff4444; font-weight: 700; }
+
+/* ===== 头部 ===== */
+.hero {
+  text-align: center;
+  padding: 60px 20px 40px;
+  border-bottom: 1px solid #1f1f1f;
+}
+.hero .eyebrow {
   font-size: 12px;
-  padding: 2px 8px;
-  border-radius: 3px;
+  letter-spacing: 4px;
+  color: #ff4444;
   font-family: 'Courier New', monospace;
+  margin-bottom: 16px;
 }
-.tag-up { background: #1a331a; color: #44cc44; }
-.tag-flat { background: #333010; color: #ccaa44; }
-.tag-down { background: #331010; color: #ff5555; }
+.hero h1 {
+  font-size: 36px;
+  font-weight: 300;
+  letter-spacing: 6px;
+  color: #f5f5f5;
+  margin-bottom: 12px;
+}
+.hero .sub {
+  color: #666;
+  font-size: 13px;
+  letter-spacing: 2px;
+}
 
-/* ===== 要点列表 ===== */
-.key-list { list-style: none; }
-.key-list li {
-  padding: 8px 12px;
-  margin-bottom: 6px;
+/* ===== 概览 ===== */
+.overview {
+  max-width: 900px;
+  margin: 40px auto;
+  padding: 0 20px;
+}
+.overview h2 {
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  margin-bottom: 20px;
+  text-align: center;
+  color: #ccc;
+}
+.overview .meta {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 30px;
+}
+.overview .meta-item {
   background: #111;
-  border-left: 2px solid #2a5a2a;
-  border-radius: 0 4px 4px 0;
-  font-size: 14px;
-}
-.key-list li.warn { border-left-color: #884400; }
-.key-list li.danger { border-left-color: #881111; }
-
-/* ===== 结论框 ===== */
-.conclusion-box {
-  background: linear-gradient(135deg, #0d1a0d, #0a0a0a);
-  border: 1px solid #1a3a1a;
+  border: 1px solid #1f1f1f;
   border-radius: 8px;
-  padding: 16px 18px;
-  margin-top: 16px;
+  padding: 16px;
+  text-align: center;
 }
-.conclusion-box h4 {
-  color: #44cc44;
-  font-size: 14px;
+.overview .meta-item .label {
+  font-size: 11px;
+  color: #666;
   letter-spacing: 2px;
   margin-bottom: 8px;
 }
-.conclusion-box p { font-size: 14px; color: #bbaa99; }
+.overview .meta-item .value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #f5f5f5;
+  letter-spacing: 1px;
+}
+.overview .meta-item .value span { color: #ff4444; }
 
-/* ===== 水印底纹 ===== */
-.watermark-foot {
+/* ===== 6 课时大纲 ===== */
+.curriculum {
+  max-width: 900px;
+  margin: 0 auto 50px;
+  padding: 0 20px;
+}
+.curriculum h2 {
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
   text-align: center;
-  padding: 30px 0;
-  font-size: 11px;
-  color: #333;
-  letter-spacing: 3px;
+  color: #ccc;
+}
+.curriculum-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+.lesson {
+  background: #111;
+  border: 1px solid #1f1f1f;
+  border-radius: 8px;
+  padding: 18px;
+  transition: border-color 0.2s;
+}
+.lesson:hover { border-color: #ff3333; }
+.lesson .num {
+  font-size: 24px;
+  font-weight: 700;
+  color: #ff3333;
+  font-family: 'Courier New', monospace;
+  margin-bottom: 8px;
+}
+.lesson h3 {
+  font-size: 15px;
+  font-weight: 700;
+  color: #f5f5f5;
+  margin-bottom: 6px;
+  letter-spacing: 1px;
+}
+.lesson p {
+  font-size: 12px;
+  color: #888;
+  line-height: 1.6;
+}
+
+/* ===== 价格表 ===== */
+.pricing {
+  max-width: 1100px;
+  margin: 0 auto 50px;
+  padding: 0 20px;
+}
+.pricing h2 {
+  font-size: 24px;
+  font-weight: 300;
+  letter-spacing: 4px;
+  margin-bottom: 8px;
+  text-align: center;
+  color: #f5f5f5;
+}
+.pricing .subtitle {
+  text-align: center;
+  color: #666;
+  font-size: 12px;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
   font-family: 'Courier New', monospace;
 }
-
-/* ===== 敏感字脱敏标记 ===== */
-.mask {
-  color: #555;
-  background: #1a1a1a;
-  padding: 0 4px;
-  border-radius: 2px;
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+.tier {
+  background: #111;
+  border: 1px solid #1f1f1f;
+  border-radius: 10px;
+  padding: 24px 18px;
+  text-align: center;
   position: relative;
+  transition: transform 0.2s, border-color 0.2s;
 }
-.mask::after {
-  content: "※脱敏";
-  font-size: 9px;
-  color: #664444;
-  margin-left: 4px;
+.tier:hover { transform: translateY(-4px); }
+.tier.featured {
+  border: 2px solid #ff3333;
+  background: linear-gradient(180deg, #1a0505, #111);
 }
+.tier.featured::before {
+  content: "最受欢迎";
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #ff3333;
+  color: #fff;
+  font-size: 10px;
+  letter-spacing: 2px;
+  padding: 3px 12px;
+  border-radius: 12px;
+  font-weight: 700;
+}
+.tier .tier-name {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: #f5f5f5;
+  margin-bottom: 4px;
+}
+.tier .tier-tag {
+  font-size: 11px;
+  color: #666;
+  letter-spacing: 1px;
+  margin-bottom: 18px;
+  font-family: 'Courier New', monospace;
+}
+.tier .price {
+  font-size: 38px;
+  font-weight: 700;
+  color: #ff4444;
+  letter-spacing: 0;
+  margin-bottom: 4px;
+  font-family: 'Courier New', monospace;
+}
+.tier .price small {
+  font-size: 16px;
+  font-weight: 300;
+  color: #888;
+  margin-left: 2px;
+}
+.tier .price-sub {
+  font-size: 11px;
+  color: #555;
+  margin-bottom: 20px;
+  letter-spacing: 1px;
+}
+.tier .divider {
+  height: 1px;
+  background: #1f1f1f;
+  margin: 16px 0;
+}
+.tier .feature-list {
+  text-align: left;
+}
+.tier .feature-list .feat {
+  font-size: 12px;
+  color: #aaa;
+  padding: 6px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+.tier .feature-list .feat .check {
+  color: #44cc44;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.tier .cta {
+  display: block;
+  margin-top: 20px;
+  padding: 12px;
+  background: #ff3333;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+.tier .cta:hover { background: #cc2222; }
+.tier.featured .cta { background: #ff4444; }
 
-/* 响应式 */
-@media (max-width: 600px) {
-  .data-grid { grid-template-columns: 1fr 1fr; }
-  .header-section h1 { font-size: 22px; }
-  .disclaimer-box { margin: 60px 12px 16px; }
-  .container { padding: 0 12px 40px; }
+/* ===== 硬件要求 ===== */
+.hardware {
+  max-width: 900px;
+  margin: 0 auto 50px;
+  padding: 0 20px;
+}
+.hardware h2 {
+  font-size: 20px;
+  font-weight: 300;
+  letter-spacing: 2px;
+  margin-bottom: 24px;
+  text-align: center;
+  color: #ccc;
+}
+.hardware-box {
+  background: #111;
+  border: 1px solid #1f1f1f;
+  border-left: 3px solid #ff3333;
+  border-radius: 8px;
+  padding: 24px;
+}
+.hardware-box h3 {
+  font-size: 14px;
+  color: #ff4444;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+}
+.hardware-box p {
+  font-size: 13px;
+  color: #aaa;
+  line-height: 1.8;
+  font-family: 'Courier New', monospace;
+}
+.hardware-box strong { color: #f5f5f5; }
+
+/* ===== 底部 ===== */
+.footer {
+  border-top: 1px solid #1f1f1f;
+  padding: 30px 20px;
+  text-align: center;
+  color: #444;
+  font-size: 12px;
+  letter-spacing: 2px;
+}
+.footer a { color: #ff4444; text-decoration: none; }
+
+@media (max-width: 768px) {
+  .pricing-grid { grid-template-columns: repeat(2, 1fr); }
+  .curriculum-grid { grid-template-columns: 1fr; }
+  .overview .meta { grid-template-columns: repeat(2, 1fr); }
+  .nav .links { gap: 14px; }
+  .hero h1 { font-size: 26px; }
+}
+@media (max-width: 520px) {
+  .pricing-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 
-<!-- ===== 横幅水印 ===== -->
-<div class="bulletin-banner">
-  <span>⚠</span>
-  <span class="tag">内部学习材料 · INTERNAL</span>
-  <span>仅供学员内部参考 · 不构成投资建议 · NOT FOR PUBLIC DISTRIBUTION</span>
+<!-- ===== 顶部导航 ===== -->
+<nav class="nav">
+  <a class="brand" href="index.html">EDY.<span>AI</span>.STUDIO</a>
+  <div class="links">
+    <a href="index.html">首页</a>
+    <a class="camp">实战训练营</a>
+    <a href="financial-practice.html">Financial</a>
+  </div>
+</nav>
+
+<!-- ===== 头部 ===== -->
+<div class="hero">
+  <div class="eyebrow">// 实战训练营 · 2026 招生中</div>
+  <h1>AI 实战 · 从入门到部署</h1>
+  <div class="sub">6 课时递进 · 真机实操 · M1 Pro Mac + RTX 5090 硬件环境</div>
 </div>
 
-<!-- ===== 免责声明 ===== -->
-<div class="disclaimer-box">
-  <div class="head">⚠ 重要声明 · 请学员务必阅读</div>
-  <p>1. 本训练营为 <strong style="color:#ff8888">AI工具使用教学</strong>，内容仅用于演示AI智能体在信息搜集与逻辑推理方面的能力，<strong>不构成任何形式的投资建议</strong>。</p>
-  <p>2. 课程中涉及的所有标的数据、技术分析与情景推演，均为<strong>历史回测与假设推演</strong>，不代表未来走势，<strong>投资者应独立判断并承担全部风险</strong>。</p>
-  <p>3. 请勿将AI输出结论<strong>直接用于交易决策</strong>。AI不具备投资顾问资质，所有操作须自行评估风险底线。</p>
-  <p>4. 本文档仅供已报名学员内部学习交流，<strong>禁止对外传播、截图转发或商用</strong>。任何因传播不当造成的损失，Edy.AI.Studio 不承担任何责任。</p>
-  <p>5. 学员报名即视为同意《学员风险告知书》，详见报名页面条款。</p>
+<!-- ===== 概览 ===== -->
+<div class="overview">
+  <h2>课程概览</h2>
+  <div class="meta">
+    <div class="meta-item">
+      <div class="label">课时</div>
+      <div class="value">6 <span>课时</span></div>
+    </div>
+    <div class="meta-item">
+      <div class="label">周期</div>
+      <div class="value">3~6 <span>周</span></div>
+    </div>
+    <div class="meta-item">
+      <div class="label">频率</div>
+      <div class="value">每周 <span>1次</span></div>
+    </div>
+    <div class="meta-item">
+      <div class="label">班级</div>
+      <div class="value">10~20 <span>人/期</span></div>
+    </div>
+  </div>
 </div>
 
-<div class="container">
-
-  <!-- ===== 头部 ===== -->
-  <div class="header-section">
-    <h1>实战训练营 · 案例拆解</h1>
-    <div class="sub">CASE STUDY / 标的代码: 300502 / 赛道: 光通信 / 数据截至 2026-07-27</div>
-  </div>
-
-  <!-- ===== 第一部分 · 标的识别 ===== -->
-  <div class="section">
-    <div class="section-title"><span class="num">01</span> 标的识别</div>
-    <ul class="key-list">
-      <li><strong>公司:</strong> 新易盛（成都）— 200G/400G/800G 光收发模块头部厂商</li>
-      <li><strong>赛道:</strong> AI算力基础设施 → 光通信 → 高速光模块</li>
-      <li><strong>行业地位:</strong> 通信设备板块市值第 2 名（行业 89 家），属于核心赛道龙头</li>
-      <li><strong>板块联动:</strong> 中际旭创、天孚通信、光迅科技等，同受北美云厂商 AI 资本开支驱动</li>
-      <li class="warn"><strong>核心逻辑:</strong> 全球 AI 算力军备竞赛 → 数据中心高速互联需求爆发 → 800G 光模块放量</li>
-    </ul>
-  </div>
-
-  <!-- ===== 第二部分 · 基本面 ===== -->
-  <div class="section">
-    <div class="section-title"><span class="num">02</span> 基本面快照</div>
-    <div class="data-grid">
-      <div class="data-card"><div class="label">TTM 营收</div><div class="value">83.38亿</div><div class="sub">同比 +105.76%</div></div>
-      <div class="data-card"><div class="label">TTM 净利润</div><div class="value">27.80亿</div><div class="sub">同比 +76.80%</div></div>
-      <div class="data-card"><div class="label">毛利率</div><div class="value">49.16%</div><div class="sub">行业领先水平</div></div>
-      <div class="data-card"><div class="label">净利率</div><div class="value">33.27%</div><div class="sub">高利润质量</div></div>
-      <div class="data-card"><div class="label">ROE</div><div class="value">14.52%</div><div class="sub">健康</div></div>
-      <div class="data-card"><div class="label">负债率</div><div class="value">31.03%</div><div class="sub">低杠杆</div></div>
-      <div class="data-card"><div class="label">动态 PE</div><div class="value neutral">61.56</div><div class="sub">估值偏高</div></div>
-      <div class="data-card"><div class="label">总市值</div><div class="value">6846亿</div><div class="sub">流值 6158亿</div></div>
-      <div class="data-card"><div class="label">每股收益</div><div class="value">1.994元</div><div class="sub">每股净资产 20.50</div></div>
+<!-- ===== 6 课时大纲 ===== -->
+<div class="curriculum">
+  <h2>6 课时大纲 · 递进式</h2>
+  <div class="curriculum-grid">
+    <div class="lesson">
+      <div class="num">01</div>
+      <h3>OpenClaw · AI 智能体</h3>
+      <p>搭建本地微信智能体，从配置到跑通第一个 AI 助手，理解 Agent 思维。</p>
     </div>
-    <div class="conclusion-box">
-      <h4>基本面判断</h4>
-      <p>营收翻倍、净利近翻倍、毛利率接近 50%、负债率仅 31%——<strong>基本面非常扎实</strong>。PE 61 倍偏高，但 100% 增速支撑了估值溢价。属于"高成长兑现"的标的，而非纯故事。</p>
+    <div class="lesson">
+      <div class="num">02</div>
+      <h3>Hermes Agent · 多 AI 调度</h3>
+      <p>用 Hermes Agent 调度双 AI 分工协作，让 OpenClaw + Hermes 形成流水线。</p>
+    </div>
+    <div class="lesson">
+      <div class="num">03</div>
+      <h3>Codex & Claude Code</h3>
+      <p>AI 编程实战——用 Codex / Claude Code 裸奔写代码、跑项目、提交 PR。</p>
+    </div>
+    <div class="lesson">
+      <div class="num">04</div>
+      <h3>本地知识库搭建</h3>
+      <p>Ollama + AnythingLLM 部署个人知识库，接入 Obsidian，RAG 检索实战。</p>
+    </div>
+    <div class="lesson">
+      <div class="num">05</div>
+      <h3>ComfyUI · AIGC 动画</h3>
+      <p>从生图到生视频——ComfyUI 工作流编排、IP-Adapter、LTX Video、Wan I2V。</p>
+    </div>
+    <div class="lesson">
+      <div class="num">06</div>
+      <h3>硬件部署 & 毕业项目</h3>
+      <p>RTX 5090 整机部署、集群搭建、学员结业项目展示与答疑。</p>
     </div>
   </div>
-
-  <!-- ===== 第三部分 · 消息面 ===== -->
-  <div class="section">
-    <div class="section-title"><span class="num">03</span> 消息面</div>
-    <ul class="key-list">
-      <li><strong>2026.07.20</strong> 半年报预告：净利 <strong>70-80亿</strong>，同比 +77.56%~102.93%</li>
-      <li><strong>2026.07.19</strong> 接待 <strong>417家</strong>机构调研（超高关注度）</li>
-      <li><strong>2026.07.26</strong> 最新研报《供应链紧张逐步缓解，订单交付快速增长》</li>
-      <li><strong>2026.08.25</strong> 半年报正式披露日</li>
-      <li class="warn"><strong>大宗交易</strong> 7月下旬多笔，单笔量级不大，未见大幅解禁压力</li>
-    </ul>
-  </div>
-
-  <!-- ===== 第四部分 · 技术面 ===== -->
-  <div class="section">
-    <div class="section-title"><span class="num">04</span> 技术面 · 量价指标</div>
-    <div class="data-grid">
-      <div class="data-card"><div class="label">收盘价</div><div class="value">491.00</div><div class="sub">涨 3.15%</div></div>
-      <div class="data-card"><div class="label">日振幅</div><div class="value neutral">6.36%</div><div class="sub">459.5~492.4</div></div>
-      <div class="data-card"><div class="label">换手率</div><div class="value">2.85%</div><div class="sub">缩量</div></div>
-      <div class="data-card"><div class="label">量比</div><div class="value neutral">0.63</div><div class="sub">低于均量</div></div>
-      <div class="data-card"><div class="label">ATR(14)</div><div class="value">45.32</div><div class="sub">高波动品种</div></div>
-      <div class="data-card"><div class="label">RSI(14)</div><div class="value neutral">43.84</div><div class="sub">中性偏空</div></div>
-      <div class="data-card"><div class="label">MACD 柱</div><div class="value negative">-4.17</div><div class="sub">零轴以下</div></div>
-      <div class="data-card"><div class="label">布林位置</div><div class="value neutral">27.2%</div><div class="sub">逼近下轨</div></div>
-    </div>
-    <div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;padding:14px;margin-bottom:10px;">
-      <div style="font-size:13px;color:#aaa;margin-bottom:8px;">均线系统（空头排列）</div>
-      <div style="display:flex;flex-direction:column;gap:6px;font-family:'Courier New',monospace;font-size:13px;">
-        <div style="display:flex;justify-content:space-between;"><span>MA5</span><span style="color:#ccaa55;">494.96</span><span style="color:#555;">现价 -0.80%</span></div>
-        <div style="display:flex;justify-content:space-between;"><span>MA10</span><span style="color:#ccaa55;">513.51</span><span style="color:#555;">现价 -4.35%</span></div>
-        <div style="display:flex;justify-content:space-between;"><span>MA20</span><span style="color:#ccaa55;">523.08</span><span style="color:#555;">现价 -6.13%</span></div>
-        <div style="display:flex;justify-content:space-between;"><span>MA60</span><span style="color:#ccaa55;">588.09</span><span style="color:#555;">现价 -16.51%</span></div>
-      </div>
-    </div>
-    <div class="conclusion-box">
-      <h4>技术面判断</h4>
-      <p>5/10/20/60 均线全线压制，典型的<strong>下降通道</strong>。MACD 在零轴以下，RSI 43.84 未超卖，布林带接近下轨 453——短线处于"调整暂缓"而非"反转确立"的状态。今日缩量 +3.15%，属于技术性反抽。</p>
-    </div>
-  </div>
-
-  <!-- ===== 第五部分 · 关键点位 ===== -->
-  <div class="section">
-    <div class="section-title"><span class="num">05</span> 关键支撑 / 阻力</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;">
-      <div style="background:#0d1111;border:1px solid #1a2222;border-radius:6px;padding:14px;">
-        <div style="font-size:12px;color:#44cc44;letter-spacing:2px;margin-bottom:10px;">▲ 支撑位</div>
-        <div style="font-family:'Courier New',monospace;font-size:14px;line-height:2.2;">
-          <div><span style="color:#888;">★</span> 453 <span style="color:#666;font-size:12px;">布林下轨 + 30日低点</span></div>
-          <div><span style="color:#666;">■</span> 440~448 <span style="color:#666;font-size:12px;">Fib 0.786</span></div>
-          <div><span style="color:#666;">■</span> 422~426 <span style="color:#666;font-size:12px;">6月急跌平台</span></div>
-          <div><span style="color:#666;">■</span> 400 <span style="color:#666;font-size:12px;">心理关口</span></div>
-        </div>
-      </div>
-      <div style="background:#110d0d;border:1px solid #221a1a;border-radius:6px;padding:14px;">
-        <div style="font-size:12px;color:#ff5555;letter-spacing:2px;margin-bottom:10px;">▼ 阻力位</div>
-        <div style="font-family:'Courier New',monospace;font-size:14px;line-height:2.2;">
-          <div><span style="color:#888;">★</span> 495~514 <span style="color:#666;font-size:12px;">MA5 + MA10（关键）</span></div>
-          <div><span style="color:#666;">■</span> 523 <span style="color:#666;font-size:12px;">MA20 强阻力</span></div>
-          <div><span style="color:#666;">■</span> 545~568 <span style="color:#666;font-size:12px;">前期平台</span></div>
-          <div><span style="color:#666;">■</span> 582 <span style="color:#666;font-size:12px;">Fib 0.5</span></div>
-        </div>
-      </div>
-    </div>
-    <div style="background:#111;border:1px solid #1f1f1f;border-radius:6px;padding:14px;">
-      <div style="font-size:13px;color:#aaa;margin-bottom:10px;">阶段表现</div>
-      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;font-family:'Courier New',monospace;font-size:14px;">
-        <div style="text-align:center;"><div style="color:#555;font-size:11px;">近1月</div><div style="color:#ff5555;font-size:22px;font-weight:700;">-9.16%</div></div>
-        <div style="text-align:center;"><div style="color:#555;font-size:11px;">近3月</div><div style="color:#44cc44;font-size:22px;font-weight:700;">+10.88%</div></div>
-        <div style="text-align:center;"><div style="color:#555;font-size:11px;">近6月</div><div style="color:#44cc44;font-size:22px;font-weight:700;">+26.34%</div></div>
-        <div style="text-align:center;"><div style="color:#555;font-size:11px;">距高点</div><div style="color:#ff5555;font-size:22px;font-weight:700;">-40%</div></div>
-      </div>
-      <div style="font-size:12px;color:#444;margin-top:8px;">高点 818.38（2026-06-05）</div>
-    </div>
-  </div>
-
-  <!-- ===== 第六部分 · 三情景推演 ===== -->
-  <div class="section">
-    <div class="section-title"><span class="num">06</span> 三情景推演</div>
-    <div class="scenario">
-      <div class="row">
-        <div><span style="color:#44cc44;font-weight:700;">情景一 · 反弹延续</span></div>
-        <span class="tag-prob tag-up">35%</span>
-      </div>
-      <div style="font-size:13px;color:#999;line-height:2;">
-        触发条件：放量突破 MA10（514）<br>
-        目标位：523 → 545 → 568<br>
-        逻辑：半年报预期 + 业绩确定性 + 技术性超跌反弹
-      </div>
-    </div>
-    <div class="scenario">
-      <div class="row">
-        <div><span style="color:#ccaa44;font-weight:700;">情景二 · 区间震荡</span></div>
-        <span class="tag-prob tag-flat">40%</span>
-      </div>
-      <div style="font-size:13px;color:#999;line-height:2;">
-        触发条件：495~514 遇阻回落，未能有效突破<br>
-        运行区间：453 ~ 514 反复拉锯<br>
-        逻辑：上方套牢盘重，下方有业绩托底，多空僵持
-      </div>
-    </div>
-    <div class="scenario">
-      <div class="row">
-        <div><span style="color:#ff5555;font-weight:700;">情景三 · 破位下行</span></div>
-        <span class="tag-prob tag-down">25%</span>
-      </div>
-      <div style="font-size:13px;color:#999;line-height:2;">
-        触发条件：有效跌破 453（布林下轨 + 30日低点）<br>
-        目标位：440 → 422 → 400<br>
-        逻辑：行业景气预期转弱、大盘系统性风险、技术面空头加速
-      </div>
-    </div>
-  </div>
-
-  <!-- ===== 第七部分 · 操作要点 ===== -->
-  <div class="section">
-    <div class="section-title"><span class="num">07</span> 操作要点（教学讨论用）</div>
-    <ul class="key-list">
-      <li><strong>均线判断:</strong> MA20（523）是强弱分水岭，有效站上才确认反弹成立，否则仍是空头通道</li>
-      <li><strong>止损警戒:</strong> 453 是核心支撑，有效跌破应考虑减仓保护</li>
-      <li><strong>仓位策略:</strong> 453~460 区域可轻仓试探，止损设在 440 以下；不在 510~523 压力区追</li>
-      <li><strong>核心矛盾:</strong> 基本面强（100% 营收增速）vs 估值偏高（PE 61）vs 技术面弱（跌 40%）——"好标的、坏时机"的典型</li>
-      <li class="warn"><strong>最佳操作:</strong> 等 MACD 金叉 或 站稳 MA20 再加码，右侧信号更稳</li>
-      <li class="danger"><strong>风险底线:</strong> AI 分析结论仅作为信息参考，不构成投资建议；所有交易决策须自行评估风险</li>
-    </ul>
-    <div class="conclusion-box">
-      <h4>总结</h4>
-      <p>基本面扎实、估值溢价合理、技术面尚未企稳。短期看 453~514 震荡概率最大，方向取决于半年报业绩验证 + 能否放量突破 MA10。这是实战训练营的核心教学案例——<strong>展示 AI 如何整合基本面+技术面+消息面做出结构化判断</strong>，而非直接给出买卖信号。</p>
-    </div>
-  </div>
-
 </div>
 
-<div class="watermark-foot">
-  EDY.AI.STUDIO · 实战训练营 · 内部学习材料 · INTERNAL USE ONLY<br>
-  AI 辅助分析 · 仅供参考 · 不构成投资建议 · NOT INVESTMENT ADVICE<br>
-  © 2026 Edy.AI.Studio — 禁止外传 · DO NOT REDISTRIBUTE
+<!-- ===== 价格表 ===== -->
+<div class="pricing">
+  <h2>四档定价 · 按需选择</h2>
+  <div class="subtitle">// 2026 年 7 月定价</div>
+  <div class="pricing-grid">
+
+    <!-- 入门 -->
+    <div class="tier">
+      <div class="tier-name">入门</div>
+      <div class="tier-tag">STARTER</div>
+      <div class="price">¥1,499<small>/人</small></div>
+      <div class="price-sub">适合 AI 零基础 · 先上车</div>
+      <div class="divider"></div>
+      <div class="feature-list">
+        <div class="feat"><span class="check">✓</span><span>课时 01: OpenClaw 智能体</span></div>
+        <div class="feat"><span class="check">✓</span><span>课时 02: Hermes Agent 双 AI 调度</span></div>
+        <div class="feat"><span class="check">✓</span><span>本地环境配置 1v1 辅导</span></div>
+        <div class="feat"><span class="check">✓</span><span>微信答疑群 3 个月</span></div>
+      </div>
+      <a class="cta" href="#">立即报名</a>
+    </div>
+
+    <!-- 中级 -->
+    <div class="tier featured">
+      <div class="tier-name">中级</div>
+      <div class="tier-tag">PROGRESSIVE</div>
+      <div class="price">¥3,288<small>/人</small></div>
+      <div class="price-sub">适合想深入 AI 编程的实践者</div>
+      <div class="divider"></div>
+      <div class="feature-list">
+        <div class="feat"><span class="check">✓</span><span>入门档全部内容</span></div>
+        <div class="feat"><span class="check">✓</span><span>课时 03: Codex & Claude Code</span></div>
+        <div class="feat"><span class="check">✓</span><span>课时 04: 本地知识库 RAG</span></div>
+        <div class="feat"><span class="check">✓</span><span>Obsidian + AnythingLLM 实战</span></div>
+        <div class="feat"><span class="check">✓</span><span>个人项目 1 对 1 辅导</span></div>
+      </div>
+      <a class="cta" href="#">立即报名</a>
+    </div>
+
+    <!-- 中高级 -->
+    <div class="tier">
+      <div class="tier-name">中高级</div>
+      <div class="tier-tag">ADVANCED</div>
+      <div class="price">¥4,988<small>/人</small></div>
+      <div class="price-sub">适合进阶开发者 · 追求效率</div>
+      <div class="divider"></div>
+      <div class="feature-list">
+        <div class="feat"><span class="check">✓</span><span>中级档全部内容</span></div>
+        <div class="feat"><span class="check">✓</span><span>课时 05: ComfyUI AIGC 动画</span></div>
+        <div class="feat"><span class="check">✓</span><span>多 AI 协同 · 自动化流水线</span></div>
+        <div class="feat"><span class="check">✓</span><span>模型本地部署 · vLLM / Ollama</span></div>
+        <div class="feat"><span class="check">✓</span><span>毕业项目答辩</span></div>
+      </div>
+      <a class="cta" href="#">立即报名</a>
+    </div>
+
+    <!-- 高级 -->
+    <div class="tier">
+      <div class="tier-name">高级</div>
+      <div class="tier-tag">ELITE</div>
+      <div class="price">¥7,988<small>/人</small></div>
+      <div class="price-sub">全栈 AI 实战 · 硬件 + 集群</div>
+      <div class="divider"></div>
+      <div class="feature-list">
+        <div class="feat"><span class="check">✓</span><span>中高级档全部内容</span></div>
+        <div class="feat"><span class="check">✓</span><span>课时 06: 硬件部署 & 集群</span></div>
+        <div class="feat"><span class="check">✓</span><span>RTX 5090 整机部署实操</span></div>
+        <div class="feat"><span class="check">✓</span><span>多机 exo 集群搭建</span></div>
+        <div class="feat"><span class="check">✓</span><span>场地合作 · 分润计划</span></div>
+        <div class="feat"><span class="check">✓</span><span>终身校友群 · 项目对接</span></div>
+      </div>
+      <a class="cta" href="#">立即报名</a>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== 硬件要求 ===== -->
+<div class="hardware">
+  <h2>学员硬件要求</h2>
+  <div class="hardware-box">
+    <h3>推荐配置 · 确保全程跟课</h3>
+    <p>
+      <strong>电脑:</strong> M1 Pro Mac（8+ 核 CPU，32GB+ RAM）<br>
+      <strong>显卡:</strong> 高级档需 RTX 4090 / 5090 或云端 GPU<br>
+      <strong>网络:</strong> 稳定 50Mbps+（海外模型源需代理）<br>
+      <strong>场地:</strong> 合作教室配 RTX 5090 × 1~2 台 + 27 寸显示器 × 10 台<br><br>
+      <strong>备注:</strong> 入门/中级档可纯笔记本完成；高级档建议带高配台式机或提前到场地。
+    </p>
+  </div>
+</div>
+
+<!-- ===== 底部 ===== -->
+<div class="footer">
+  EDY.AI.STUDIO · 实战训练营 &nbsp;|&nbsp; 微信咨询: <a href="#">edy_ai</a> &nbsp;|&nbsp; 数据截至 2026-07-29<br>
+  <span style="color:#333;">AI 实战教育 · 从配置到部署 · 真机实操</span>
 </div>
 
 </body>
