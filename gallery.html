@@ -34,23 +34,29 @@
 
   .card {
     aspect-ratio: auto;
-    background: transparent;
-    border: 1px solid rgba(234,221,229,0.06);
+    background: rgba(6,8,13,0.35);
+    border: 1px solid rgba(234,221,229,0.08);
     border-radius: 6px;
     cursor: pointer;
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     padding: 5px 2px; gap: 1px;
-    transition: all 0.3s ease; text-decoration: none; color: rgba(234,221,229,0.6);
-    position: relative;
+    transition: all 0.25s ease; text-decoration: none; color: rgba(234,221,229,0.5);
+    position: relative; overflow: hidden;
   }
   .card::before {
     content: ''; position: absolute; inset: 0;
-    background: rgba(6,8,13,0.08);
+    background: rgba(234,221,229,0.03);
     border-radius: 6px;
     transition: 0.3s;
   }
-  .card:hover { border-color: rgba(234,221,229,0.25); color: #eadde5; }
-  .card:hover::before { background: rgba(6,8,13,0.2); }
+  .card:hover {
+    border-color: rgba(234,221,229,0.35);
+    color: #ffffff;
+    background: rgba(6,8,13,0.55);
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(234,221,229,0.08);
+  }
+  .card:hover::before { background: rgba(255,255,255,0.06); }
 
   .card .icon { font-size: 14px; position: relative; z-index: 1; line-height: 1; }
   .card .name { font-size: 8px; text-align: center; color: inherit; letter-spacing: 0.5px; line-height: 1.2; position: relative; z-index: 1; }
@@ -104,6 +110,27 @@ projects.forEach(p => {
                  <div class="name">${p.name}</div>`;
   grid.appendChild(a);
 });
+
+// 卡片生成后再绑定 hover 声效
+setTimeout(() => {
+  let actx;
+  document.querySelectorAll('.card').forEach(el => {
+    el.addEventListener('mouseenter', () => {
+      if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = actx.createOscillator();
+      const gain = actx.createGain();
+      osc.connect(gain);
+      gain.connect(actx.destination);
+      osc.type = 'sine';
+      osc.frequency.setValueAtTime(660, actx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(1320, actx.currentTime + 0.06);
+      gain.gain.setValueAtTime(0.015, actx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, actx.currentTime + 0.12);
+      osc.start(actx.currentTime);
+      osc.stop(actx.currentTime + 0.12);
+    });
+  });
+}, 100);
 </script>
 </body>
 </html>
