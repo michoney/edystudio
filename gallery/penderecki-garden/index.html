@@ -17,7 +17,7 @@
         width: 100%;
         height: 100%;
         overflow: hidden;
-        background: #372933;
+        background: #06080d;
       }
       canvas {
         display: block;
@@ -57,7 +57,7 @@
 
       const status = document.querySelector("#status");
       const scene = new THREE.Scene();
-      scene.background = new THREE.Color(0x372933);
+      scene.background = new THREE.Color(0x06080d);
       const camera = new THREE.PerspectiveCamera(
         40,
         innerWidth / innerHeight,
@@ -89,27 +89,28 @@
           value: (innerHeight / 1000) * 240 * Math.min(devicePixelRatio, 2),
         },
         uSize: { value: 10 },
-        uSizeRandom: { value: 0.3 },
-        uPositionRandom: { value: 0.5 },
-        uDepth: { value: 4 },
+        uSizeRandom: { value: 0.8 },
+        uPositionRandom: { value: 2.2 },
+        uDepth: { value: 18 },
         uFlat: { value: 0 },
         uAlpha: { value: 1 },
-        uAlphaMin: { value: 0.8 },
-        uAlphaMax: { value: 1 },
+        uAlphaMin: { value: 0.18 },
+        uAlphaMax: { value: 0.45 },
         uMobile: { value: innerWidth < 769 ? 1 : 0 },
         uMove: { value: new THREE.Vector3(1, 1, 1) },
         uAudioStrength: { value: 0 },
         uAudioLow: { value: 0 },
         uAudioMid: { value: 0 },
         uAudioHigh: { value: 0 },
-        uTempo: { value: 3 },
+        uTempo: { value: 6 },
         pointTexture: { value: new THREE.CanvasTexture(dot) },
       };
       let cloud = null,
         targetX = 0,
         targetY = 0,
         shiftX = 0,
-        shiftY = 0;
+        shiftY = 0,
+        settleStart = 0;
 
       new PCDLoader().load(
         "./amphitheatre-mobile.pcd",
@@ -156,8 +157,8 @@
             THREE.MathUtils.degToRad(-150),
           );
           scene.add(cloud);
-          status.textContent = `AMPHITHEATRE / ${count.toLocaleString()} POINTS`;
-          setTimeout(() => (status.style.opacity = 0), 1800);
+          settleStart = performance.now();
+          status.textContent = `CONVERGING / ${count.toLocaleString()} POINTS`;
           requestAnimationFrame(render);
         },
         (progress) => {
@@ -189,17 +190,36 @@
       );
       function render(now) {
         if (!cloud) return;
-        shiftX += (targetX - shiftX) * 0.025;
-        shiftY += (targetY - shiftY) * 0.025;
-        camera.position.x = shiftX * 1.2;
-        camera.position.y = 8 - shiftY * 0.35;
-        camera.rotation.y = -shiftX * THREE.MathUtils.degToRad(3);
-        camera.rotation.x = shiftY * THREE.MathUtils.degToRad(1.2);
-        uniforms.uTime.value = now * 0.001;
-        const pulse = 0.5 + 0.5 * Math.sin(now * 0.00045);
-        uniforms.uAudioStrength.value = 1.5 + pulse * 2;
-        uniforms.uAudioLow.value = 1 + pulse * 1.5;
-        uniforms.uAudioHigh.value = 0.6 + (1 - pulse);
+        const raw = Math.min(1, (now - settleStart) / 18000);
+        const settled = raw * raw * (3 - 2 * raw);
+        const easeOut = 1 - Math.pow(1 - raw, 3);
+        uniforms.uPositionRandom.value = THREE.MathUtils.lerp(
+          2.2,
+          0.018,
+          settled,
+        );
+        uniforms.uDepth.value = THREE.MathUtils.lerp(18, 0.55, settled);
+        uniforms.uSizeRandom.value = THREE.MathUtils.lerp(0.8, 0.18, easeOut);
+        uniforms.uAlphaMin.value = THREE.MathUtils.lerp(0.18, 0.86, easeOut);
+        uniforms.uAlphaMax.value = THREE.MathUtils.lerp(0.45, 1, easeOut);
+        shiftX += (targetX - shiftX) * 0.012;
+        shiftY += (targetY - shiftY) * 0.012;
+        camera.position.x = shiftX * 0.55;
+        camera.position.y = 8 - shiftY * 0.16;
+        camera.rotation.y = -shiftX * THREE.MathUtils.degToRad(1.2);
+        camera.rotation.x = shiftY * THREE.MathUtils.degToRad(0.5);
+        uniforms.uTime.value = now * 0.00022;
+        const breath = 0.5 + 0.5 * Math.sin(now * 0.00018);
+        uniforms.uAudioStrength.value =
+          raw < 1 ? (1 - raw) * 1.5 : 0.15 + breath * 0.12;
+        uniforms.uAudioLow.value =
+          raw < 1 ? 1 - raw : 0.08 + breath * 0.06;
+        uniforms.uAudioHigh.value = 0.04;
+        if (raw >= 1 && status.style.opacity !== "0") {
+          status.textContent = "AMPHITHEATRE / IMAGE STABLE";
+          status.style.transition = "opacity 2s";
+          status.style.opacity = 0;
+        }
         renderer.render(scene, camera);
         requestAnimationFrame(render);
       }

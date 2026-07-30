@@ -6,105 +6,67 @@
 <title>Particle Gallery — Creative AI Studio</title>
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: #080808; overflow-x: hidden; font-family: 'Courier New', monospace; color: #b0e0b0; }
-  canvas#bg { display: block; position: fixed; top: 0; left: 0; z-index: 0; }
-  .overlay { position: relative; z-index: 1; min-height: 100vh; padding: 40px 20px; pointer-events: none; }
-  .header { text-align: center; padding: 30px 0 10px; pointer-events: auto; }
-  .header h1 { font-size: 28px; color: #8bc34a; letter-spacing: 4px; text-shadow: 0 0 20px rgba(100,200,100,0.3); }
-  .header p { font-size: 14px; color: #5a8a5a; margin-top: 8px; }
-  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; max-width: 1400px; margin: 30px auto; padding: 0 20px; pointer-events: auto; }
-  .card {
-    aspect-ratio: 4/3; background: rgba(20,40,20,0.35); border: 1px solid rgba(80,160,80,0.2);
-    border-radius: 8px; backdrop-filter: blur(4px); cursor: pointer;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    transition: all 0.3s ease; text-decoration: none; color: inherit; position: relative; overflow: hidden;
-  }
-  .card:hover { border-color: #8bc34a; background: rgba(30,60,30,0.5); transform: translateY(-3px); box-shadow: 0 8px 30px rgba(80,200,80,0.15); }
-  .card .icon { font-size: 36px; margin-bottom: 8px; opacity: 0.6; }
-  .card .name { font-size: 12px; text-align: center; color: #8bc34a; letter-spacing: 1px; line-height: 1.3; }
-  .card .tag { font-size: 10px; color: #5a8a5a; margin-top: 4px; }
-  .back { position: fixed; top: 16px; left: 16px; z-index: 10; pointer-events: auto; }
-  .back a { color: #5a8a5a; text-decoration: none; font-size: 13px; padding: 6px 14px; border: 1px solid rgba(80,160,80,0.2); border-radius: 4px; background: rgba(8,8,8,0.6); transition: 0.3s; }
-  .back a:hover { color: #8bc34a; border-color: #8bc34a; }
+  html, body { width: 100%; height: 100%; overflow: hidden; }
+  body { background: #06080d; font-family: 'Courier New', monospace; }
 
-  @media (max-width: 900px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 12px; } }
-  @media (max-width: 540px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } .header h1 { font-size: 20px; } }
+  #bg-frame { position: fixed; top: 0; left: 0; width: 100%; height: 100%; border: 0; z-index: 0; pointer-events: none; }
+
+  .overlay { position: relative; z-index: 1; width: 100%; height: 100vh; overflow-y: auto; padding: 30px 20px; pointer-events: none; }
+  .overlay::-webkit-scrollbar { width: 4px; }
+  .overlay::-webkit-scrollbar-thumb { background: rgba(80,160,80,0.3); border-radius: 2px; }
+
+  .header { text-align: center; padding: 20px 0 10px; pointer-events: auto; }
+  .header h1 { font-size: 24px; color: #eadde5; letter-spacing: 4px; text-shadow: 0 0 30px rgba(100,150,200,0.2); }
+  .header p { font-size: 13px; color: rgba(234,221,229,0.5); margin-top: 6px; }
+
+  .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; max-width: 1300px; margin: 20px auto; padding: 0 10px; pointer-events: auto; }
+
+  .card {
+    aspect-ratio: 4/3;
+    background: transparent;
+    border: 1px solid rgba(234,221,229,0.12);
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    transition: all 0.35s ease; text-decoration: none; color: #eadde5;
+    backdrop-filter: none;
+    position: relative;
+  }
+  .card::before {
+    content: ''; position: absolute; inset: 0;
+    background: rgba(6,8,13,0.1);
+    border-radius: 10px;
+    transition: 0.35s;
+  }
+  .card:hover { border-color: rgba(234,221,229,0.4); transform: translateY(-2px); }
+  .card:hover::before { background: rgba(6,8,13,0.25); }
+
+  .card .icon { font-size: 30px; position: relative; z-index: 1; opacity: 0.7; }
+  .card .name { font-size: 11px; text-align: center; color: #eadde5; letter-spacing: 1px; line-height: 1.3; margin-top: 6px; position: relative; z-index: 1; }
+  .card .tag { font-size: 9px; color: rgba(234,221,229,0.35); margin-top: 3px; position: relative; z-index: 1; }
+
+  .back { position: fixed; top: 14px; left: 14px; z-index: 10; pointer-events: auto; }
+  .back a { color: rgba(234,221,229,0.5); text-decoration: none; font-size: 12px; padding: 5px 12px; border: 1px solid rgba(234,221,229,0.1); border-radius: 4px; transition: 0.3s; }
+  .back a:hover { color: #eadde5; border-color: rgba(234,221,229,0.3); }
+
+  @media (max-width: 900px) { .grid { grid-template-columns: repeat(3, 1fr); gap: 10px; } }
+  @media (max-width: 540px) { .grid { grid-template-columns: repeat(2, 1fr); gap: 8px; } .header h1 { font-size: 18px; } }
 </style>
 </head>
 <body>
-<canvas id="c"></canvas>
-<div class="back"><a href="https://michoney.github.io/edystudio/">← Edy Studio</a></div>
+
+<iframe id="bg-frame" src="gallery/penderecki-garden/" scrolling="no"></iframe>
+
+<div class="back"><a href="index.html">← Edy Studio</a></div>
 <div class="overlay">
   <div class="header">
     <h1>✦ Particle Gallery ✦</h1>
-    <p>15 generative effects · click to explore</p>
+    <p>15 generative effects</p>
   </div>
   <div class="grid" id="grid"></div>
 </div>
 
 <script>
-// ═══ WAVE BACKGROUND (same as home) ═══════════════════════
-const canvas = document.getElementById('c');
-const ctx = canvas.getContext('2d');
-let W, H, COLS, ROWS;
-const CELL = 16;
-const CHARS = '·∘○◎●◉◈◇◆□■△▲▽▼☆★♢♤♧♡♢♦♥♣♠•◦◯◉◈◇◆';
-let h0, h1, v;
-function resize() {
-  W = canvas.width = window.innerWidth;
-  H = canvas.height = window.innerHeight;
-  COLS = Math.ceil(W / CELL) + 2;
-  ROWS = Math.ceil(H / CELL) + 2;
-  h0 = new Float32Array(COLS * ROWS);
-  h1 = new Float32Array(COLS * ROWS);
-  v  = new Float32Array(COLS * ROWS);
-}
-resize();
-window.addEventListener('resize', resize);
-function idx(x, y) { return y * COLS + x; }
-function drop() {
-  const x = 2 + Math.floor(Math.random() * (COLS - 4));
-  const y = 2 + Math.floor(Math.random() * (ROWS - 4));
-  const r = 3;
-  for (let dy = -r; dy <= r; dy++) {
-    for (let dx = -r; dx <= r; dx++) {
-      const dist = Math.sqrt(dx*dx + dy*dy);
-      if (dist <= r) { const i = idx(x+dx, y+dy); if (i >= 0 && i < h1.length) h1[i] += (1 - dist/r) * 4; }
-    }
-  }
-}
-for (let i = 0; i < 3; i++) drop();
-setInterval(drop, 15000);
-function draw() {
-  const damp = 0.999;
-  for (let y = 1; y < ROWS - 1; y++) {
-    for (let x = 1; x < COLS - 1; x++) {
-      const i = idx(x, y);
-      const lap = (h1[idx(x-1,y)] + h1[idx(x+1,y)] + h1[idx(x,y-1)] + h1[idx(x,y+1)]) / 2 - 2 * h1[i];
-      v[i] = (v[i] + lap * 0.02) * damp;
-    }
-  }
-  for (let i = 0; i < h0.length; i++) { h0[i] = h1[i] + v[i]; h1[i] = h0[i]; }
-  ctx.fillStyle = 'rgba(8, 8, 8, 0.03)';
-  ctx.fillRect(0, 0, W, H);
-  ctx.font = (CELL - 2) + 'px \"Courier New\"';
-  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  for (let y = 1; y < ROWS - 1; y++) {
-    for (let x = 1; x < COLS - 1; x++) {
-      const val = h1[idx(x, y)];
-      if (Math.abs(val) < 0.05) continue;
-      const absVal = Math.min(Math.abs(val), 3);
-      const ci = Math.floor(absVal / 3 * (CHARS.length - 1));
-      const alpha = 0.15 + absVal * 0.25;
-      ctx.fillStyle = `rgba(40,80,40,${alpha.toFixed(2)})`;
-      ctx.fillText(CHARS[Math.min(ci, CHARS.length - 1)], x * CELL + val * 3, y * CELL + val * 2);
-    }
-  }
-  requestAnimationFrame(draw);
-}
-draw();
-
-// ═══ PROJECTS DATA ════════════════════════════════════════
 const projects = [
   { name: '3D Fireworks', icon: '✨', tag: 'p5.js · 3D', file: '3d-fireworks' },
   { name: '3D Roses', icon: '🌹', tag: 'p5.js · WebGL', file: '3d-roses' },
@@ -115,7 +77,7 @@ const projects = [
   { name: 'Neural Falls', icon: '💧', tag: 'p5.js', file: 'neural-falls' },
   { name: 'Particle Flock', icon: '🐟', tag: 'p5.js', file: 'particle-flock' },
   { name: 'Particles to Image', icon: '🎯', tag: 'p5.js', file: 'particles-to-image' },
-  { name: 'Penderecki Garden', icon: '🎭', tag: 'Three.js', file: 'penderecki-garden' },
+  { name: 'Penderecki Garden', icon: '🏛️', tag: 'Three.js · PCD', file: 'penderecki-garden' },
   { name: 'Perlin Flow', icon: '🎨', tag: 'p5.js', file: 'perlin-flow' },
   { name: 'Planet Rings', icon: '🪐', tag: 'p5.js', file: 'planet-rings' },
   { name: 'Radioactivity', icon: '☢️', tag: 'p5.js', file: 'radioactivity' },
