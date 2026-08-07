@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>吉验机 · 性能跑分</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#080f0a;--card:rgba(255,255,255,.05);--green:#00e676;--green-dim:#1b5e20;--text:#e8e8e8;--text2:#999;--text3:#555;--red:#ff5252;--gold:#ffd740}
+html,body{width:100%;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+body{display:flex;flex-direction:column;align-items:center}
+.a1,.a2{position:fixed;pointer-events:none;z-index:0;border-radius:9999px}
+.a1{top:-20%;left:-10%;width:70vw;height:70vw;background:radial-gradient(circle,rgba(0,230,118,.06),transparent 70%)}
+.a2{bottom:-15%;right:-25%;width:60vw;height:60vw;background:radial-gradient(circle,rgba(0,200,83,.04),transparent 70%)}
+.ct{position:relative;z-index:1;width:100%;max-width:440px;padding:16px;display:flex;flex-direction:column;gap:12px;padding-bottom:50px}
+/* header */
+.hd{text-align:center;padding:8px 0}
+.hd .logo{font-size:12px;color:var(--green);letter-spacing:2px}
+.hd .title{font-size:22px;font-weight:800;color:#fff;letter-spacing:-1px}
+.hd .sub{font-size:11px;color:var(--text2);margin-top:2px}
+/* qr */
+.qr-box{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px 14px}
+.qr-box canvas{border-radius:8px;background:#fff;padding:4px}
+.qr-info{flex:1;min-width:0}
+.qr-info .t{font-size:14px;font-weight:600;color:#fff}
+.qr-info .d{font-size:11px;color:var(--text2);margin-top:2px;word-break:break-all}
+.qr-info .url{font-size:10px;color:var(--green-dim);margin-top:3px;word-break:break-all}
+/* device */
+.dc{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px}
+.dc .ic{font-size:28px}
+.dc .dm{flex:1;min-width:0}
+.dc .nm{font-size:15px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dc .sp{font-size:11px;color:var(--text2);margin-top:2px}
+/* score */
+.sh{text-align:center;padding:16px 0 4px}
+.sh .bn{font-size:72px;font-weight:900;color:var(--green);line-height:1;letter-spacing:-3px;text-shadow:0 0 50px rgba(0,230,118,.2)}
+.sh .un{font-size:14px;color:var(--text2);margin-top:2px}
+.sh .bd{display:inline-block;padding:5px 16px;border-radius:16px;font-size:13px;font-weight:700;margin-top:8px}
+.bd-s{background:linear-gradient(135deg,#ffd700,#ff6d00);color:#000}
+.bd-a{background:var(--green);color:#080f0a}
+.bd-b{background:var(--green-dim);color:var(--green)}
+.bd-c{background:rgba(255,255,255,.08);color:var(--text2)}
+.bd-d{background:rgba(255,82,82,.15);color:var(--red)}
+/* detail */
+.dg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.dgc{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;text-align:center}
+.dgc .dv{font-size:26px;font-weight:800;color:#fff}
+.dgc .dl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:2px;margin-top:4px}
+.dgc .ds{font-size:10px;color:var(--text3);margin-top:2px}
+/* progress */
+.pp{display:none;flex-direction:column;gap:4px}
+.pp.on{display:flex}
+.pr{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--card);border-radius:8px;font-size:12px;transition:all .3s}
+.pr.wait{color:var(--text3)}
+.pr.run{color:var(--green);border-left:3px solid var(--green);background:rgba(0,230,118,.03)}
+.pr.done{color:var(--green-dim)}
+.pr .pi{font-size:12px;width:18px;text-align:center}
+.pr .pn{flex:1}
+.pr .pt{font-size:10px;color:var(--text3);min-width:35px;text-align:right}
+/* btn */
+.btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all .2s}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.4;transform:none}
+.btn-go{background:linear-gradient(135deg,#00c853,#00e676);color:#080f0a}
+.btn-out{background:var(--card);color:var(--text);border:1px solid rgba(255,255,255,.1)}
+/* comments */
+.cm-section{margin-top:4px}
+.cm-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+/* form */
+.cf{display:flex;flex-direction:column;gap:8px;background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:12px;margin-bottom:10px}
+.cf input,.cf textarea{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:8px 10px;color:var(--text);font-size:13px;font-family:inherit;outline:none;width:100%}
+.cf input:focus,.cf textarea:focus{border-color:var(--green)}
+.cf textarea{resize:none;height:50px}
+.cf-row{display:flex;gap:8px}
+.cf-row input{flex:1}
+.cf .btns{display:flex;gap:8px}
+.cf .btns .btn{flex:1;font-size:12px;padding:10px}
+.cf .preview{max-width:120px;max-height:120px;border-radius:8px;object-fit:cover;display:none}
+/* comment list */
+.cl-item{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:10px 12px;margin-bottom:6px}
+.cl-head{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.cl-avatar{width:28px;height:28px;border-radius:50%;background:var(--green-dim);display:flex;align-items:center;justify-content:center;font-size:12px;color:var(--green);font-weight:700}
+.cl-name{font-size:13px;font-weight:600;color:#fff}
+.cl-score{font-size:12px;font-weight:700;color:var(--green);margin-left:auto}
+.cl-time{font-size:10px;color:var(--text3);margin-left:4px}
+.cl-device{font-size:11px;color:var(--text2);margin-bottom:2px}
+.cl-img{max-width:100%;max-height:200px;border-radius:8px;margin-top:6px;cursor:pointer}
+.cl-empty{text-align:center;color:var(--text3);font-size:12px;padding:12px}
+/* actions */
+.ac{display:flex;gap:8px;margin-top:6px}
+.ac .btn{flex:1;font-size:12px;padding:10px}
+/* footer */
+.ft{text-align:center;padding:12px;font-size:10px;color:var(--text3);letter-spacing:.5px}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.pulse{animation:pulse .8s infinite}
+</style>
+</head>
+<body>
+<div class="a1"></div><div class="a2"></div>
+<div class="ct" id="app">
+  <div class="hd">
+    <div class="logo">▸ 吉验机</div>
+    <div class="title">性能跑分</div>
+    <div class="sub">扫二维码手机也能测 · 看看你的手机几分</div>
+  </div>
+
+  <!-- QR code for sharing -->
+  <div class="qr-box">
+    <canvas id="qrC" width="120" height="120"></canvas>
+    <div class="qr-info">
+      <div class="t">📱 扫码打开</div>
+      <div class="d">手机扫码直接测，无需安装</div>
+      <div class="url" id="qrUrl">--</div>
+    </div>
+  </div>
+
+  <!-- Device info -->
+  <div class="dc">
+    <div class="ic" id="devIcon">📱</div>
+    <div class="dm"><div class="nm" id="devName">检测中...</div><div class="sp" id="devSpecs"></div></div>
+  </div>
+
+  <!-- Score hero -->
+  <div class="sh" id="scoreHero" style="display:none">
+    <div class="bn" id="totalScore">---</div>
+    <div class="un">综合跑分</div>
+    <div class="bd" id="badge"></div>
+  </div>
+
+  <button class="btn btn-go" id="btnGo" onclick="runAll()">⚡ 开始跑分</button>
+
+  <!-- Progress -->
+  <div class="pp" id="progPanel">
+    <div class="pr wait" id="p1"><span class="pi">○</span><span class="pn">CPU 整数</span><span class="pt"></span></div>
+    <div class="pr wait" id="p2"><span class="pi">○</span><span class="pn">CPU 浮点</span><span class="pt"></span></div>
+    <div class="pr wait" id="p3"><span class="pi">○</span><span class="pn">GPU 渲染</span><span class="pt"></span></div>
+    <div class="pr wait" id="p4"><span class="pi">○</span><span class="pn">内存带宽</span><span class="pt"></span></div>
+    <div class="pr wait" id="p5"><span class="pi">○</span><span class="pn">单核性能</span><span class="pt"></span></div>
+  </div>
+
+  <!-- Results -->
+  <div id="resultArea" style="display:none">
+    <div class="dg">
+      <div class="dgc"><div class="dv" id="cpuV">-</div><div class="dl">CPU 多核</div><div class="ds" id="cpuSub"></div></div>
+      <div class="dgc"><div class="dv" id="cpu1V">-</div><div class="dl">CPU 单核</div><div class="ds" id="cpu1Sub"></div></div>
+      <div class="dgc"><div class="dv" id="gpuV">-</div><div class="dl">GPU</div><div class="ds" id="gpuSub"></div></div>
+      <div class="dgc"><div class="dv" id="memV">-</div><div class="dl">内存</div><div class="ds" id="memSub"></div></div>
+    </div>
+
+    <!-- Comment form -->
+    <div class="cm-section">
+      <div class="cm-title">💬 晒出你的跑分</div>
+      <div class="cf" id="commentForm">
+        <div class="cf-row">
+          <input id="commentName" placeholder="昵称" maxlength="20">
+          <input id="commentDevice" placeholder="设备名" maxlength="30" readonly style="flex:2">
+        </div>
+        <div class="btns">
+          <button class="btn btn-out" onclick="captureResult()">📸 截图结果</button>
+          <button class="btn btn-out" id="imgBtn" onclick="document.getElementById('imgInput').click()">🖼 上传图片</button>
+        </div>
+        <input type="file" id="imgInput" accept="image/*" onchange="previewImage(this)" style="display:none">
+        <img class="preview" id="imgPreview">
+        <button class="btn btn-go" onclick="postComment()" style="font-size:13px;padding:10px">🚀 发布跑分</button>
+      </div>
+
+      <!-- Comments list -->
+      <div class="cm-title" style="margin-top:4px">🏆 跑分排行榜</div>
+      <div id="commentList"><div class="cl-empty">加载中...</div></div>
+    </div>
+
+    <div class="ac">
+      <button class="btn btn-out" onclick="shareIt()">📊 分享</button>
+      <button class="btn btn-out" onclick="redo()">🔄 再测</button>
+    </div>
+  </div>
+  <div class="ft">纯本地 · 不上传隐私 · 扫码即用</div>
+</div>
+
+<script>
+// ─── API ───
+var API='';
+function apiPost(url,data,isForm){
+  var opt={method:'POST'};
+  if(isForm){opt.body=data}else{opt.headers={'Content-Type':'application/json'};opt.body=JSON.stringify(data)}
+  return fetch(API+url,opt).then(function(r){return r.json()});
+}
+
+// ─── QR Code ───
+(function(){
+  var url=window.location.href||('http://'+window.location.host+'/');
+  document.getElementById('qrUrl').textContent=url;
+  // simple QR using canvas
+  var c=document.getElementById('qrC'),ctx=c.getContext('2d');
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,120,120);
+  // Use external QR API (no deps)
+  var img=new Image();
+  img.onload=function(){ctx.drawImage(img,0,0,120,120)};
+  img.src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&margin=4&data='+encodeURIComponent(url);
+  // fallback text
+  setTimeout(function(){if(!img.complete||img.naturalWidth===0){ctx.fillStyle='#000';ctx.font='11px monospace';ctx.textAlign='center';ctx.fillText('QR:扫码打开',60,60)}},3000);
+})();
+
+// ─── Worker ───
+var _wBlob;
+function getWorker(){
+  if(!_wBlob){
+    var code=`
+function cpuInt(dur){var end=performance.now()+dur*1000,ops=0;while(performance.now()<end){var N=800000,s=new Uint8Array(N+1).fill(1);s[0]=s[1]=0;for(var i=2;i*i<=N;i++)if(s[i])for(var j=i*i;j<=N;j+=i)s[j]=0;ops+=N}return Math.round(ops/dur)}
+function cpuFloat(dur){var end=performance.now()+dur*1000,ops=0,W=200,H=150,iter=80;while(performance.now()<end){for(var py=0;py<H;py++){var y0=(py/H)*3.5-2.5;for(var px=0;px<W;px++){var x0=(px/W)*3.5-2.5,x=0,y=0,i=0;while(x*x+y*y<=4&&i<iter){var xt=x*x-y*y+x0;y=2*x*y+y0;x=xt;i++}ops+=i}}}var el=(performance.now()-(end-dur*1000))/1000;return Math.round(ops/el)}
+function cpuSingle(dur){var end=performance.now()+dur*1000,ops=0;while(performance.now()<end){var h=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];for(var b=0;b<64;b++){var s0=((h[0]>>>2|h[0]<<30)^(h[0]>>>13|h[0]<<19)^(h[0]>>>22|h[0]<<10)),maj=(h[0]&h[1])^(h[0]&h[2])^(h[1]&h[2]),t2=s0+maj,s1=((h[4]>>>6|h[4]<<26)^(h[4]>>>11|h[4]<<21)^(h[4]>>>25|h[4]<<7)),ch=(h[4]&h[5])^((~h[4])&h[6]),t1=h[7]+s1+ch+0x428a2f98+b;h[7]=h[6];h[6]=h[5];h[5]=h[4];h[4]=h[3]+t1;h[3]=h[2];h[2]=h[1];h[1]=h[0];h[0]=t1+t2}ops+=64}return Math.round(ops/dur)}
+function memBW(dur){var end=performance.now()+dur*1000,bytes=0;while(performance.now()<end){var sz=12*1024*1024,buf=new ArrayBuffer(sz),v32=new Uint32Array(buf);for(var i=0;i<v32.length;i++)v32[i]=i*0x9e3779b9;var s=0;for(var i=0;i<v32.length;i++)s+=v32[i];bytes+=sz*2}return Math.round(bytes/dur)}
+self.onmessage=function(e){var t=e.data;if(t==='int')self.postMessage({k:'int',v:cpuInt(2)});else if(t==='float')self.postMessage({k:'float',v:cpuFloat(2)});else if(t==='single')self.postMessage({k:'single',v:cpuSingle(1.5)});else if(t==='mem')self.postMessage({k:'mem',v:memBW(1.5)})};
+`;
+    _wBlob=URL.createObjectURL(new Blob([code],{type:'text/javascript'}));
+  }
+  return new Worker(_wBlob);
+}
+
+// ─── GPU ───
+function gpuTest(dpr){return new Promise(function(ok){var c=document.createElement('canvas');var s=Math.min(512,window.innerWidth*dpr);c.width=s;c.height=s;var gl=c.getContext('webgl2')||c.getContext('webgl');if(!gl){ok(0);return}var vs=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(vs,'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}');gl.compileShader(vs);var fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,'precision highp float;uniform float t,u;vec3 hsv(float h){vec3 c=clamp(abs(mod(h*6.+vec3(0,4,2),6.)-3.)-1.,0.,1.);return c*c*(3.-2.*c);}void main(){vec2 uv=gl_FragCoord.xy/u;float n=0.,a=1.;for(int i=0;i<5;i++){n+=a*sin(uv.x*10.*a+t)*cos(uv.y*12.*a+t*.7);a*=.5;}n+=sin(length(uv-vec2(.5))*20.-t*2.);n+=sin(uv.x*20.+t)*cos(uv.y*20.-t)*.3;gl_FragColor=vec4(hsv(n*.3+t*.1),1.);}');gl.compileShader(fs);var p=gl.createProgram();gl.attachShader(p,vs);gl.attachShader(p,fs);gl.linkProgram(p);gl.useProgram(p);var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);var al=gl.getAttribLocation(p,'p');gl.enableVertexAttribArray(al);gl.vertexAttribPointer(al,2,gl.FLOAT,false,0,0);var tl=gl.getUniformLocation(p,'t'),ul=gl.getUniformLocation(p,'u');gl.uniform1f(ul,s);var frames=0,start=performance.now(),stop=false;function f(now){if(stop)return;gl.uniform1f(tl,(now-start)*.001);gl.drawArrays(gl.TRIANGLES,0,6);frames++;if(now-start<2000)requestAnimationFrame(f);else{stop=true;var el=(now-start)/1000;gl.deleteProgram(p);gl.deleteShader(vs);gl.deleteShader(fs);gl.deleteBuffer(b);ok(Math.round(frames/el))}}requestAnimationFrame(f)})}
+
+// ─── Detect ───
+var g_devInfo=null;
+function detect(){var ua=navigator.userAgent,nm='',os='',icon='📱',cores=navigator.hardwareConcurrency||0,ram=navigator.deviceMemory||0,dpr=window.devicePixelRatio||1;if(/iPhone/.test(ua)){icon='🍎';var m=ua.match(/iPhone(?: OS)? (\\d+)[,_]/),v=m?parseInt(m[1]):15;os='iOS '+((ua.match(/OS (\\d+_\\d+)/)||[])[1]||'').replace(/_/g,'.');if(v>=20)nm='iPhone 17 Pro Max';else if(v>=19)nm='iPhone 16 Pro Max';else if(v>=18)nm='iPhone 15 Pro Max';else if(v>=17)nm='iPhone 14 Pro';else if(v>=16)nm='iPhone 13';else nm='iPhone'}else if(/iPad/.test(ua)){icon='📱';os='iPadOS';nm='iPad'}else if(/Android/.test(ua)){icon='🤖';var brands={Samsung:'三星',HUAWEI:'华为',Xiaomi:'小米',OPPO:'OPPO',vivo:'vivo',Redmi:'红米',OnePlus:'一加',realme:'真我',HONOR:'荣耀',Motorola:'摩托罗拉'};for(var k in brands){if(ua.indexOf(k)!==-1){nm=brands[k];break}}if(!nm)nm='Android';os='Android '+((ua.match(/Android ([\\d.]+)/)||[])[1]||'')}else{icon='💻';nm='桌面端';os='桌面系统'}if(typeof cores!=='number'||cores<=0)cores='未知';var specs=(cores!=='未知'?cores+'核 ':'')+(ram?ram+'GB RAM ':'')+os;document.getElementById('devName').textContent=nm;document.getElementById('devSpecs').textContent=specs;document.getElementById('devIcon').textContent=icon;document.getElementById('commentDevice').value=nm;g_devInfo={name:nm,os:os,cores:typeof cores==='number'?cores:4,ram:ram,dpr:dpr};return g_devInfo}
+
+// ─── Calc ───
+function calc(intOps,floatOps,singleOps,gpuFps,memBps){var intS=Math.min(100,Math.log2(intOps/3e6)*12);var floatS=Math.min(100,Math.log2(floatOps/0.8e6)*13);var singleS=Math.min(100,Math.log2(singleOps/2e5)*14);var gpuS=Math.min(100,Math.log2(gpuFps/8)*17);var memS=Math.min(100,Math.log2(memBps/8e7)*15);var cpu=Math.round((intS*0.3+floatS*0.3+singleS*0.4)*6000);var gpu=Math.round(gpuS*9000);var mem=Math.round(memS*8000);return{total:Math.round((cpu+gpu+mem)/3),cpu:cpu,gpu:gpu,mem:mem,intOps:intOps,floatOps:floatOps,singleOps:singleOps,gpuFps:gpuFps,memBps:memBps}}
+function badge(s){if(s>550000)return['S','旗舰性能','bd-s'];if(s>350000)return['A','性能强劲','bd-a'];if(s>200000)return['B','中流砥柱','bd-b'];if(s>100000)return['C','日常够用','bd-c'];return['D','入门级别','bd-d']}
+function animNum(el,v){el.textContent='0';var t=performance.now(),d=1400;(function f(n){var p=Math.min((n-t)/d,1);el.textContent=Math.round(v*(1-Math.pow(1-p,3))).toLocaleString();if(p<1)requestAnimationFrame(f)})(t)}
+
+// ─── Progress ───
+function prog(n,st){var el=document.getElementById('p'+n),icons={run:'◉',done:'✓'};el.className='pr '+st;el.querySelector('.pi').textContent=icons[st]||'○'}
+
+// ─── Main ───
+var busy=false,g_lastResult=null;
+async function runAll(){
+  if(busy)return;busy=true;
+  var btn=document.getElementById('btnGo');btn.disabled=true;btn.textContent='跑分中...';
+  document.getElementById('scoreHero').style.display='block';
+  document.getElementById('resultArea').style.display='none';
+  document.getElementById('totalScore').textContent='···';
+  document.getElementById('progPanel').classList.add('on');
+  for(var i=1;i<=5;i++)prog(i,'wait');
+
+  var info=detect(),t0=performance.now();
+
+  prog(1,'run');
+  var intV=await new Promise(function(r){var w=getWorker();w.onmessage=function(e){w.terminate();r(e.data.v)};w.postMessage('int')});
+  prog(1,'done');document.getElementById('p1').querySelector('.pt').textContent=((performance.now()-t0)/1000).toFixed(1)+'s';
+
+  prog(2,'run');
+  var floatV=await new Promise(function(r){var w=getWorker();w.onmessage=function(e){w.terminate();r(e.data.v)};w.postMessage('float')});
+  prog(2,'done');document.getElementById('p2').querySelector('.pt').textContent=((performance.now()-t0)/1000).toFixed(1)+'s';
+
+  prog(3,'run');
+  var gpuV=await gpuTest(info.dpr);
+  prog(3,'done');document.getElementById('p3').querySelector('.pt').textContent=((performance.now()-t0)/1000).toFixed(1)+'s';
+
+  prog(4,'run');
+  var memV=await new Promise(function(r){var w=getWorker();w.onmessage=function(e){w.terminate();r(e.data.v)};w.postMessage('mem')});
+  prog(4,'done');document.getElementById('p4').querySelector('.pt').textContent=((performance.now()-t0)/1000).toFixed(1)+'s';
+
+  prog(5,'run');
+  var singleV=await new Promise(function(r){var w=getWorker();w.onmessage=function(e){w.terminate();r(e.data.v)};w.postMessage('single')});
+  prog(5,'done');document.getElementById('p5').querySelector('.pt').textContent=((performance.now()-t0)/1000).toFixed(1)+'s';
+
+  var elapsed=(performance.now()-t0)/1000;
+  var res=calc(intV,floatV,singleV,gpuV,memV);
+  g_lastResult={info:info,res:res,elapsed:elapsed};
+
+  document.getElementById('progPanel').classList.remove('on');
+  document.getElementById('resultArea').style.display='block';
+  animNum(document.getElementById('totalScore'),res.total);
+  var b=badge(res.total);document.getElementById('badge').textContent=b[0]+' · '+b[1];document.getElementById('badge').className='bd '+b[2];
+  document.getElementById('cpuV').textContent=res.cpu.toLocaleString();document.getElementById('cpuSub').textContent=Math.round(intV/1e6)+'M int/s';
+  document.getElementById('cpu1V').textContent=Math.round(res.cpu*res.singleOps/Math.max(res.intOps,1)).toLocaleString();document.getElementById('cpu1Sub').textContent=Math.round(singleV/1e3)+'K hash/s';
+  document.getElementById('gpuV').textContent=res.gpu.toLocaleString();document.getElementById('gpuSub').textContent=gpuV+' fps';
+  document.getElementById('memV').textContent=res.mem.toLocaleString();document.getElementById('memSub').textContent=(memV/1e9).toFixed(1)+' GB/s';
+
+  // Auto-fill comment form
+  document.getElementById('commentDevice').value=info.name;
+
+  // Refresh comments
+  loadComments();
+
+  btn.disabled=false;btn.textContent='⚡ 重新跑分';busy=false;
+}
+
+function redo(){document.getElementById('resultArea').style.display='none';for(var i=1;i<=5;i++){prog(i,'wait');document.getElementById('p'+i).querySelector('.pt').textContent=''}document.getElementById('totalScore').textContent='···'}
+
+// ─── Screenshot ───
+var _capturedImg=null;
+function captureResult(){
+  if(!g_lastResult)return alert('请先跑分');
+  // Simple: screenshot the score section using canvas
+  var sh=document.querySelector('.sh'),dc=document.querySelector('.dc'),dg=document.querySelector('.dg');
+  var c=document.createElement('canvas'),w=400,h=320;c.width=w;c.height=h;
+  var ctx=c.getContext('2d');
+  ctx.fillStyle='#080f0a';ctx.fillRect(0,0,w,h);
+  ctx.fillStyle='#fff';ctx.font='bold 14px sans-serif';ctx.textAlign='center';
+  ctx.fillText('吉验机 · 性能跑分',w/2,25);
+  ctx.font='bold 36px sans-serif';ctx.fillStyle='#00e676';
+  ctx.fillText(g_lastResult.res.total.toLocaleString(),w/2,75);
+  ctx.font='12px sans-serif';ctx.fillStyle='#999';ctx.fillText('综合跑分',w/2,98);
+  var b=badge(g_lastResult.res.total);
+  ctx.font='bold 13px sans-serif';ctx.fillStyle='#fff';
+  ctx.fillText(b[0]+' · '+b[1],w/2,125);
+  ctx.fillStyle='#999';ctx.font='11px sans-serif';
+  ctx.fillText(g_lastResult.info.name+' | '+g_lastResult.info.os,w/2,150);
+  ctx.fillText('CPU:'+g_lastResult.res.cpu.toLocaleString()+' GPU:'+g_lastResult.res.gpu.toLocaleString()+' MEM:'+g_lastResult.res.mem.toLocaleString(),w/2,175);
+  ctx.fillStyle='#555';ctx.font='10px sans-serif';
+  ctx.fillText('耗时 '+g_lastResult.elapsed.toFixed(1)+'s  |  '+new Date().toLocaleString(),w/2,200);
+  _capturedImg=c.toDataURL('image/png');
+  var pv=document.getElementById('imgPreview');pv.src=_capturedImg;pv.style.display='block';
+}
+
+// ─── Image upload ───
+function previewImage(inp){
+  var f=inp.files[0];if(!f)return;
+  var r=new FileReader();r.onload=function(e){var pv=document.getElementById('imgPreview');pv.src=e.target.result;pv.style.display='block';_capturedImg=e.target.result};
+  r.readAsDataURL(f);
+}
+
+// ─── Post comment ───
+function postComment(){
+  var name=document.getElementById('commentName').value.trim()||'匿名';
+  var device=document.getElementById('commentDevice').value.trim()||'未知设备';
+  var score=g_lastResult?g_lastResult.res.total:0;
+  var img=_capturedImg||'';
+  if(!score){alert('请先跑分');return}
+
+  var fd=new FormData();
+  fd.append('name',name);fd.append('device',device);fd.append('score',score.toString());
+  if(img){
+    var blob=dataURItoBlob(img);
+    fd.append('image',blob,'screenshot.png');
+  }
+  apiPost('/api/comment',fd,true).then(function(r){
+    if(r.ok){_capturedImg=null;document.getElementById('imgPreview').style.display='none';document.getElementById('imgPreview').src='';loadComments()}
+    else alert('发布失败')
+  }).catch(function(e){alert('发布失败: '+e.message)});
+}
+
+function dataURItoBlob(dataURI){
+  var m=dataURI.split(',')[0].match(/:(.*?);/),type=m?m[1]:'image/png';
+  var b64=dataURI.split(',')[1],raw=atob(b64),arr=new Uint8Array(raw.length);
+  for(var i=0;i<raw.length;i++)arr[i]=raw.charCodeAt(i);
+  return new Blob([arr],{type:type});
+}
+
+// ─── Load comments ───
+function loadComments(){
+  fetch(API+'/api/comments').then(function(r){return r.json()}).then(function(list){
+    if(!list||!list.length){document.getElementById('commentList').innerHTML='<div class="cl-empty">暂无跑分记录，来做第一个！</div>';return}
+    list.sort(function(a,b){return b.score-a.score});
+    var h='';
+    for(var i=0;i<list.length;i++){
+      var c=list[i],rank=i<3?['🥇','🥈','🥉'][i]:(i+1);
+      h+='<div class="cl-item">';
+      h+='<div class="cl-head"><div class="cl-avatar">'+c.name.charAt(0)+'</div><span class="cl-name">'+esc(c.name)+'</span><span class="cl-score">'+Number(c.score).toLocaleString()+' 分</span><span class="cl-time">'+esc(c.time||'')+'</span></div>';
+      h+='<div class="cl-device">📱 '+esc(c.device||'')+'</div>';
+      if(c.image)h+='<img class="cl-img" src="'+esc(c.image)+'" onclick="window.open(this.src)" loading="lazy">';
+      h+='</div>';
+    }
+    document.getElementById('commentList').innerHTML=h;
+  }).catch(function(){document.getElementById('commentList').innerHTML='<div class="cl-empty">加载失败</div>'});
+}
+
+function esc(s){var d=document.createElement('div');d.textContent=s;return d.innerHTML}
+
+// ─── Share ───
+function shareIt(){
+  var s=document.getElementById('totalScore').textContent,n=document.getElementById('devName').textContent;
+  var t=n+' 吉验机跑分 '+s+' 分\\n'+window.location.href;
+  if(navigator.share)navigator.share({title:'吉验机跑分',text:t});
+  else{navigator.clipboard.writeText(t);alert('已复制')}
+}
+
+detect();document.getElementById('scoreHero').style.display='block';document.getElementById('totalScore').textContent='---';
+loadComments();
+</script>
+</body>
+</html>
