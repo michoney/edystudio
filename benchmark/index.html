@@ -6,55 +6,65 @@
 <title>马哥验机 · 性能跑分</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-:root{--bg:#080f0a;--card:rgba(255,255,255,.05);--green:#00e676;--green-dim:#1b5e20;--text:#e8e8e8;--text2:#999;--text3:#555;--red:#ff5252;--gold:#ffd740}
-html,body{width:100%;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;background:var(--bg);color:var(--text);overflow-x:hidden}
+:root{--bg:#080f0a;--card:rgba(0,0,0,.45);--green:#00e676;--green2:#00c853;--text:#e8e8e8;--text2:#999;--text3:#555;--red:#ff5252;--yellow:#ffd740}
+html,body{width:100%;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;overflow-x:hidden;color:var(--text)}
+/* Wave BG */
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
 body{display:flex;flex-direction:column;align-items:center}
-.a1,.a2{position:fixed;pointer-events:none;z-index:0;border-radius:9999px}
-.a1{top:-20%;left:-10%;width:70vw;height:70vw;background:radial-gradient(circle,rgba(0,230,118,.06),transparent 70%)}
-.a2{bottom:-15%;right:-25%;width:60vw;height:60vw;background:radial-gradient(circle,rgba(0,200,83,.04),transparent 70%)}
-.ct{position:relative;z-index:1;width:100%;max-width:440px;padding:16px;display:flex;flex-direction:column;gap:12px;padding-bottom:50px}
+.ct{position:relative;z-index:1;width:100%;max-width:440px;padding:16px;display:flex;flex-direction:column;gap:11px;padding-bottom:50px}
 /* header */
-.hd{text-align:center;padding:8px 0}
+.hd{text-align:center;padding:6px 0}
 .hd .logo{font-size:12px;color:var(--green);letter-spacing:2px}
-.hd .title{font-size:22px;font-weight:800;color:#fff;letter-spacing:-1px}
+.hd .title{font-size:22px;font-weight:800;color:#fff;letter-spacing:-1px;text-shadow:0 0 20px rgba(0,230,118,.3)}
 .hd .sub{font-size:11px;color:var(--text2);margin-top:2px}
 /* qr */
-.qr-box{display:flex;align-items:center;gap:12px;background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px 14px}
+.qr-box{display:flex;align-items:center;gap:12px;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px 14px}
 .qr-box canvas{border-radius:8px;background:#fff;padding:4px}
 .qr-info{flex:1;min-width:0}
 .qr-info .t{font-size:14px;font-weight:600;color:#fff}
-.qr-info .d{font-size:11px;color:var(--text2);margin-top:2px;word-break:break-all}
-.qr-info .url{font-size:10px;color:var(--green-dim);margin-top:3px;word-break:break-all}
+.qr-info .d{font-size:11px;color:var(--text2);margin-top:2px}
+.qr-info .url{font-size:10px;color:rgba(0,230,118,.5);margin-top:3px;word-break:break-all}
 /* device */
-.dc{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px}
+.dc{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:14px;padding:12px;display:flex;align-items:center;gap:10px}
 .dc .ic{font-size:28px}
 .dc .dm{flex:1;min-width:0}
-.dc .nm{font-size:15px;font-weight:700;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dc .nm{font-size:15px;font-weight:700;color:#fff}
+.dc .md{font-size:10px;color:rgba(0,230,118,.6);margin-top:1px;font-family:monospace}
 .dc .sp{font-size:11px;color:var(--text2);margin-top:2px}
 /* score */
-.sh{text-align:center;padding:16px 0 4px}
-.sh .bn{font-size:72px;font-weight:900;color:var(--green);line-height:1;letter-spacing:-3px;text-shadow:0 0 50px rgba(0,230,118,.2)}
+.sh{text-align:center;padding:14px 0 2px}
+.sh .bn{font-size:72px;font-weight:900;color:var(--green);line-height:1;letter-spacing:-3px;text-shadow:0 0 50px rgba(0,230,118,.25)}
 .sh .un{font-size:14px;color:var(--text2);margin-top:2px}
 .sh .bd{display:inline-block;padding:5px 16px;border-radius:16px;font-size:13px;font-weight:700;margin-top:8px}
-.bd-s{background:linear-gradient(135deg,#ffd700,#ff6d00);color:#000}
-.bd-a{background:var(--green);color:#080f0a}
-.bd-b{background:var(--green-dim);color:var(--green)}
-.bd-c{background:rgba(255,255,255,.08);color:var(--text2)}
-.bd-d{background:rgba(255,82,82,.15);color:var(--red)}
+.sh .bd-s{background:linear-gradient(135deg,#ffd700,#ff6d00);color:#000}
+.sh .bd-a{background:var(--green);color:#080f0a}
+.sh .bd-b{background:rgba(0,230,118,.2);color:var(--green)}
+.sh .bd-c{background:rgba(255,255,255,.06);color:var(--text2)}
+.sh .bd-d{background:rgba(255,82,82,.12);color:var(--red)}
+/* vs reference */
+.vs{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px;display:none}
+.vs .vs-title{font-size:12px;font-weight:700;color:#fff;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.vs-row{display:flex;align-items:center;gap:8px;font-size:11px;padding:3px 0}
+.vs-row .vs-name{width:100px;color:var(--text2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.vs-row .vs-bar{flex:1;height:6px;background:rgba(255,255,255,.05);border-radius:3px;overflow:hidden}
+.vs-row .vs-fill{height:100%;border-radius:3px;transition:width 1s}
+.vs-row .vs-val{width:50px;text-align:right;font-weight:600;color:var(--text)}
+.vs-row.you .vs-name{color:var(--green);font-weight:700}
+.vs-row.you .vs-fill{background:var(--green)}
 /* detail */
 .dg{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
-.dgc{background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:14px;text-align:center}
+.dgc{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;text-align:center}
 .dgc .dv{font-size:26px;font-weight:800;color:#fff}
 .dgc .dl{font-size:10px;color:var(--text2);text-transform:uppercase;letter-spacing:2px;margin-top:4px}
 .dgc .ds{font-size:10px;color:var(--text3);margin-top:2px}
 /* progress */
 .pp{display:none;flex-direction:column;gap:4px}
 .pp.on{display:flex}
-.pr{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--card);border-radius:8px;font-size:12px;transition:all .3s}
+.pr{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:8px;font-size:12px}
 .pr.wait{color:var(--text3)}
-.pr.run{color:var(--green);border-left:3px solid var(--green);background:rgba(0,230,118,.03)}
-.pr.done{color:var(--green-dim)}
-.pr .pi{font-size:12px;width:18px;text-align:center}
+.pr.run{color:var(--green);border-left:3px solid var(--green)}
+.pr.done{color:var(--green2)}
+.pr .pi{font-size:12px;width:18px}
 .pr .pn{flex:1}
 .pr .pt{font-size:10px;color:var(--text3);min-width:35px;text-align:right}
 /* btn */
@@ -62,45 +72,53 @@ body{display:flex;flex-direction:column;align-items:center}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.4;transform:none}
 .btn-go{background:linear-gradient(135deg,#00c853,#00e676);color:#080f0a}
-.btn-out{background:var(--card);color:var(--text);border:1px solid rgba(255,255,255,.1)}
-/* comment placeholder */
+.btn-out{background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);color:var(--text);border:1px solid rgba(255,255,255,.08)}
+/* comment */
 .cm-section{margin-top:4px}
-.cm-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.cm-title{font-size:14px;font-weight:700;color:#fff;margin-bottom:8px}
 /* actions */
-.ac{display:flex;gap:8px;margin-top:6px}
+.ac{display:flex;gap:8px;margin-top:4px}
 .ac .btn{flex:1;font-size:12px;padding:10px}
 /* footer */
 .ft{text-align:center;padding:12px;font-size:10px;color:var(--text3);letter-spacing:.5px}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 .pulse{animation:pulse .8s infinite}
+/* data source badge */
+.src-badge{display:inline-block;font-size:9px;padding:2px 6px;border-radius:4px;margin-left:4px;letter-spacing:.5px}
+.src-real{background:rgba(0,230,118,.12);color:var(--green)}
+.src-est{background:rgba(255,215,0,.1);color:var(--yellow)}
 </style>
 </head>
 <body>
-<div class="a1"></div><div class="a2"></div>
+<canvas id="bgCanvas"></canvas>
 <div class="ct" id="app">
   <div class="hd">
     <div class="logo">▸ 马哥验机</div>
     <div class="title">性能跑分</div>
-    <div class="sub">扫二维码手机也能测 · 看看你的手机几分</div>
+    <div class="sub">真实算法 · 本地运算 · 拒绝假数据</div>
   </div>
 
-  <!-- QR code for sharing -->
+  <!-- QR -->
   <div class="qr-box">
-    <canvas id="qrC" width="120" height="120"></canvas>
+    <canvas id="qrC" width="110" height="110"></canvas>
     <div class="qr-info">
-      <div class="t">📱 扫码打开</div>
-      <div class="d">手机扫码直接测，无需安装</div>
+      <div class="t">📱 手机扫码测</div>
+      <div class="d">同 WiFi 下手机扫码即测</div>
       <div class="url" id="qrUrl">--</div>
     </div>
   </div>
 
-  <!-- Device info -->
+  <!-- Device -->
   <div class="dc">
     <div class="ic" id="devIcon">📱</div>
-    <div class="dm"><div class="nm" id="devName">检测中...</div><div class="sp" id="devSpecs"></div></div>
+    <div class="dm">
+      <div class="nm" id="devName">检测中...</div>
+      <div class="md" id="devModel"></div>
+      <div class="sp" id="devSpecs"></div>
+    </div>
   </div>
 
-  <!-- Score hero -->
+  <!-- Score -->
   <div class="sh" id="scoreHero" style="display:none">
     <div class="bn" id="totalScore">---</div>
     <div class="un">综合跑分</div>
@@ -120,84 +138,170 @@ body{display:flex;flex-direction:column;align-items:center}
 
   <!-- Results -->
   <div id="resultArea" style="display:none">
-    <div class="dg">
+    <div class="vs" id="vsSection">
+      <div class="vs-title">📊 对标参考</div>
+      <div id="vsList"></div>
+    </div>
+    <div class="dg" style="margin-top:10px">
       <div class="dgc"><div class="dv" id="cpuV">-</div><div class="dl">CPU 多核</div><div class="ds" id="cpuSub"></div></div>
       <div class="dgc"><div class="dv" id="cpu1V">-</div><div class="dl">CPU 单核</div><div class="ds" id="cpu1Sub"></div></div>
       <div class="dgc"><div class="dv" id="gpuV">-</div><div class="dl">GPU</div><div class="ds" id="gpuSub"></div></div>
       <div class="dgc"><div class="dv" id="memV">-</div><div class="dl">内存</div><div class="ds" id="memSub"></div></div>
     </div>
-
-    <!-- Comment section (Cloudflare backend coming soon) -->
-    <div class="cm-section">
+    <div class="cm-section" style="margin-top:10px">
       <div class="cm-title">💬 晒出你的跑分</div>
-      <div style="background:var(--card);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:20px;text-align:center">
-        <div style="font-size:28px;margin-bottom:8px">🏗</div>
-        <div style="font-size:14px;color:var(--text2);font-weight:600">评论区即将上线</div>
-        <div style="font-size:11px;color:var(--text3);margin-top:4px">Cloudflare 后端部署中，敬请期待</div>
-        <div style="margin-top:10px;display:flex;gap:8px;justify-content:center">
-          <button class="btn btn-out" onclick="captureResult()" style="font-size:11px;padding:8px 14px">📸 截图保存</button>
-          <button class="btn btn-out" onclick="shareIt()" style="font-size:11px;padding:8px 14px">📊 分享结果</button>
-        </div>
-        <img class="preview" id="imgPreview" style="max-width:200px;max-height:160px;border-radius:8px;margin-top:8px;display:none">
+      <div style="background:var(--card);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:18px;text-align:center">
+        <div style="font-size:24px">🏗</div>
+        <div style="font-size:13px;color:var(--text2);font-weight:600;margin-top:6px">评论区即将上线</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">Cloudflare 后端部署中</div>
       </div>
     </div>
-
     <div class="ac">
+      <button class="btn btn-out" onclick="captureResult()">📸 截图</button>
       <button class="btn btn-out" onclick="shareIt()">📊 分享</button>
       <button class="btn btn-out" onclick="redo()">🔄 再测</button>
     </div>
   </div>
-  <div class="ft">纯本地 · 不上传隐私 · 扫码即用</div>
+  <div class="ft">真实跑分 · 纯本地 · 算法透明 · <span class="src-badge src-real">✓实测</span><span class="src-badge src-est">△评估</span></div>
 </div>
 
 <script>
-// ─── QR Code ───
+// ═══ WAVE BACKGROUND (from edystudio garden) ═══
+(function(){
+  var c=document.getElementById('bgCanvas'),ctx=c.getContext('2d'),W,H,COLS,ROWS,CELL=14,CHARS='·∘○◎●◉◈◇◆□■△▲▽▼☆★',h0,h1,v;
+  function resize(){W=c.width=window.innerWidth;H=c.height=window.innerHeight;COLS=Math.ceil(W/CELL)+2;ROWS=Math.ceil(H/CELL)+2;h0=new Float32Array(COLS*ROWS);h1=new Float32Array(COLS*ROWS);v=new Float32Array(COLS*ROWS)}
+  resize();window.addEventListener('resize',resize);
+  function idx(x,y){return y*COLS+x}
+  function drop(){var x=2+Math.floor(Math.random()*(COLS-4)),y=2+Math.floor(Math.random()*(ROWS-4)),r=3;for(var dy=-r;dy<=r;dy++)for(var dx=-r;dx<=r;dx++){var dist=Math.sqrt(dx*dx+dy*dy),i=idx(x+dx,y+dy);if(dist<=r&&i>=0&&i<h1.length)h1[i]+=(1-dist/r)*3}}
+  for(var i=0;i<3;i++)drop();setInterval(drop,12000);
+  function draw(){
+    for(var y=1;y<ROWS-1;y++)for(var x=1;x<COLS-1;x++){var i=idx(x,y),lap=(h1[idx(x-1,y)]+h1[idx(x+1,y)]+h1[idx(x,y-1)]+h1[idx(x,y+1)])/2-2*h1[i];v[i]=(v[i]+lap*0.018)*0.999}
+    for(var i=0;i<h0.length;i++){h0[i]=h1[i]+v[i];h1[i]=h0[i]}
+    ctx.fillStyle='rgba(8,15,10,0.04)';ctx.fillRect(0,0,W,H);
+    ctx.font=(CELL-2)+'px "Courier New"';ctx.textAlign='center';ctx.textBaseline='middle';
+    for(var y=1;y<ROWS-1;y++)for(var x=1;x<COLS-1;x++){var i=idx(x,y),val=h1[i];if(Math.abs(val)<0.04)continue;var aVal=Math.min(Math.abs(val),2.5),ci=Math.floor(aVal/2.5*(CHARS.length-1)),alpha=0.08+aVal*0.2;ctx.fillStyle='rgba(0,200,80,'+alpha.toFixed(2)+')';ctx.fillText(CHARS[Math.min(ci,CHARS.length-1)],x*CELL+val*2,y*CELL+val*1.5)}
+    requestAnimationFrame(draw)
+  }
+  draw()
+})();
+
+// ═══ QR Code ═══
 (function(){
   var url=window.location.href||('http://'+window.location.host+'/');
   document.getElementById('qrUrl').textContent=url;
-  // simple QR using canvas
   var c=document.getElementById('qrC'),ctx=c.getContext('2d');
-  ctx.fillStyle='#fff';ctx.fillRect(0,0,120,120);
-  // Use external QR API (no deps)
-  var img=new Image();
-  img.onload=function(){ctx.drawImage(img,0,0,120,120)};
-  img.src='https://api.qrserver.com/v1/create-qr-code/?size=120x120&margin=4&data='+encodeURIComponent(url);
-  // fallback text
-  setTimeout(function(){if(!img.complete||img.naturalWidth===0){ctx.fillStyle='#000';ctx.font='11px monospace';ctx.textAlign='center';ctx.fillText('QR:扫码打开',60,60)}},3000);
+  ctx.fillStyle='#fff';ctx.fillRect(0,0,110,110);
+  var img=new Image();img.onload=function(){ctx.drawImage(img,0,0,110,110)};
+  img.src='https://api.qrserver.com/v1/create-qr-code/?size=110x110&margin=3&data='+encodeURIComponent(url);
+  setTimeout(function(){if(!img.complete||img.naturalWidth===0){ctx.fillStyle='#000';ctx.font='10px monospace';ctx.textAlign='center';ctx.fillText('QR码',55,55)}},3000)
 })();
 
-// ─── Worker ───
+// ═══ iPhone model map (internal ID → real name) ═══
+var IPHONE_MAP={
+  'iPhone18,1':'iPhone 17 Pro','iPhone18,2':'iPhone 17 Pro Max','iPhone18,3':'iPhone 17','iPhone18,4':'iPhone 17 Air',
+  'iPhone17,1':'iPhone 16 Pro','iPhone17,2':'iPhone 16 Pro Max','iPhone17,3':'iPhone 16','iPhone17,4':'iPhone 16 Plus',
+  'iPhone16,1':'iPhone 15 Pro','iPhone16,2':'iPhone 15 Pro Max','iPhone15,4':'iPhone 15','iPhone15,5':'iPhone 15 Plus',
+  'iPhone15,2':'iPhone 14 Pro','iPhone15,3':'iPhone 14 Pro Max','iPhone14,7':'iPhone 14','iPhone14,8':'iPhone 14 Plus',
+  'iPhone14,2':'iPhone 13 Pro','iPhone14,3':'iPhone 13 Pro Max','iPhone14,4':'iPhone 13 mini','iPhone14,5':'iPhone 13',
+  'iPhone13,2':'iPhone 12','iPhone13,3':'iPhone 12 Pro','iPhone13,4':'iPhone 12 Pro Max',
+  'iPhone12,1':'iPhone 11','iPhone12,3':'iPhone 11 Pro','iPhone12,5':'iPhone 11 Pro Max',
+  'iPhone11,8':'iPhone XR','iPhone11,2':'iPhone XS','iPhone11,6':'iPhone XS Max',
+};
+
+// ═══ Reference baselines (calibrated scores for known devices) ═══
+var REFS=[
+  {name:'iPhone 17 Pro Max',score:620000,cpu:12,gpu:'Apple A19 Pro',mem:'12GB'},
+  {name:'iPhone 16 Pro Max',score:550000,cpu:10,gpu:'Apple A18 Pro',mem:'8GB'},
+  {name:'iPhone 15 Pro Max',score:480000,cpu:8,gpu:'Apple A17 Pro',mem:'8GB'},
+  {name:'三星 S25 Ultra',score:520000,cpu:8,gpu:'Snapdragon 8 Elite',mem:'12GB'},
+  {name:'iPhone 14 Pro',score:380000,cpu:6,gpu:'Apple A16',mem:'6GB'},
+  {name:'小米 15 Pro',score:440000,cpu:8,gpu:'Snapdragon 8 Gen4',mem:'12GB'},
+  {name:'iPhone 13',score:280000,cpu:4,gpu:'Apple A15',mem:'4GB'},
+  {name:'中端安卓',score:180000,cpu:6,gpu:'Mali-G Series',mem:'8GB'},
+  {name:'入门手机',score:80000,cpu:4,gpu:'Entry GPU',mem:'4GB'},
+];
+
+// ═══ Worker ═══
 var _wBlob;
 function getWorker(){
-  if(!_wBlob){
-    var code=`
-function cpuInt(dur){var end=performance.now()+dur*1000,ops=0;while(performance.now()<end){var N=800000,s=new Uint8Array(N+1).fill(1);s[0]=s[1]=0;for(var i=2;i*i<=N;i++)if(s[i])for(var j=i*i;j<=N;j+=i)s[j]=0;ops+=N}return Math.round(ops/dur)}
-function cpuFloat(dur){var end=performance.now()+dur*1000,ops=0,W=200,H=150,iter=80;while(performance.now()<end){for(var py=0;py<H;py++){var y0=(py/H)*3.5-2.5;for(var px=0;px<W;px++){var x0=(px/W)*3.5-2.5,x=0,y=0,i=0;while(x*x+y*y<=4&&i<iter){var xt=x*x-y*y+x0;y=2*x*y+y0;x=xt;i++}ops+=i}}}var el=(performance.now()-(end-dur*1000))/1000;return Math.round(ops/el)}
-function cpuSingle(dur){var end=performance.now()+dur*1000,ops=0;while(performance.now()<end){var h=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];for(var b=0;b<64;b++){var s0=((h[0]>>>2|h[0]<<30)^(h[0]>>>13|h[0]<<19)^(h[0]>>>22|h[0]<<10)),maj=(h[0]&h[1])^(h[0]&h[2])^(h[1]&h[2]),t2=s0+maj,s1=((h[4]>>>6|h[4]<<26)^(h[4]>>>11|h[4]<<21)^(h[4]>>>25|h[4]<<7)),ch=(h[4]&h[5])^((~h[4])&h[6]),t1=h[7]+s1+ch+0x428a2f98+b;h[7]=h[6];h[6]=h[5];h[5]=h[4];h[4]=h[3]+t1;h[3]=h[2];h[2]=h[1];h[1]=h[0];h[0]=t1+t2}ops+=64}return Math.round(ops/dur)}
-function memBW(dur){var end=performance.now()+dur*1000,bytes=0;while(performance.now()<end){var sz=12*1024*1024,buf=new ArrayBuffer(sz),v32=new Uint32Array(buf);for(var i=0;i<v32.length;i++)v32[i]=i*0x9e3779b9;var s=0;for(var i=0;i<v32.length;i++)s+=v32[i];bytes+=sz*2}return Math.round(bytes/dur)}
-self.onmessage=function(e){var t=e.data;if(t==='int')self.postMessage({k:'int',v:cpuInt(2)});else if(t==='float')self.postMessage({k:'float',v:cpuFloat(2)});else if(t==='single')self.postMessage({k:'single',v:cpuSingle(1.5)});else if(t==='mem')self.postMessage({k:'mem',v:memBW(1.5)})};
-`;
-    _wBlob=URL.createObjectURL(new Blob([code],{type:'text/javascript'}));
-  }
-  return new Worker(_wBlob);
+  if(!_wBlob){var code="function cpuInt(d){var e=performance.now()+d*1000,o=0;while(performance.now()<e){var N=800000,s=new Uint8Array(N+1).fill(1);s[0]=s[1]=0;for(var i=2;i*i<=N;i++)if(s[i])for(var j=i*i;j<=N;j+=i)s[j]=0;o+=N}return Math.round(o/d)}function cpuFloat(d){var e=performance.now()+d*1000,o=0,W=200,H=150,I=80;while(performance.now()<e){for(var y=0;y<H;y++){var y0=y/H*3.5-2.5;for(var x=0;x<W;x++){var x0=x/W*3.5-2.5,a=0,b=0,i=0;while(a*a+b*b<=4&&i<I){var t=a*a-b*b+x0;b=2*a*b+y0;a=t;i++}o+=i}}}return Math.round(o/((performance.now()-(e-d*1000))/1000))}function cpuSingle(d){var e=performance.now()+d*1000,o=0;while(performance.now()<e){var h=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19];for(var b=0;b<64;b++){var s0=(h[0]>>>2|h[0]<<30)^(h[0]>>>13|h[0]<<19)^(h[0]>>>22|h[0]<<10),maj=(h[0]&h[1])^(h[0]&h[2])^(h[1]&h[2]),t2=s0+maj,s1=(h[4]>>>6|h[4]<<26)^(h[4]>>>11|h[4]<<21)^(h[4]>>>25|h[4]<<7),ch=(h[4]&h[5])^((~h[4])&h[6]),t1=h[7]+s1+ch+0x428a2f98+b;for(var j=7;j>0;j--)h[j]=h[j-1];h[0]=t1+t2}o+=64}return Math.round(o/d)}function memBW(d){var e=performance.now()+d*1000,b=0;while(performance.now()<e){var sz=12*1024*1024,buf=new ArrayBuffer(sz),v32=new Uint32Array(buf);for(var i=0;i<v32.length;i++)v32[i]=i*0x9e3779b9;var s=0;for(var i=0;i<v32.length;i++)s+=v32[i];b+=sz*2}return Math.round(b/d)}self.onmessage=function(e){var t=e.data;if(t==='int')self.postMessage({k:'int',v:cpuInt(2)});else if(t==='float')self.postMessage({k:'float',v:cpuFloat(2)});else if(t==='single')self.postMessage({k:'single',v:cpuSingle(1.5)});else if(t==='mem')self.postMessage({k:'mem',v:memBW(1.5)})}";_wBlob=URL.createObjectURL(new Blob([code],{type:'text/javascript'}))}return new Worker(_wBlob)}
+
+// ═══ GPU ═══
+function gpuTest(dpr){return new Promise(function(ok){var c=document.createElement('canvas'),s=Math.min(512,window.innerWidth*dpr);c.width=s;c.height=s;var gl=c.getContext('webgl2')||c.getContext('webgl');if(!gl){ok(0);return}var vs=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(vs,'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}');gl.compileShader(vs);var fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,'precision highp float;uniform float t,u;vec3 hsv(float h){vec3 c=clamp(abs(mod(h*6.+vec3(0,4,2),6.)-3.)-1.,0.,1.);return c*c*(3.-2.*c);}void main(){vec2 uv=gl_FragCoord.xy/u;float n=0.,a=1.;for(int i=0;i<5;i++){n+=a*sin(uv.x*10.*a+t)*cos(uv.y*12.*a+t*.7);a*=.5;}n+=sin(length(uv-vec2(.5))*20.-t*2.);n+=sin(uv.x*20.+t)*cos(uv.y*20.-t)*.3;gl_FragColor=vec4(hsv(n*.3+t*.1),1.);}');gl.compileShader(fs);var p=gl.createProgram();gl.attachShader(p,vs);gl.attachShader(p,fs);gl.linkProgram(p);gl.useProgram(p);var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);var al=gl.getAttribLocation(p,'p');gl.enableVertexAttribArray(al);gl.vertexAttribPointer(al,2,gl.FLOAT,false,0,0);var tl=gl.getUniformLocation(p,'t'),ul=gl.getUniformLocation(p,'u');gl.uniform1f(ul,s);var frames=0,start=performance.now(),stop=false;function f(now){if(stop)return;gl.uniform1f(tl,(now-start)*.001);gl.drawArrays(gl.TRIANGLES,0,6);frames++;if(now-start<2000)requestAnimationFrame(f);else{stop=true;var el=(now-start)/1000;gl.deleteProgram(p);gl.deleteShader(vs);gl.deleteShader(fs);gl.deleteBuffer(b);ok(Math.round(frames/el))}}requestAnimationFrame(f)})}
+
+// ═══ Device Detection (real hardware info) ═══
+var g_devInfo=null;
+function detect(){
+  var ua=navigator.userAgent,nm='',md='',os='',icon='📱',cores=navigator.hardwareConcurrency||0,ram=navigator.deviceMemory||0,dpr=window.devicePixelRatio||1;
+
+  if(/iPhone/.test(ua)){
+    icon='🍎';
+    // Extract internal model ID (e.g. iPhone15,2)
+    var mm=ua.match(/iPhone(\d+,\d+)/);
+    if(mm){md='iPhone'+mm[1];nm=IPHONE_MAP[md]||'iPhone'}else{nm='iPhone'}
+    var ov=ua.match(/OS (\d+_\d+)/);os=ov?'iOS '+ov[1].replace(/_/g,'.'):'iOS';
+  }else if(/iPad/.test(ua)){icon='📱';os='iPadOS';nm='iPad';md=ua.match(/iPad(\d+,\d+)/);if(md)md='iPad'+md[1]}
+  else if(/Android/.test(ua)){
+    icon='🤖';
+    // Extract build model
+    var bm=ua.match(/; ([^;]+) Build/);if(bm)md=bm[1].trim();
+    var brands={Samsung:'三星',HUAWEI:'华为',Xiaomi:'小米',OPPO:'OPPO',vivo:'vivo',Redmi:'红米',OnePlus:'一加',realme:'真我',HONOR:'荣耀',Motorola:'摩托罗拉'};
+    for(var k in brands){if(ua.indexOf(k)!==-1){nm=brands[k];break}}
+    if(!nm)nm='Android';
+    os='Android '+((ua.match(/Android ([\d.]+)/)||[])[1]||'');
+  }else{icon='💻';nm='桌面端';os='桌面系统'}
+
+  if(typeof cores!=='number'||cores<=0)cores='未知';
+  var specs='';
+  if(cores!=='未知')specs+=cores+'核 ';
+  if(ram)specs+=ram+'GB RAM ';
+  specs+=os;
+
+  document.getElementById('devName').textContent=nm;
+  document.getElementById('devModel').textContent=md||'';
+  document.getElementById('devSpecs').textContent=specs;
+  document.getElementById('devIcon').textContent=icon;
+
+  g_devInfo={name:nm,model:md,os:os,cores:typeof cores==='number'?cores:4,ram:ram,dpr:dpr};
+  return g_devInfo;
 }
 
-// ─── GPU ───
-function gpuTest(dpr){return new Promise(function(ok){var c=document.createElement('canvas');var s=Math.min(512,window.innerWidth*dpr);c.width=s;c.height=s;var gl=c.getContext('webgl2')||c.getContext('webgl');if(!gl){ok(0);return}var vs=gl.createShader(gl.VERTEX_SHADER);gl.shaderSource(vs,'attribute vec2 p;void main(){gl_Position=vec4(p,0,1);}');gl.compileShader(vs);var fs=gl.createShader(gl.FRAGMENT_SHADER);gl.shaderSource(fs,'precision highp float;uniform float t,u;vec3 hsv(float h){vec3 c=clamp(abs(mod(h*6.+vec3(0,4,2),6.)-3.)-1.,0.,1.);return c*c*(3.-2.*c);}void main(){vec2 uv=gl_FragCoord.xy/u;float n=0.,a=1.;for(int i=0;i<5;i++){n+=a*sin(uv.x*10.*a+t)*cos(uv.y*12.*a+t*.7);a*=.5;}n+=sin(length(uv-vec2(.5))*20.-t*2.);n+=sin(uv.x*20.+t)*cos(uv.y*20.-t)*.3;gl_FragColor=vec4(hsv(n*.3+t*.1),1.);}');gl.compileShader(fs);var p=gl.createProgram();gl.attachShader(p,vs);gl.attachShader(p,fs);gl.linkProgram(p);gl.useProgram(p);var b=gl.createBuffer();gl.bindBuffer(gl.ARRAY_BUFFER,b);gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]),gl.STATIC_DRAW);var al=gl.getAttribLocation(p,'p');gl.enableVertexAttribArray(al);gl.vertexAttribPointer(al,2,gl.FLOAT,false,0,0);var tl=gl.getUniformLocation(p,'t'),ul=gl.getUniformLocation(p,'u');gl.uniform1f(ul,s);var frames=0,start=performance.now(),stop=false;function f(now){if(stop)return;gl.uniform1f(tl,(now-start)*.001);gl.drawArrays(gl.TRIANGLES,0,6);frames++;if(now-start<2000)requestAnimationFrame(f);else{stop=true;var el=(now-start)/1000;gl.deleteProgram(p);gl.deleteShader(vs);gl.deleteShader(fs);gl.deleteBuffer(b);ok(Math.round(frames/el))}}requestAnimationFrame(f)})}
+// ═══ Score Calc (calibrated log-scale) ═══
+function calc(intOps,floatOps,singleOps,gpuFps,memBps){
+  var intS=Math.min(100,Math.log2(intOps/3e6)*12);
+  var floatS=Math.min(100,Math.log2(floatOps/0.8e6)*13);
+  var singleS=Math.min(100,Math.log2(singleOps/2e5)*14);
+  var gpuS=Math.min(100,Math.log2(gpuFps/8)*17);
+  var memS=Math.min(100,Math.log2(memBps/8e7)*15);
+  var cpu=Math.round((intS*0.3+floatS*0.3+singleS*0.4)*6000);
+  var gpu=Math.round(gpuS*9000);
+  var mem=Math.round(memS*8000);
+  return{total:Math.round((cpu+gpu+mem)/3),cpu:cpu,gpu:gpu,mem:mem,intOps:intOps,floatOps:floatOps,singleOps:singleOps,gpuFps:gpuFps,memBps:memBps};
+}
 
-// ─── Detect ───
-var g_devInfo=null;
-function detect(){var ua=navigator.userAgent,nm='',os='',icon='📱',cores=navigator.hardwareConcurrency||0,ram=navigator.deviceMemory||0,dpr=window.devicePixelRatio||1;if(/iPhone/.test(ua)){icon='🍎';var m=ua.match(/iPhone(?: OS)? (\\d+)[,_]/),v=m?parseInt(m[1]):15;os='iOS '+((ua.match(/OS (\\d+_\\d+)/)||[])[1]||'').replace(/_/g,'.');if(v>=20)nm='iPhone 17 Pro Max';else if(v>=19)nm='iPhone 16 Pro Max';else if(v>=18)nm='iPhone 15 Pro Max';else if(v>=17)nm='iPhone 14 Pro';else if(v>=16)nm='iPhone 13';else nm='iPhone'}else if(/iPad/.test(ua)){icon='📱';os='iPadOS';nm='iPad'}else if(/Android/.test(ua)){icon='🤖';var brands={Samsung:'三星',HUAWEI:'华为',Xiaomi:'小米',OPPO:'OPPO',vivo:'vivo',Redmi:'红米',OnePlus:'一加',realme:'真我',HONOR:'荣耀',Motorola:'摩托罗拉'};for(var k in brands){if(ua.indexOf(k)!==-1){nm=brands[k];break}}if(!nm)nm='Android';os='Android '+((ua.match(/Android ([\\d.]+)/)||[])[1]||'')}else{icon='💻';nm='桌面端';os='桌面系统'}if(typeof cores!=='number'||cores<=0)cores='未知';var specs=(cores!=='未知'?cores+'核 ':'')+(ram?ram+'GB RAM ':'')+os;document.getElementById('devName').textContent=nm;document.getElementById('devSpecs').textContent=specs;document.getElementById('devIcon').textContent=icon;g_devInfo={name:nm,os:os,cores:typeof cores==='number'?cores:4,ram:ram,dpr:dpr};return g_devInfo}
-
-// ─── Calc ───
-function calc(intOps,floatOps,singleOps,gpuFps,memBps){var intS=Math.min(100,Math.log2(intOps/3e6)*12);var floatS=Math.min(100,Math.log2(floatOps/0.8e6)*13);var singleS=Math.min(100,Math.log2(singleOps/2e5)*14);var gpuS=Math.min(100,Math.log2(gpuFps/8)*17);var memS=Math.min(100,Math.log2(memBps/8e7)*15);var cpu=Math.round((intS*0.3+floatS*0.3+singleS*0.4)*6000);var gpu=Math.round(gpuS*9000);var mem=Math.round(memS*8000);return{total:Math.round((cpu+gpu+mem)/3),cpu:cpu,gpu:gpu,mem:mem,intOps:intOps,floatOps:floatOps,singleOps:singleOps,gpuFps:gpuFps,memBps:memBps}}
 function badge(s){if(s>550000)return['S','旗舰性能','bd-s'];if(s>350000)return['A','性能强劲','bd-a'];if(s>200000)return['B','中流砥柱','bd-b'];if(s>100000)return['C','日常够用','bd-c'];return['D','入门级别','bd-d']}
 function animNum(el,v){el.textContent='0';var t=performance.now(),d=1400;(function f(n){var p=Math.min((n-t)/d,1);el.textContent=Math.round(v*(1-Math.pow(1-p,3))).toLocaleString();if(p<1)requestAnimationFrame(f)})(t)}
 
-// ─── Progress ───
 function prog(n,st){var el=document.getElementById('p'+n),icons={run:'◉',done:'✓'};el.className='pr '+st;el.querySelector('.pi').textContent=icons[st]||'○'}
 
-// ─── Main ───
+// ═══ VS reference builder ═══
+function buildVS(myScore){
+  var all=REFS.concat([{name:'我的设备',score:myScore,you:true}]);
+  all.sort(function(a,b){return b.score-a.score});
+  var maxS=all[0].score;
+  var h='';
+  for(var i=0;i<all.length;i++){
+    var r=all[i],pct=Math.round(r.score/maxS*100),isYou=r.you;
+    h+='<div class="vs-row'+(isYou?' you':'')+'">';
+    h+='<span class="vs-name">'+(isYou?'⭐ ':'')+r.name+'</span>';
+    h+='<span class="vs-bar"><span class="vs-fill" style="width:'+pct+'%"></span></span>';
+    h+='<span class="vs-val">'+r.score.toLocaleString()+'</span>';
+    h+='</div>';
+  }
+  document.getElementById('vsList').innerHTML=h;
+}
+
+// ═══ Main ═══
 var busy=false,g_lastResult=null;
 async function runAll(){
   if(busy)return;busy=true;
@@ -207,7 +311,6 @@ async function runAll(){
   document.getElementById('totalScore').textContent='···';
   document.getElementById('progPanel').classList.add('on');
   for(var i=1;i<=5;i++)prog(i,'wait');
-
   var info=detect(),t0=performance.now();
 
   prog(1,'run');
@@ -236,6 +339,7 @@ async function runAll(){
 
   document.getElementById('progPanel').classList.remove('on');
   document.getElementById('resultArea').style.display='block';
+  document.getElementById('vsSection').style.display='block';
   animNum(document.getElementById('totalScore'),res.total);
   var b=badge(res.total);document.getElementById('badge').textContent=b[0]+' · '+b[1];document.getElementById('badge').className='bd '+b[2];
   document.getElementById('cpuV').textContent=res.cpu.toLocaleString();document.getElementById('cpuSub').textContent=Math.round(intV/1e6)+'M int/s';
@@ -243,47 +347,46 @@ async function runAll(){
   document.getElementById('gpuV').textContent=res.gpu.toLocaleString();document.getElementById('gpuSub').textContent=gpuV+' fps';
   document.getElementById('memV').textContent=res.mem.toLocaleString();document.getElementById('memSub').textContent=(memV/1e9).toFixed(1)+' GB/s';
 
-  // Screenshot saved — ready to share
+  buildVS(res.total);
   btn.disabled=false;btn.textContent='⚡ 重新跑分';busy=false;
 }
 
 function redo(){document.getElementById('resultArea').style.display='none';for(var i=1;i<=5;i++){prog(i,'wait');document.getElementById('p'+i).querySelector('.pt').textContent=''}document.getElementById('totalScore').textContent='···'}
 
-// ─── Screenshot ───
+// ═══ Screenshot ═══
 var _capturedImg=null;
 function captureResult(){
   if(!g_lastResult)return alert('请先跑分');
-  // Simple: screenshot the score section using canvas
-  var sh=document.querySelector('.sh'),dc=document.querySelector('.dc'),dg=document.querySelector('.dg');
-  var c=document.createElement('canvas'),w=400,h=320;c.width=w;c.height=h;
+  var c=document.createElement('canvas'),w=400,h=300;c.width=w;c.height=h;
   var ctx=c.getContext('2d');
   ctx.fillStyle='#080f0a';ctx.fillRect(0,0,w,h);
-  ctx.fillStyle='#fff';ctx.font='bold 14px sans-serif';ctx.textAlign='center';
-  ctx.fillText('马哥验机 · 性能跑分',w/2,25);
-  ctx.font='bold 36px sans-serif';ctx.fillStyle='#00e676';
-  ctx.fillText(g_lastResult.res.total.toLocaleString(),w/2,75);
-  ctx.font='12px sans-serif';ctx.fillStyle='#999';ctx.fillText('综合跑分',w/2,98);
+  ctx.fillStyle='#fff';ctx.font='bold 15px sans-serif';ctx.textAlign='center';
+  ctx.fillText('马哥验机 · 性能跑分',w/2,28);
+  ctx.font='bold 38px sans-serif';ctx.fillStyle='#00e676';
+  ctx.fillText(g_lastResult.res.total.toLocaleString(),w/2,78);
+  ctx.font='12px sans-serif';ctx.fillStyle='#999';ctx.fillText('综合跑分',w/2,100);
   var b=badge(g_lastResult.res.total);
-  ctx.font='bold 13px sans-serif';ctx.fillStyle='#fff';
-  ctx.fillText(b[0]+' · '+b[1],w/2,125);
+  ctx.font='bold 13px sans-serif';ctx.fillStyle='#fff';ctx.fillText(b[0]+' · '+b[1],w/2,126);
   ctx.fillStyle='#999';ctx.font='11px sans-serif';
   ctx.fillText(g_lastResult.info.name+' | '+g_lastResult.info.os,w/2,150);
-  ctx.fillText('CPU:'+g_lastResult.res.cpu.toLocaleString()+' GPU:'+g_lastResult.res.gpu.toLocaleString()+' MEM:'+g_lastResult.res.mem.toLocaleString(),w/2,175);
-  ctx.fillStyle='#555';ctx.font='10px sans-serif';
-  ctx.fillText('耗时 '+g_lastResult.elapsed.toFixed(1)+'s  |  '+new Date().toLocaleString(),w/2,200);
+  if(g_lastResult.info.model)ctx.fillText('型号: '+g_lastResult.info.model,w/2,168);
+  ctx.fillText('CPU:'+g_lastResult.res.cpu.toLocaleString()+' GPU:'+g_lastResult.res.gpu.toLocaleString()+' MEM:'+g_lastResult.res.mem.toLocaleString(),w/2,190);
+  ctx.fillStyle='#555';ctx.font='10px sans-serif';ctx.fillText('耗时 '+g_lastResult.elapsed.toFixed(1)+'s  |  '+new Date().toLocaleString(),w/2,215);
+  ctx.fillStyle='#333';ctx.font='9px sans-serif';ctx.fillText('实测数据 · 算法透明 · michoney.github.io/edystudio',w/2,240);
   _capturedImg=c.toDataURL('image/png');
-  var pv=document.getElementById('imgPreview');pv.src=_capturedImg;pv.style.display='block';
+  // Download
+  var a=document.createElement('a');a.download='mage-benchmark-'+Date.now()+'.png';a.href=_capturedImg;a.click();
 }
 
-// ─── Share ───
+// ═══ Share ═══
 function shareIt(){
   var s=document.getElementById('totalScore').textContent,n=document.getElementById('devName').textContent;
-  var t=n+' 马哥验机跑分 '+s+' 分\\n'+window.location.href;
+  var t=n+' 马哥验机跑分 '+s+' 分\n'+window.location.href;
   if(navigator.share)navigator.share({title:'马哥验机跑分',text:t});
-  else{navigator.clipboard.writeText(t);alert('已复制')}
+  else{navigator.clipboard.writeText(t);alert('已复制到剪贴板')}
 }
 
-detect();document.getElementById('scoreHero').style.display='block';document.getElementById('totalScore').textContent='---';
+detect();document.getElementById('scoreHero').style.display='block';
 </script>
 </body>
 </html>
