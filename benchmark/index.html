@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>吉验机 · 性能跑分</title>
+<title>马哥验机 · 性能跑分</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 :root{--bg:#080f0a;--card:rgba(255,255,255,.05);--green:#00e676;--green-dim:#1b5e20;--text:#e8e8e8;--text2:#999;--text3:#555;--red:#ff5252;--gold:#ffd740}
@@ -79,7 +79,7 @@ body{display:flex;flex-direction:column;align-items:center}
 <div class="a1"></div><div class="a2"></div>
 <div class="ct" id="app">
   <div class="hd">
-    <div class="logo">▸ 吉验机</div>
+    <div class="logo">▸ 马哥验机</div>
     <div class="title">性能跑分</div>
     <div class="sub">扫二维码手机也能测 · 看看你的手机几分</div>
   </div>
@@ -259,7 +259,7 @@ function captureResult(){
   var ctx=c.getContext('2d');
   ctx.fillStyle='#080f0a';ctx.fillRect(0,0,w,h);
   ctx.fillStyle='#fff';ctx.font='bold 14px sans-serif';ctx.textAlign='center';
-  ctx.fillText('吉验机 · 性能跑分',w/2,25);
+  ctx.fillText('马哥验机 · 性能跑分',w/2,25);
   ctx.font='bold 36px sans-serif';ctx.fillStyle='#00e676';
   ctx.fillText(g_lastResult.res.total.toLocaleString(),w/2,75);
   ctx.font='12px sans-serif';ctx.fillStyle='#999';ctx.fillText('综合跑分',w/2,98);
@@ -278,8 +278,8 @@ function captureResult(){
 // ─── Share ───
 function shareIt(){
   var s=document.getElementById('totalScore').textContent,n=document.getElementById('devName').textContent;
-  var t=n+' 吉验机跑分 '+s+' 分\\n'+window.location.href;
-  if(navigator.share)navigator.share({title:'吉验机跑分',text:t});
+  var t=n+' 马哥验机跑分 '+s+' 分\\n'+window.location.href;
+  if(navigator.share)navigator.share({title:'马哥验机跑分',text:t});
   else{navigator.clipboard.writeText(t);alert('已复制')}
 }
 
