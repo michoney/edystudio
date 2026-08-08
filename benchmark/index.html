@@ -67,7 +67,16 @@ body{display:flex;flex-direction:column;align-items:center}
 .pr .pi{font-size:12px;width:18px}
 .pr .pn{flex:1}
 .pr .pt{font-size:10px;color:var(--text3);min-width:35px;text-align:right}
-/* btn */
+/* buyback banner */
+.recycle-banner{background:linear-gradient(135deg,rgba(255,180,0,.12),rgba(0,230,118,.08));border:1px solid rgba(255,180,0,.2);border-radius:12px;padding:12px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.rb-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.rb-icon{font-size:28px;flex-shrink:0}
+.rb-text{min-width:0}
+.rb-title{font-size:14px;font-weight:700;color:#ffb400;letter-spacing:1px}
+.rb-sub{font-size:10px;color:var(--text2);margin-top:2px}
+.rb-right{text-align:center;flex-shrink:0}
+.rb-wx{font-size:10px;color:var(--text3);letter-spacing:1px}
+.rb-id{font-size:13px;font-weight:700;color:var(--green);font-family:monospace;margin-top:2px}
 .btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;letter-spacing:1px;transition:all .2s}
 .btn:active{transform:scale(.97)}
 .btn:disabled{opacity:.4;transform:none}
@@ -126,6 +135,21 @@ body{display:flex;flex-direction:column;align-items:center}
   </div>
 
   <button class="btn btn-go" id="btnGo" onclick="runAll()">⚡ 开始跑分</button>
+
+  <!-- Buyback banner -->
+  <div class="recycle-banner">
+    <div class="rb-left">
+      <div class="rb-icon">♻️</div>
+      <div class="rb-text">
+        <div class="rb-title">马哥回收</div>
+        <div class="rb-sub">高价回收二手手机 · 高于平台价格</div>
+      </div>
+    </div>
+    <div class="rb-right">
+      <div class="rb-wx">微信</div>
+      <div class="rb-id">mage_2378</div>
+    </div>
+  </div>
 
   <!-- Progress -->
   <div class="pp" id="progPanel">
