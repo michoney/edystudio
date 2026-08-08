@@ -14,7 +14,8 @@ body{display:flex;flex-direction:column;align-items:center}
 .ct{position:relative;z-index:1;width:100%;max-width:440px;padding:16px;display:flex;flex-direction:column;gap:11px;padding-bottom:50px}
 /* header */
 .hd{text-align:center;padding:6px 0}
-.hd .logo{font-size:12px;color:var(--green);letter-spacing:2px}
+.hd .logo{font-size:12px;color:var(--green);letter-spacing:2px;text-decoration:none;cursor:pointer;transition:opacity .2s}
+.hd .logo:hover{opacity:.7}
 .hd .title{font-size:22px;font-weight:800;color:#fff;letter-spacing:-1px;text-shadow:0 0 20px rgba(0,230,118,.3)}
 .hd .sub{font-size:11px;color:var(--text2);margin-top:2px}
 /* qr */
@@ -102,8 +103,8 @@ body{display:flex;flex-direction:column;align-items:center}
 <canvas id="bgCanvas"></canvas>
 <div class="ct" id="app">
   <div class="hd">
-    <div class="logo">▸ 马哥验机</div>
-    <div class="title">性能跑分</div>
+    <a class="logo" href="https://michoney.github.io/edystudio/">← EDY.AI.STUDIO</a>
+    <div class="title">▸ 马哥验机</div>
     <div class="sub">真实算法 · 本地运算 · 拒绝假数据</div>
   </div>
 
