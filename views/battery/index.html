@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tesla Model Y 电池包 · 爆炸图</title>
+<style>
+  :root {
+    --bg: #0e1116; --panel: rgba(20,26,34,.84); --line: rgba(255,255,255,.09);
+    --txt: #dbe4ec; --txt-dim: #8b98a5; --accent: #ff8a2a; --accent2: #37f0c0;
+    --blue: #7fb3d5;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--txt); }
+  #app { position: fixed; inset: 0; }
+  canvas { display: block; }
+
+  .panel { position: fixed; z-index: 10; background: var(--panel); border: 1px solid var(--line);
+    border-radius: 12px; backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    padding: 14px 16px; box-shadow: 0 8px 30px rgba(0,0,0,.4); }
+  .panel h2 { margin: 0 0 4px; font-size: 15px; font-weight: 600; letter-spacing: .5px; }
+  .panel .sub { margin: 0 0 10px; font-size: 11px; color: var(--txt-dim); }
+
+  #title { top: 16px; left: 16px; max-width: 320px; }
+  #title .tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px;
+    background: rgba(255,138,42,.15); color: var(--accent); border: 1px solid rgba(255,138,42,.3); margin-bottom: 6px; }
+  #related { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 12; display: flex; gap: 8px; }
+  #related button { padding: 7px 14px; border-radius: 20px; cursor: pointer; font-size: 12.5px; font-family: inherit;
+    background: var(--panel); color: var(--accent2); border: 1px solid rgba(55,240,192,.4); backdrop-filter: blur(8px); }
+  #related button.rel { color: var(--accent); border-color: rgba(255,138,42,.4); }
+  #related button:hover { background: rgba(55,240,192,.12); }
+
+  #legend { top: 16px; right: 16px; width: 250px; }
+  #legend .row { display: flex; align-items: center; gap: 10px; padding: 5px 4px; }
+  #legend .row i { width: 22px; height: 8px; border-radius: 6px; flex: 0 0 auto; }
+  #legend .row b { font-size: 13px; }
+  #legend .row span { font-size: 11px; color: var(--txt-dim); margin-left: auto; }
+
+  #parts { bottom: 16px; left: 16px; width: 300px; max-height: 46vh; display: flex; flex-direction: column; }
+  #parts .list { overflow-y: auto; margin-top: 6px; padding-right: 4px; }
+  #parts .list::-webkit-scrollbar { width: 6px; }
+  #parts .list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.14); border-radius: 3px; }
+
+  .row { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 8px; cursor: pointer;
+    border: 1px solid transparent; transition: background .15s, border .15s; }
+  .row:hover { background: rgba(255,255,255,.05); }
+  .row.sel { background: rgba(255,138,42,.12); border-color: rgba(255,138,42,.4); }
+  .row .dot { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; }
+  .row .nm { flex: 0 0 116px; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row input[type=range] { flex: 1 1 auto; min-width: 0; accent-color: var(--accent); }
+  .row .pct { flex: 0 0 30px; font-size: 10px; color: var(--txt-dim); text-align: right; font-variant-numeric: tabular-nums; }
+
+  #ctrl { bottom: 16px; right: 16px; }
+  .ctl { margin-bottom: 12px; } .ctl:last-child { margin-bottom: 0; }
+  .ctl label { display: block; font-size: 11px; color: var(--txt-dim); margin-bottom: 4px; }
+  .ctl .big { display: flex; align-items: center; gap: 8px; }
+  .ctl input[type=range] { flex: 1; accent-color: var(--accent2); }
+  .ctl .val { font-size: 11px; min-width: 34px; text-align: right; font-variant-numeric: tabular-nums; }
+  .btnrow { display: flex; gap: 8px; flex-wrap: wrap; width: 232px; }
+  button { flex: 1; min-width: 64px; padding: 8px 10px; border-radius: 9px; cursor: pointer;
+    background: rgba(255,255,255,.06); color: var(--txt); border: 1px solid var(--line);
+    font-size: 12.5px; font-family: inherit; transition: background .15s, border .15s, transform .05s; }
+  button:hover { background: rgba(255,255,255,.12); }
+  button:active { transform: scale(.96); }
+  button.on { background: rgba(55,240,192,.16); border-color: rgba(55,240,192,.5); color: var(--accent2); }
+
+  #selinfo { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 10;
+    font-size: 12px; color: var(--txt-dim); padding: 6px 14px; border-radius: 20px;
+    background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(8px); }
+  #selinfo b { color: var(--accent); }
+  #hint { position: fixed; bottom: 16px; right: 16px; z-index: 9; font-size: 11px; color: var(--txt-dim); line-height: 1.7; opacity: .8; }
+
+  /* —— 手机窄屏适配 —— */
+  @media (max-width: 820px) {
+    #hint, #selinfo, #parts, #legend { display: none; }
+    #title { max-width: 46vw; padding: 10px 12px; }
+    #title h2 { font-size: 13px; }
+    #title .sub { font-size: 10px; }
+    #related { top: 10px; right: 8px; left: auto; transform: none; gap: 5px; }
+    #related button { padding: 6px 10px; font-size: 11px; }
+    #ctrl { top: auto; bottom: 10px; right: 8px; left: 8px; width: auto; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<div id="title" class="panel">
+  <span class="tag">TESLA · 官方 EPC 目录</span>
+  <h2>Model Y 电池包</h2>
+  <p class="sub">下托盘 + 上盖 + 4 电池模组 + 配电盒 · 爆炸示意（示意建模）</p>
+</div>
+<div id="related">
+  <button onclick="location.href='../../index.html'">↑ 整车拓扑</button>
+  <button class="rel" onclick="location.href='../drive-unit/'">→ 后桥电驱（受电）</button>
+</div>
+
+<div id="legend" class="panel">
+  <h2>线路图例</h2>
+  <div class="row"><i style="background:#ff3b30"></i><b>红色</b><span>高压回路 HV</span></div>
+  <div class="row"><i style="background:#3391ff"></i><b>蓝色</b><span>冷却液管路</span></div>
+  <div class="row"><i style="background:#ffc400"></i><b>黄色</b><span>BMS 采样信号</span></div>
+</div>
+
+<div id="ctrl" class="panel">
+  <div class="ctl">
+    <label>总分解</label>
+    <div class="big"><input type="range" id="master" min="0" max="100" value="0"><span class="val" id="masterval">0%</span></div>
+  </div>
+  <div class="btnrow ctl">
+    <button id="btnExplode">一键拆分</button>
+    <button id="btnMerge">一键合并</button>
+  </div>
+  <div class="btnrow">
+    <button id="btnXray">全透视 X-Ray</button>
+    <button id="btnLabel">部件标注</button>
+    <button id="btnSpin">自动旋转</button>
+  </div>
+</div>
+
+<div id="parts" class="panel">
+  <h2>零部件 · 单独开合</h2>
+  <p class="sub">拖滑块或点击选中（3D 点选亦可）</p>
+  <div class="list" id="partList"></div>
+</div>
+
+<div id="selinfo">当前选中：<b id="selname">无</b></div>
+<div id="hint">🖱 左键旋转 · 滚轮缩放 · 右键平移<br>点击部件高亮选中</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+// ---------- 场景 ----------
+const app = document.getElementById('app');
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x0e1116, 1200, 4800);
+const camera = new THREE.PerspectiveCamera(46, innerWidth / innerHeight, 1, 9000);
+camera.position.set(1600, 1200, 1900);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+app.appendChild(renderer.domElement);
+
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(innerWidth, innerHeight);
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.top = '0';
+labelRenderer.domElement.style.pointerEvents = 'none';
+app.appendChild(labelRenderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 140, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 500;
+controls.maxDistance = 6000;
+
+scene.add(new THREE.HemisphereLight(0xcfd8e0, 0x1a2027, 0.8));
+const key = new THREE.DirectionalLight(0xffffff, 2.0);
+key.position.set(1200, 2200, 1400);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+key.shadow.camera.left = -3000; key.shadow.camera.right = 3000;
+key.shadow.camera.top = 3000; key.shadow.camera.bottom = -3000;
+key.shadow.camera.far = 8000;
+scene.add(key);
+const fill = new THREE.DirectionalLight(0x7fb3d5, 0.7);
+fill.position.set(-1400, 600, -1400);
+scene.add(fill);
+
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(8000, 8000),
+  new THREE.MeshStandardMaterial({ color: 0x12161c, roughness: 0.95, metalness: 0.1 }));
+ground.rotation.x = -Math.PI / 2; ground.position.y = 0; ground.receiveShadow = true; scene.add(ground);
+const grid = new THREE.GridHelper(4000, 40, 0x2a3440, 0x1a222b); grid.position.y = 1; scene.add(grid);
+
+// ---------- 材质 ----------
+const matReg = [];
+function reg(m, b) { matReg.push({ mat: m, base: b }); return m; }
+function setXray(on) {
+  for (const { mat, base } of matReg) {
+    mat.transparent = true; mat.depthWrite = !on; mat.opacity = on ? base * 0.3 : base; mat.needsUpdate = true;
+  }
+}
+const M = {
+  cover: reg(new THREE.MeshStandardMaterial({ color: 0x9fb6c4, metalness: 0.55, roughness: 0.35, transparent: true, opacity: 0.32 }), 0.32),
+  coverEdge: new THREE.LineBasicMaterial({ color: 0xbfe0f2, transparent: true, opacity: 0.5 }),
+  tray: reg(new THREE.MeshStandardMaterial({ color: 0x2a3138, metalness: 0.7, roughness: 0.45 }), 1.0),
+  module: reg(new THREE.MeshStandardMaterial({ color: 0x2c3846, metalness: 0.4, roughness: 0.5 }), 1.0),
+  cell: reg(new THREE.MeshStandardMaterial({ color: 0xd8dde2, metalness: 0.8, roughness: 0.25 }), 1.0),
+  busbar: reg(new THREE.MeshStandardMaterial({ color: 0xcf8a4a, metalness: 0.9, roughness: 0.3 }), 1.0),
+  penthouse: reg(new THREE.MeshStandardMaterial({ color: 0x20262c, metalness: 0.6, roughness: 0.5 }), 1.0),
+  bolt: reg(new THREE.MeshStandardMaterial({ color: 0x5c6871, metalness: 0.9, roughness: 0.3 }), 1.0),
+  line: (c, e) => reg(new THREE.MeshStandardMaterial({ color: c, metalness: 0.25, roughness: 0.35, emissive: c, emissiveIntensity: e }), 1.0),
+};
+const leaderMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5, depthTest: false });
+
+// 标签颜色
+const C_BLUE = '#7fb3d5', C_ORANGE = '#ff8a2a', C_TEAL = '#37f0c0', C_RED = '#ff5b52', C_YELLOW = '#ffc400';
+
+// ---------- 部件注册 / 标签 ----------
+const parts = [];
+const pickMeshes = [];
+const meshToPart = new Map();
+function regPart(id, label, color, explode, spinKind) {
+  const g = new THREE.Group(); scene.add(g);
+  const p = { id, label, color, group: g, base: new THREE.Vector3(), explode: explode.clone(), factor: 0, target: 0, spin: spinKind, meshes: [] };
+  parts.push(p); return p;
+}
+function addMesh(p, mesh) { p.group.add(mesh); p.meshes.push(mesh); pickMeshes.push(mesh); meshToPart.set(mesh, p); return mesh; }
+function label(p, text, anchor, offset) {
+  const from = anchor.clone(), to = anchor.clone().add(offset);
+  const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([from, to]), leaderMat);
+  p.group.add(line);
+  const div = document.createElement('div');
+  div.innerHTML = text;
+  Object.assign(div.style, { color: p.color, fontSize: '12px', fontWeight: '600', whiteSpace: 'nowrap',
+    textShadow: '0 1px 6px rgba(0,0,0,.9)', background: 'rgba(10,14,18,.55)',
+    padding: '2px 8px', borderRadius: '20px', border: `1px solid ${p.color}55`, letterSpacing: '.5px' });
+  const obj = new CSS2DObject(div); obj.position.copy(to); p.group.add(obj);
+}
+
+function tube(pts, radius, color, emissiveIntensity = 0.35) {
+  const curve = new THREE.CatmullRomCurve3(pts.map(p => new THREE.Vector3(...p)));
+  const geo = new THREE.TubeGeometry(curve, 44, radius, 12, false);
+  return new THREE.Mesh(geo, M.line(color, emissiveIntensity));
+}
+
+// ============================================================
+//  下托盘
+// ============================================================
+(function () {
+  const p = regPart('tray', '下托盘<br>Lower Tray', C_BLUE, new THREE.Vector3(0, -260, 0), null);
+  const tray = new THREE.Mesh(new THREE.BoxGeometry(2100, 110, 1400), M.tray);
+  tray.position.set(0, 55, 0); tray.castShadow = true;
+  addMesh(p, tray);
+  // 边框螺栓
+  for (let i = 0; i < 10; i++) {
+    const bolt = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 6, 16), M.bolt);
+    bolt.position.set(-1000 + i * 210, 118, -680);
+    addMesh(p, bolt);
+  }
+  label(p, '下托盘 Lower Tray', new THREE.Vector3(0, 30, -740), new THREE.Vector3(0, -60, 0));
+})();
+
+// ============================================================
+//  上盖（透明）
+// ============================================================
+(function () {
+  const p = regPart('cover', '上盖<br>Upper Cover', C_BLUE, new THREE.Vector3(0, 320, 0), null);
+  const cover = new THREE.Mesh(new THREE.BoxGeometry(2060, 90, 1360), M.cover);
+  cover.position.set(0, 275, 0);
+  addMesh(p, cover);
+  const edge = new THREE.LineSegments(new THREE.EdgesGeometry(cover.geometry), M.coverEdge);
+  edge.position.copy(cover.position);
+  p.group.add(edge);
+  label(p, '上盖 Upper Cover', new THREE.Vector3(0, 330, 720), new THREE.Vector3(0, 70, 0));
+})();
+
+// ============================================================
+//  电池模组 ×4（2170 电芯 + 汇流排）
+// ============================================================
+const MODULES = [
+  { id: 'modA', name: '模组 A', en: 'Module A', pos: [-520, -330], expl: [0, 260, -150], color: C_ORANGE },
+  { id: 'modB', name: '模组 B', en: 'Module B', pos: [-520, 330], expl: [0, 260, 150], color: C_ORANGE },
+  { id: 'modC', name: '模组 C', en: 'Module C', pos: [520, -330], expl: [0, 430, -150], color: C_ORANGE },
+  { id: 'modD', name: '模组 D', en: 'Module D', pos: [520, 330], expl: [0, 430, 150], color: C_ORANGE },
+];
+function buildModule(m) {
+  const p = regPart(m.id, `${m.name}<br>${m.en}`, m.color, new THREE.Vector3(...m.expl), null);
+  const [x, z] = m.pos;
+  const block = new THREE.Mesh(new THREE.BoxGeometry(950, 90, 620), M.module);
+  block.position.set(x, 155, z); block.castShadow = true;
+  addMesh(p, block);
+  // 2170 电芯（示意网格）
+  const cellGeo = new THREE.CylinderGeometry(8, 8, 14, 14);
+  for (let i = 0; i < 6; i++) for (let j = 0; j < 4; j++) {
+    const cell = new THREE.Mesh(cellGeo, M.cell);
+    cell.position.set(x - 300 + i * 120, 207, z - 210 + j * 140);
+    addMesh(p, cell);
+  }
+  // 汇流排（铜排）
+  const bus = new THREE.Mesh(new THREE.BoxGeometry(850, 4, 540), M.busbar);
+  bus.position.set(x, 220, z);
+  addMesh(p, bus);
+  label(p, `${m.name} ${m.en}`, new THREE.Vector3(x, 230, z + 360), new THREE.Vector3(0, 60, 0));
+}
+MODULES.forEach(buildModule);
+
+// ============================================================
+//  配电盒（BMS / 接触器 / 保险）
+// ============================================================
+(function () {
+  const p = regPart('penthouse', '配电盒<br>Penthouse (BMS)', C_TEAL, new THREE.Vector3(300, 0, 0), null);
+  const box = new THREE.Mesh(new THREE.BoxGeometry(220, 100, 900), M.penthouse);
+  box.position.set(1040, 205, 0); box.castShadow = true;
+  addMesh(p, box);
+  // 高压接触器（小红块）
+  for (let i = 0; i < 3; i++) {
+    const contactor = new THREE.Mesh(new THREE.BoxGeometry(40, 30, 40), M.line(0xff3b30, 0.25));
+    contactor.position.set(1040, 265, -250 + i * 250);
+    addMesh(p, contactor);
+  }
+  label(p, '配电盒 Penthouse（BMS·接触器·保险）', new THREE.Vector3(1040, 260, 0), new THREE.Vector3(0, 80, 0));
+})();
+
+// ============================================================
+//  高压回路（红色）
+// ============================================================
+(function () {
+  const p = regPart('hv', '高压回路<br>HV (红色)', C_RED, new THREE.Vector3(0, 230, 0), null);
+  const R = 0xff3b30;
+  // 正极 HV+
+  addMesh(p, tube([[1000, 240, -300], [0, 240, -300], [-1000, 240, -300], [-1040, 240, -60]], 9, R, 0.4));
+  // 负极 HV−
+  addMesh(p, tube([[1000, 240, 300], [0, 240, 300], [-1000, 240, 300], [-1040, 240, 60]], 9, R, 0.4));
+  // 模组间串联母排（示意，短红排）
+  addMesh(p, tube([[-520, 240, -330], [-520, 240, 330], [520, 240, 330], [520, 240, -330], [1000, 240, -300]], 5, R, 0.35));
+  label(p, '高压回路 HV（红色）', new THREE.Vector3(0, 250, -300), new THREE.Vector3(0, 80, -40));
+})();
+
+// ============================================================
+//  冷却液管路（蓝色）
+// ============================================================
+(function () {
+  const p = regPart('coolant', '冷却液管路<br>Coolant (蓝色)', C_BLUE, new THREE.Vector3(0, 360, 0), null);
+  const B = 0x3391ff;
+  // 进水 / 回水 两条主管
+  addMesh(p, tube([[1000, 130, -640], [-1000, 130, -640]], 8, B, 0.4));
+  addMesh(p, tube([[1000, 130, 640], [-1000, 130, 640]], 8, B, 0.4));
+  // 前端冷却接口（歧管）
+  const man = new THREE.Mesh(new THREE.CylinderGeometry(18, 18, 700, 20), M.line(B, 0.3));
+  man.rotation.x = Math.PI / 2; man.position.set(1010, 130, 0);
+  addMesh(p, man);
+  label(p, '冷却液管路 Coolant（蓝色）', new THREE.Vector3(0, 140, 640), new THREE.Vector3(0, 80, 60));
+})();
+
+// ============================================================
+//  BMS 采样信号线（黄色）
+// ============================================================
+(function () {
+  const p = regPart('bms', 'BMS 采样线<br>Signal (黄色)', C_YELLOW, new THREE.Vector3(0, 470, 0), null);
+  const Y = 0xffc400;
+  const targets = [[-520, -330], [-520, 330], [520, -330], [520, 330]];
+  for (const [tx, tz] of targets) {
+    addMesh(p, tube([[1000, 210, 0], [(1000 + tx) / 2, 210, tz], [tx, 215, tz]], 2.5, Y, 0.5));
+  }
+  label(p, 'BMS 采样信号（黄色）', new THREE.Vector3(760, 220, 0), new THREE.Vector3(0, 80, 0));
+})();
+
+// ============================================================
+//  高压连接器（→ 电驱）
+// ============================================================
+(function () {
+  const p = regPart('hvconn', '高压连接器<br>HV Connector', C_RED, new THREE.Vector3(-300, 0, 0), null);
+  const plug = new THREE.Mesh(new THREE.BoxGeometry(120, 120, 180), M.penthouse);
+  plug.position.set(-1080, 200, 0);
+  addMesh(p, plug);
+  const port = new THREE.Mesh(new THREE.CylinderGeometry(30, 30, 60, 20), M.line(0xff3b30, 0.3));
+  port.rotation.z = Math.PI / 2; port.position.set(-1120, 200, 0);
+  addMesh(p, port);
+  label(p, '高压连接器 → 电驱', new THREE.Vector3(-1080, 270, 0), new THREE.Vector3(0, 70, 0));
+})();
+
+// ============================================================
+//  每部件滑块列表
+// ============================================================
+const partListEl = document.getElementById('partList');
+let selected = null, selBox = null;
+function selectPart(part) {
+  selected = part;
+  if (selBox) { scene.remove(selBox); selBox = null; }
+  document.querySelectorAll('#partList .row').forEach(r => r.classList.toggle('sel', part && r.dataset.id === part.id));
+  document.getElementById('selname').textContent = part ? part.label.replace(/<br>.*/, '') : '无';
+  if (part) {
+    selBox = new THREE.BoxHelper(part.group, 0xff8a2a);
+    selBox.material.depthTest = false;
+    scene.add(selBox);
+  }
+}
+for (const p of parts) {
+  const row = document.createElement('div');
+  row.className = 'row'; row.dataset.id = p.id;
+  row.innerHTML = `<span class="dot" style="background:${p.color}"></span>
+    <span class="nm">${p.label.replace(/<br>.*/, '')}</span>
+    <input type="range" min="0" max="100" value="0"><span class="pct">0%</span>`;
+  const slider = row.querySelector('input');
+  slider.addEventListener('input', () => { p.target = slider.value / 100; row.querySelector('.pct').textContent = slider.value + '%'; });
+  row.addEventListener('click', (e) => { if (e.target !== slider) selectPart(selected === p ? null : p); });
+  partListEl.appendChild(row);
+}
+
+// 3D 拾取
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+renderer.domElement.addEventListener('pointerdown', (e) => {
+  pointer.x = (e.clientX / innerWidth) * 2 - 1;
+  pointer.y = -(e.clientY / innerHeight) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(pickMeshes, false);
+  selectPart(hits.length ? meshToPart.get(hits[0].object) : null);
+});
+
+// ---------- 控制 ----------
+const masterEl = document.getElementById('master'), masterVal = document.getElementById('masterval');
+masterEl.addEventListener('input', () => {
+  const v = masterEl.value / 100;
+  masterVal.textContent = masterEl.value + '%';
+  parts.forEach((p, i) => {
+    p.target = v;
+    const row = partListEl.children[i];
+    row.querySelector('input').value = masterEl.value;
+    row.querySelector('.pct').textContent = masterEl.value + '%';
+  });
+});
+document.getElementById('btnExplode').addEventListener('click', () => { masterEl.value = 100; masterEl.dispatchEvent(new Event('input')); });
+document.getElementById('btnMerge').addEventListener('click', () => { masterEl.value = 0; masterEl.dispatchEvent(new Event('input')); });
+
+let xray = false, labelsOn = true, autoRotate = false;
+const btnXray = document.getElementById('btnXray');
+btnXray.addEventListener('click', () => { xray = !xray; setXray(xray); btnXray.classList.toggle('on', xray); });
+const btnLabel = document.getElementById('btnLabel');
+btnLabel.addEventListener('click', () => {
+  labelsOn = !labelsOn; btnLabel.classList.toggle('on', !labelsOn);
+  labelRenderer.domElement.style.display = labelsOn ? 'block' : 'none';
+  leaderMat.visible = labelsOn;
+});
+const btnSpin = document.getElementById('btnSpin');
+btnSpin.addEventListener('click', () => {
+  autoRotate = !autoRotate; controls.autoRotate = autoRotate; controls.autoRotateSpeed = 0.7;
+  btnSpin.classList.toggle('on', autoRotate);
+});
+
+// ---------- 动画 ----------
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  for (const p of parts) {
+    p.factor += (p.target - p.factor) * 0.16;
+    p.group.position.copy(p.base).addScaledVector(p.explode, p.factor);
+  }
+  if (selBox) selBox.update();
+  controls.update();
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+}
+animate();
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight); labelRenderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>
