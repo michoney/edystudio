@@ -12,6 +12,7 @@ Edy Studio 主页源码仓库 — 粒子特效画廊与 AI 作品集。
 ## 内容
 
 - **gallery/** — p5.js 粒子特效画廊（gallery.html 主页 + 每个特效独立目录）
+- **models.html** — Model 产品库（数字孪生与 AI 可视化产品）
 - **benchmark/** — 马哥验机：手机性能检测工具
 - **tools/** — AI 交互工具集
 - **video/** — AI 视频作品
