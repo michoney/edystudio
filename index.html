@@ -63,6 +63,15 @@
   #autonext .lb { font-size: 12px; color: var(--txt); }
   #autonext button { padding: 6px 12px; border-radius: 20px; font-size: 12px; cursor: pointer;
     background: rgba(255,138,42,.16); border: 1px solid rgba(255,138,42,.5); color: var(--accent); }
+  /* 自动进入开关 */
+  #autonext .sw { position: relative; width: 40px; height: 22px; flex: 0 0 auto; cursor: pointer; }
+  #autonext .sw input { position: absolute; opacity: 0; width: 0; height: 0; }
+  #autonext .sw .tk { position: absolute; inset: 0; border-radius: 22px; background: rgba(255,255,255,.12);
+    border: 1px solid var(--line); transition: background .2s, border-color .2s; }
+  #autonext .sw .tk::before { content: ""; position: absolute; left: 3px; top: 2px; width: 16px; height: 16px;
+    border-radius: 50%; background: #889; transition: transform .2s, background .2s; }
+  #autonext .sw input:checked + .tk { background: rgba(55,240,192,.2); border-color: rgba(55,240,192,.5); }
+  #autonext .sw input:checked + .tk::before { transform: translateX(18px); background: var(--accent2); }
 
   /* —— 竖屏提示（自动横屏兜底）—— */
   #rotate { position: fixed; inset: 0; z-index: 40; background: rgba(10,14,18,.96); display: none;
@@ -116,6 +125,7 @@
 
 <div id="autonext">
   <span class="cd" id="autonext-cd">20</span><span class="lb">秒后自动进入后桥电驱</span>
+  <label class="sw" title="自动进入开关"><input type="checkbox" id="autonext-toggle" checked><span class="tk"></span></label>
   <button id="autonext-skip">立即进入 →</button>
 </div>
 
@@ -538,16 +548,46 @@ addEventListener('resize', () => {
   camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
   renderer.setSize(innerWidth, innerHeight); labelRenderer.setSize(innerWidth, innerHeight);
 });
-// —— 20 秒自动进入后桥电驱 ——
+// —— 自动进入后桥电驱（仅首次进入 + 开关可控）——
 const NEXT_PAGE = 'views/drive-unit/';
-let sec = 20;
+const K_VISITED = 'm3y_visited';
+const K_AUTO = 'm3y_autonext';
 const cdEl = document.getElementById('autonext-cd');
-document.getElementById('autonext-skip').addEventListener('click', () => location.href = NEXT_PAGE);
-setInterval(() => {
-  sec--;
-  if (sec <= 0) { location.href = NEXT_PAGE; return; }
+const lbEl = document.querySelector('#autonext .lb');
+const autoToggle = document.getElementById('autonext-toggle');
+
+let autoNext = localStorage.getItem(K_AUTO) !== '0';   // 默认开启
+const visited = localStorage.getItem(K_VISITED) === '1';
+let sec = 20, timer = null;
+
+function startCountdown() {
+  stopCountdown();
+  sec = 20;
   cdEl.textContent = sec;
-}, 1000);
+  lbEl.textContent = '秒后自动进入后桥电驱';
+  timer = setInterval(() => {
+    sec--;
+    if (sec <= 0) { stopCountdown(); location.href = NEXT_PAGE; return; }
+    cdEl.textContent = sec;
+  }, 1000);
+}
+function stopCountdown() {
+  if (timer) { clearInterval(timer); timer = null; }
+  cdEl.textContent = '—';
+  lbEl.textContent = '自动进入已关闭';
+}
+
+autoToggle.checked = autoNext;
+autoToggle.addEventListener('change', () => {
+  autoNext = autoToggle.checked;
+  localStorage.setItem(K_AUTO, autoNext ? '1' : '0');
+  if (autoNext) startCountdown(); else stopCountdown();
+});
+document.getElementById('autonext-skip').addEventListener('click', () => location.href = NEXT_PAGE);
+
+// 首次进入（开关开启）→ 自动倒计时；否则显示关闭态
+if (autoNext && !visited) startCountdown(); else stopCountdown();
+localStorage.setItem(K_VISITED, '1');
 
 // —— 自动横屏：优先锁 orientation，iOS 不支持则用竖屏提示兜底 ——
 function tryLandscape() {
