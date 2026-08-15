@@ -216,6 +216,120 @@ docker run -it --rm \
     </div>
   </div>
 
+  <div class="news-card hot">
+    <div class="news-head">
+      <span class="fire">🔥</span>
+      <span class="tag">HOT</span>
+      <a class="link-ext" href="https://github.com/vmoranv/jshookmcp" target="_blank">→ GitHub · 1.8k+</a>
+      <a class="link-ext" href="https://vmoranv.github.io/jshookmcp/" target="_blank">文档</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      JSHookMCP —— 给 AI 装上 600+ 工具的 JS 逆向与安全研究神器
+      <span class="en">JSHookMCP · 636 Hooks for AI Agents · JS Reversing &amp; Security Research</span>
+    </div>
+    <div class="news-subtitle">
+      专为 AI Agent 设计的 MCP 服务器——34 个技术域、636 个原子工具，AI 能直接动手做逆向。
+    </div>
+    <div class="news-body">
+
+      <p>一个专为 AI Agent 设计的 <strong>MCP 服务器</strong>，把 JavaScript 分析、安全研究、浏览器自动化、逆向工程整合成一套超级工具箱。</p>
+
+      <h3>它能做什么</h3>
+      <ul>
+        <li><strong>浏览器全栈自动化</strong>：Chromium / Camoufox + CDP 调试 + 反检测 + 验证码处理</li>
+        <li><strong>网络拦截与分析</strong>：HTTP/2 帧操作、中间人捕获、GraphQL 解析、Burp 桥接</li>
+        <li><strong>JS Hook 与动态分析</strong>：运行时 Hook、源码映射重建、AST 变换</li>
+        <li><strong>AI 智能分析</strong>：LLM 驱动的反混淆、加密算法识别、代码深度理解</li>
+        <li><strong>逆向与取证</strong>：WASM 反编译、二进制分析、Frida / Ghidra / IDA 桥接、进程内存取证、硬件断点</li>
+        <li><strong>复合工作流</strong>：声明式工作流、热重载插件、跨域编排</li>
+        <li><strong>高效搜索</strong>：混合 BM25 + 向量搜索，轻量模式仅需约 <strong>3K tokens</strong>（完整模式 40K+）</li>
+      </ul>
+      <p>以前需要人工写脚本、开浏览器、抓包、调试的活，现在直接让 AI 用自然语言调工具就能完成。</p>
+
+      <h3>简单使用方法</h3>
+
+      <p><strong>方式一：最快速接入（无需全局安装）</strong></p>
+      <p>在 Claude Desktop / Cursor 等 MCP 客户端的配置文件中加入：</p>
+      <pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:14px 18px;margin:10px 0;font-size:12px;color:#b8b8b8;font-family:'Courier New',monospace;line-height:1.8;overflow-x:auto;">{
+  "mcpServers": {
+    "jshook": {
+      "command": "npx",
+      "args": ["-y", "@jshookmcp/jshook@latest"],
+      "env": {
+        "MCP_TOOL_PROFILE": "search",
+        "npm_config_omit": "optional"
+      }
+    }
+  }
+}</pre>
+      <p>保存后重启客户端即可。<code>search</code> 档是轻量模式，启动快、占用低。</p>
+
+      <p><strong>方式二：多 AI 共用一个进程（推荐）</strong></p>
+      <pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:14px 18px;margin:10px 0;font-size:12px;color:#b8b8b8;font-family:'Courier New',monospace;line-height:1.8;overflow-x:auto;">pnpm build
+pnpm daemon</pre>
+      <p>所有客户端统一指向 <code>http://127.0.0.1:3000/mcp</code>，资源只加载一份，效率更高。</p>
+
+      <h3>适用人群</h3>
+      <ul>
+        <li>安全研究员 / 逆向工程师</li>
+        <li>需要让 AI 帮忙做浏览器自动化、抓包分析的人</li>
+        <li>想用 AI 做 JS 反混淆、加密定位、WASM 分析的开发者</li>
+        <li>做 Agent 工作流、想给大模型装上专业逆向能力的人</li>
+      </ul>
+
+      <p><strong>开源协议 AGPL-3.0</strong>，目前 1.8k+ Star，更新活跃。</p>
+    </div>
+    <div class="news-meta">
+      <span class="pill">MCP</span>
+      <span class="pill">JS Reversing</span>
+      <span class="pill">Security</span>
+      <span class="pill">636 Hooks</span>
+      <span class="pill">1.8k+ Star</span>
+      <span class="pill">AGPL-3.0</span>
+    </div>
+  </div>
+
+  <div class="news-card">
+    <div class="news-head">
+      <span class="fire">🎁</span>
+      <span class="tag" style="background:#ff9900;">粉丝福利</span>
+      <a class="link-ext" href="https://cutt.ly/aytpVurC" target="_blank">→ 下载</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      一站式视频下载 + 画质增强工具
+      <span class="en">All-in-One Video Downloader &amp; Enhancer</span>
+    </div>
+    <div class="news-subtitle">
+      支持 1000+ 视频站点下载，画质自动增强，Windows / Mac 双平台。
+    </div>
+    <div class="news-body">
+
+      <p><strong>下载：</strong><a href="https://cutt.ly/aytpVurC" target="_blank" style="color:#ff9900;">https://cutt.ly/aytpVurC</a>（繁体中文版本）</p>
+      <p><strong>支持站点参考：</strong><a href="https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md" target="_blank" style="color:#8bc34a;">yt-dlp 支持站点列表（1000+ 站点）</a></p>
+
+      <h3>福利内容</h3>
+      <ul>
+        <li><strong>3 天免费试用</strong></li>
+        <li><strong>150 视频生成点数</strong></li>
+      </ul>
+
+      <h3>领取方式</h3>
+      <ul>
+        <li>使用上方链接下载繁体中文版本并成功安装</li>
+        <li>发送 <strong>电脑操作系统</strong>（Windows / Mac）及 <strong>软件成功安装界面截图</strong></li>
+        <li>发送至邮箱：<a href="mailto:cocozeng7997@gmail.com" style="color:#4fc3f7;">cocozeng7997@gmail.com</a></li>
+      </ul>
+    </div>
+    <div class="news-meta">
+      <span class="pill">Video Download</span>
+      <span class="pill">Enhancement</span>
+      <span class="pill">Windows / Mac</span>
+      <span class="pill">粉丝福利</span>
+    </div>
+  </div>
+
 </div>
 
 <div class="footer">
