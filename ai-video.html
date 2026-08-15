@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edy.AI.Studio · AI Video</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a0a;color:#e0e0e0;font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;line-height:1.8;}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;border-bottom:1px solid #1a1a1a;background:#0d0d0d;position:sticky;top:0;z-index:100;}
+.nav .brand{font-size:16px;font-weight:300;letter-spacing:4px;color:#f5f5f5;text-decoration:none;}
+.nav .brand span{color:#ff3333;font-weight:700;}
+.nav .links a{color:#888;text-decoration:none;font-size:13px;letter-spacing:1px;margin-left:24px;transition:color 0.2s;}
+.nav .links a:hover{color:#f5f5f5;}
+.nav .links a.active{color:#ff3333;}
+.hero{text-align:center;padding:50px 20px 30px;border-bottom:1px solid #1f1f1f;}
+.hero .eyebrow{font-size:12px;letter-spacing:4px;color:#ff4444;font-family:'Courier New',monospace;margin-bottom:16px;}
+.hero h1{font-size:32px;font-weight:300;letter-spacing:6px;color:#f5f5f5;margin-bottom:12px;}
+.hero .sub{color:#666;font-size:13px;letter-spacing:2px;}
+.container{max-width:1000px;margin:40px auto;padding:0 20px;}
+.section-title{font-size:18px;font-weight:300;letter-spacing:2px;margin-bottom:20px;color:#ccc;display:flex;align-items:center;gap:10px;}
+.section-title::before{content:"";display:inline-block;width:20px;height:1px;background:#ff3333;}
+
+/* Pipeline */
+.pipeline{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:6px;margin-bottom:12px;padding:20px;background:#111;border:1px solid #1f1f1f;border-radius:8px;}
+.pipeline .step{padding:8px 14px;background:#0a0a0a;border:1px solid #2a2a2a;border-radius:4px;font-size:12px;color:#ccc;letter-spacing:1px;font-family:'Courier New',monospace;}
+.pipeline .step.director{color:#ff3333;border-color:#ff3333;background:#1a0a0a;}
+.pipeline .arrow{color:#444;font-size:14px;}
+.pipeline-legend{display:flex;justify-content:center;gap:20px;margin-bottom:40px;font-size:11px;color:#555;font-family:'Courier New',monospace;letter-spacing:1px;}
+.pipeline-legend span{display:flex;align-items:center;gap:6px;}
+.pipeline-legend span::before{content:"";width:8px;height:8px;background:#ff3333;border-radius:50%;display:inline-block;}
+
+/* Skill grid */
+.skill-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+.skill-card{background:#111;border:1px solid #1f1f1f;border-radius:8px;padding:20px;transition:all 0.2s;position:relative;overflow:hidden;}
+.skill-card:hover{border-color:#ff3333;transform:translateY(-2px);}
+.skill-card.director{border-color:#331111;background:#151010;}
+.skill-card.director:hover{border-color:#ff3333;}
+.skill-card .num{font-size:20px;font-weight:700;color:#ff3333;font-family:'Courier New',monospace;margin-bottom:8px;}
+.skill-card h3{font-size:14px;font-weight:700;color:#f5f5f5;margin-bottom:2px;letter-spacing:1px;}
+.skill-card .en{font-size:10px;color:#555;letter-spacing:2px;margin-bottom:10px;font-family:'Courier New',monospace;}
+.skill-card p{font-size:12px;color:#888;line-height:1.7;margin-bottom:10px;}
+.skill-card .triggers{font-size:10px;color:#666;font-family:'Courier New',monospace;line-height:1.6;border-top:1px solid #1a1a1a;padding-top:8px;}
+.skill-card .triggers .label{color:#ff4444;display:block;margin-bottom:3px;letter-spacing:2px;}
+.skill-card .link{display:inline-block;margin-top:10px;color:#ff4444;font-size:11px;letter-spacing:2px;text-decoration:none;font-family:'Courier New',monospace;}
+
+/* Pipeline flow diagram */
+.flow{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px;}
+.flow-card{background:#111;border:1px solid #1f1f1f;border-radius:8px;padding:16px 20px;}
+.flow-card h4{font-size:13px;color:#f5f5f5;margin-bottom:10px;letter-spacing:1px;font-family:'Courier New',monospace;}
+.flow-card ol{margin-left:18px;color:#888;font-size:12px;line-height:2;}
+.flow-card ol li::marker{color:#ff3333;}
+
+.footer{border-top:1px solid #1f1f1f;padding:24px 20px;text-align:center;color:#444;font-size:12px;letter-spacing:2px;margin-top:40px;}
+@media(max-width:768px){.skill-grid{grid-template-columns:1fr;}.flow{grid-template-columns:1fr;}.pipeline{gap:4px;}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="index.html">EDY.<span>AI</span>.STUDIO</a>
+  <div class="links">
+    <a href="index.html">首页</a>
+    <a href="skills.html">Skills</a>
+    <a href="camp.html">实战训练营</a>
+    <a href="financial-practice.html">Financial</a>
+    <a href="ai-video.html" class="active">AI Video</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">// AI VIDEO PRODUCTION</div>
+  <h1>AI 视频创作</h1>
+  <div class="sub">space-video Skill Matrix · 9 Skills · 参考→选题→脚本→剪辑→B-roll→字幕→封面</div>
+</div>
+
+<div class="container">
+
+  <div class="section-title">Pipeline · 视频流水线</div>
+  <div class="pipeline">
+    <div class="step director">DIRECTOR</div>
+    <div class="arrow">→</div>
+    <div class="step">TOPIC</div>
+    <div class="arrow">→</div>
+    <div class="step">SCRIPT</div>
+    <div class="arrow">→</div>
+    <div class="step">EDIT</div>
+    <div class="arrow">→</div>
+    <div class="step">BROLL</div>
+    <div class="arrow">→</div>
+    <div class="step">SUBTITLE</div>
+    <div class="arrow">→</div>
+    <div class="step">AUDIO</div>
+    <div class="arrow">→</div>
+    <div class="step">COVER</div>
+  </div>
+  <div class="pipeline-legend">
+    <span>RED = space-video 总控导演</span>
+    <span style="background:#444;">GRAY = 子技能（可单用也可串联）</span>
+  </div>
+
+  <div class="section-title">Skills · 技能矩阵</div>
+  <div class="skill-grid">
+
+    <div class="skill-card director">
+      <div class="num">00</div>
+      <h3>总控 · 视频导演</h3>
+      <div class="en">SPACE-VIDEO · DIRECTOR</div>
+      <p>把一条视频从「参考素材→选题→脚本→剪辑→B-roll→字幕→封面」串成流水线。判断当前走哪步、路由哪个子技能，成片后复盘。</p>
+      <div class="triggers"><span class="label">// TRIGGERS</span>「做个视频」「从头帮我做」「video pipeline」</div>
+      <a class="link" href="https://github.com/michoney/edystudio/tree/main/ai-video/space-video" target="_blank">→ SKILL.md</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">01</div>
+      <h3>选题 · 文案前端</h3>
+      <div class="en">SPACE-VIDEO-TOPIC</div>
+      <p>下载去水印 · 提取逐字稿 · 生成选题与钩子 · 撰写标题和口播正文。整条流水线的入口。</p>
+      <div class="triggers"><span class="label">// TRIGGERS</span>「帮我想选题」「爆款拆解」「下载视频」「提取文案」</div>
+      <a class="link" href="https://github.com/michoney/edystudio/tree/main/ai-video/space-video-topic" target="_blank">→ SKILL.md</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">02</div>
+      <h3>脚本 · 口播分镜</h3>
+      <div class="en">SPACE-VIDEO-SCRIPT</div>
+      <p>去 AI 味，把书面腔改成真人能念的口语；把模糊想法逼成精确到秒的分镜脚本。</p>
+      <div class="triggers"><span class="label">// TRIGGERS</span>「写口播脚本」「改成人话」「精确到秒」「分镜脚本」</div>
+      <a class="link" href="https://github.com/michoney/edystudio/tree/main/ai-video/space-video-script" target="_blank">→ SKILL.md</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">03</div>
+      <h3>剪辑 · 口播成片</h3>
+      <div class="en">SPACE-VIDEO-EDIT</div>
+      <p>剪口播（删口误/语气词/静音/卡顿）+ 成片（分镜、时间轴、导出 MP4）。删前保后 + 风险分层方法论。</p>
+      <div class="triggers"><span class="label">// TRIGGERS</span>「剪口播」「删口误」「口播成片」「做时间轴」</div>
+      <a class="link" href="https://github.com/michoney/edystudio/tree/main/ai-video/space-video-edit" target="_blank">→ SKILL.md</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">04</div>
+      <h3>动效 B-roll</h3>
+      <div class="en">SPACE-VIDEO-BROLL</div>
+      <p>HTML→确定性 MP4。5 种设计风格（暗色 SaaS、黑白打字机、暖色编辑、极简白、蓝图网格），纯排版/SVG，无 emoji。</p>
+      <div class="triggers"><span class="label">// TRIGGERS</span>「做 B-roll」「motion 开场」「文字动画」「HTML 转视频」</div>
+      <a class="link" href="https://github.com/michoney/edystudio/tree/main/ai-video/space-video-broll" target="_blank">→ SKILL.md</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">05</div>
+      <h3>手绘图解 B-roll</h3>
+      <div class="en">SPACE-VIDEO-BROLL-SKETCH</div>
+      <p>文章转手绘线稿风格动态图解视频。调用 Seedance 2.0 或 libtv Agent 逐帧生成「手绘生长」动效。白底黑线 + 蓝色强调。</p>
+      <div class="triggers"><span class="label">// TRIGGERS</span>「文章转图解视频」「手绘 B-roll」「Seedance 出图」</div>
+      <a class="link" href="https://github.com/michoney/edystudio/tree/main/ai-video/space-video-broll-sketch" target="_blank">→ SKILL.md</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">06</div>
+      <h3>字幕 · 转写校对</h3>
+      <div class="en">SPACE-VIDEO-SUBTITLE</div>
+      <p>语音转写 → 口播式断句 → AI 校对（专有名词/同音字/标点）→ SRT/ASS → 可选烧录硬字幕。</p>
+      <div class="triggers"><span class="label">// TRIGGERS</span>「上字幕」「转写视频」「生成 SRT」「烧录字幕」</div>
+      <a class="link" href="https://github.com/michoney/edystudio/tree/main/ai-video/space-video-subtitle" target="_blank">→ SKILL.md</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">07</div>
+      <h3>配音 · 配乐混音</h3>
+      <div class="en">SPACE-VIDEO-AUDIO</div>
+      <p>TTS 旁白生成 + 免版权 BGM 匹配下载 + ffmpeg 自动压音/响度归一/淡入淡出/对齐视频长度。</p>
+      <div class="triggers"><span class="label">// TRIGGERS</span>「配音」「加 BGM」「找音乐」「混音」「TTS 口播」</div>
+      <a class="link" href="https://github.com/michoney/edystudio/tree/main/ai-video/space-video-audio" target="_blank">→ SKILL.md</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">08</div>
+      <h3>封面 · 缩略图</h3>
+      <div class="en">SPACE-VIDEO-COVER</div>
+      <p>口播/短视频高点击封面。保持账号「家族气质」（统一版式基因，每条重新设计）。B 站/视频号/小红书/YouTube 多比例。</p>
+      <div class="triggers"><span class="label">// TRIGGERS</span>「做封面」「视频缩略图」「B 站封面」「小红书封面」</div>
+      <a class="link" href="https://github.com/michoney/edystudio/tree/main/ai-video/space-video-cover" target="_blank">→ SKILL.md</a>
+    </div>
+
+  </div>
+
+  <div class="section-title" style="margin-top:50px;">Workflow · 两种使用方式</div>
+  <div class="flow">
+    <div class="flow-card">
+      <h4>// FULL PIPELINE · 一键全流程</h4>
+      <ol>
+        <li>说「从头帮我做一条视频」</li>
+        <li>space-video 总控接管</li>
+        <li>逐环节调用子技能</li>
+        <li>文件落盘交接</li>
+        <li>成片后自动复盘</li>
+      </ol>
+    </div>
+    <div class="flow-card">
+      <h4>// SINGLE SKILL · 单技能触发</h4>
+      <ol>
+        <li>说「帮我想视频选题」→ topic</li>
+        <li>说「写口播脚本」→ script</li>
+        <li>说「剪这条口播」→ edit</li>
+        <li>说「做个动效 B-roll」→ broll</li>
+        <li>说「做封面」→ cover</li>
+      </ol>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  EDY.AI.STUDIO · AI VIDEO &nbsp;|&nbsp; <a href="https://github.com/michoney/edystudio/tree/main/ai-video" style="color:#ff4444;text-decoration:none;">michoney/edystudio/ai-video</a>
+</div>
+
+</body>
+</html>
