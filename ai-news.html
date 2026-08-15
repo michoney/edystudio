@@ -142,6 +142,80 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:'PingFang SC','Microsoft YaHei
     </div>
   </div>
 
+  <div class="news-card hot">
+    <div class="news-head">
+      <span class="fire">🔥</span>
+      <span class="tag">HOT</span>
+      <a class="link-ext" href="https://github.com/OpenHands/OpenHands" target="_blank">→ GitHub · 81k+</a>
+      <a class="link-ext" href="https://openhands.dev" target="_blank">官网</a>
+      <a class="link-ext" href="https://docs.openhands.dev" target="_blank">文档</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      OpenHands —— 开源 AI 软件工程师平台
+      <span class="en">OpenHands · Open Source AI Software Engineer Agent Platform</span>
+    </div>
+    <div class="news-subtitle">
+      不只是代码建议，而是能像初级工程师一样自主完成完整开发任务的 AI Agent 平台。
+    </div>
+    <div class="news-body">
+
+      <p>OpenHands（前身是 <strong>OpenDevin</strong>）是目前最受欢迎的开源 AI 编码 Agent 平台之一。它真正能像初级工程师一样<strong>自主完成完整开发任务</strong>：看代码、改代码、跑终端、开 PR、修漏洞、处理 Issue……</p>
+      <p>现在主推的入口是 <strong>Agent Canvas</strong>——一个可自托管的「AI 工程团队控制中心」。</p>
+
+      <h3>它能做什么</h3>
+      <ul>
+        <li><strong>真正动手写代码</strong>：规划任务、修改代码库、运行测试、提交 PR</li>
+        <li><strong>自动化工程工作流</strong>：自动分解 GitHub Issue、审查 PR、修安全漏洞、处理 Linear/Jira 工单</li>
+        <li><strong>多 Agent 后端切换</strong>：本地、Docker、云端、企业 VPC 随便切换，不中断工作</li>
+        <li><strong>深度集成工具</strong>：原生支持 GitHub / GitLab、Slack、Linear、Notion、CI/CD 等 <strong>70+ 工具</strong></li>
+        <li><strong>模型无关</strong>：支持任意 LLM，也可直接使用 Claude Code、Codex、Gemini 等 ACP 兼容 Agent</li>
+        <li><strong>安全可控</strong>：本地/自托管运行，数据不出你的环境，支持沙箱隔离</li>
+      </ul>
+      <p>把「写代码 + 修 Bug + Code Review + 处理工单」这些日常工作，交给 AI Agent 全自动完成。</p>
+
+      <h3>简单使用方法</h3>
+
+      <p><strong>方式一：最快速本地启动（推荐先试）</strong></p>
+      <p>需要 Node.js 22.12+ 和 <code>uv</code>：</p>
+      <pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:14px 18px;margin:10px 0;font-size:12px;color:#b8b8b8;font-family:'Courier New',monospace;line-height:1.8;overflow-x:auto;"><span style="color:#7a7a7a;"># 安装</span>
+npm install -g @openhands/agent-canvas
+agent-canvas
+
+<span style="color:#7a7a7a;"># 浏览器打开</span>
+http://localhost:8000</pre>
+
+      <p><strong>方式二：Docker 沙箱（更安全，推荐日常使用）</strong></p>
+      <pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:14px 18px;margin:10px 0;font-size:12px;color:#b8b8b8;font-family:'Courier New',monospace;line-height:1.8;overflow-x:auto;">export PROJECTS_PATH="$HOME/projects"
+mkdir -p "$PROJECTS_PATH" "$HOME/.openhands"
+
+docker run -it --rm \
+  -p 8000:8000 \
+  -v "$HOME/.openhands:/home/openhands/.openhands" \
+  -v "${PROJECTS_PATH}:/projects" \
+  ghcr.io/openhands/agent-canvas:1</pre>
+      <p>访问 <code>http://localhost:8000</code> 即可。</p>
+
+      <h3>适合谁用</h3>
+      <ul>
+        <li>想让 AI 真正「干活」而不是只聊天的开发者</li>
+        <li>希望自动化 Code Review、Issue 拆解、漏洞修复的团队</li>
+        <li>需要自托管、数据不出内网的企业用户</li>
+        <li>想搭建自己的 AI 工程流水线的人</li>
+      </ul>
+
+      <p><strong>核心组件 MIT 开源</strong>，社区活跃（81k+ Star），可本地跑、可上云、可企业私有化。感兴趣的直接去 GitHub 或官网试试，5 分钟就能跑起来。</p>
+    </div>
+    <div class="news-meta">
+      <span class="pill">Open Source</span>
+      <span class="pill">MIT</span>
+      <span class="pill">81k+ Star</span>
+      <span class="pill">Agent</span>
+      <span class="pill">Software Engineering</span>
+      <span class="pill">Self-hosted</span>
+    </div>
+  </div>
+
 </div>
 
 <div class="footer">
