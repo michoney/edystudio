@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edy.AI.Studio · AI News</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a0a;color:#e0e0e0;font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;line-height:1.85;}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;border-bottom:1px solid #1a1a1a;background:#0d0d0d;position:sticky;top:0;z-index:100;}
+.nav .brand{font-size:16px;font-weight:300;letter-spacing:4px;color:#f5f5f5;text-decoration:none;}
+.nav .brand span{color:#ff3333;font-weight:700;}
+.nav .links a{color:#888;text-decoration:none;font-size:13px;letter-spacing:1px;margin-left:24px;transition:color 0.2s;}
+.nav .links a:hover{color:#f5f5f5;}
+.nav .links a.active{color:#ff3333;}
+
+.hero{text-align:center;padding:45px 20px 25px;border-bottom:1px solid #1f1f1f;}
+.hero .eyebrow{font-size:12px;letter-spacing:4px;color:#ff4444;font-family:'Courier New',monospace;margin-bottom:14px;}
+.hero h1{font-size:30px;font-weight:300;letter-spacing:6px;color:#f5f5f5;margin-bottom:10px;}
+.hero .sub{color:#666;font-size:12px;letter-spacing:2px;}
+.hero .badge{display:inline-block;margin-top:14px;padding:4px 12px;background:#1a0a0a;border:1px solid #ff3333;color:#ff4444;font-size:10px;letter-spacing:2px;font-family:'Courier New',monospace;}
+
+.container{max-width:760px;margin:30px auto;padding:0 20px;}
+
+.section-title{font-size:16px;font-weight:300;letter-spacing:2px;margin-bottom:24px;color:#ccc;display:flex;align-items:center;gap:10px;}
+.section-title::before{content:"";display:inline-block;width:16px;height:1px;background:#ff3333;}
+
+/* News card */
+.news-card{background:#111;border:1px solid #1f1f1f;border-radius:8px;padding:28px 32px;margin-bottom:20px;transition:border-color 0.2s;}
+.news-card:hover{border-color:#333;}
+.news-card.hot{border-color:#331111;}
+.news-card.hot:hover{border-color:#ff3333;}
+
+.news-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.news-head .fire{font-size:20px;}
+.news-head .tag{padding:3px 10px;background:#ff3333;color:#fff;font-size:10px;letter-spacing:2px;font-family:'Courier New',monospace;border-radius:2px;font-weight:700;}
+.news-head .date{margin-left:auto;font-size:10px;color:#555;font-family:'Courier New',monospace;letter-spacing:1px;}
+.news-head .link-ext{color:#ff4444;font-size:12px;text-decoration:none;font-family:'Courier New',monospace;letter-spacing:1px;}
+.news-head .link-ext:hover{text-decoration:underline;}
+
+.news-title{font-size:19px;font-weight:700;color:#f5f5f5;margin-bottom:6px;letter-spacing:1px;}
+.news-title .en{display:block;font-size:12px;color:#666;font-weight:400;letter-spacing:2px;font-family:'Courier New',monospace;margin-top:6px;}
+.news-subtitle{font-size:13px;color:#aaa;margin-bottom:18px;line-height:1.7;}
+
+.news-body{font-size:13px;color:#999;line-height:1.9;}
+.news-body h3{font-size:14px;color:#f5f5f5;font-weight:700;margin:20px 0 8px;letter-spacing:1px;display:flex;align-items:center;gap:8px;}
+.news-body h3::before{content:"▸";color:#ff3333;font-size:12px;}
+.news-body p{margin-bottom:10px;}
+.news-body ul{margin:8px 0 8px 20px;padding:0;}
+.news-body ul li{margin-bottom:6px;}
+.news-body strong{color:#e0e0e0;font-weight:600;}
+.news-body code{background:#0a0a0a;padding:1px 6px;border-radius:3px;font-size:12px;color:#ff9999;font-family:'Courier New',monospace;border:1px solid #1a1a1a;}
+
+.news-meta{display:flex;gap:10px;margin-top:18px;padding-top:14px;border-top:1px solid #1a1a1a;}
+.news-meta .pill{padding:3px 10px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:12px;font-size:10px;color:#888;letter-spacing:1px;font-family:'Courier New',monospace;}
+
+/* Empty state */
+.empty{text-align:center;padding:60px 20px;color:#444;font-family:'Courier New',monospace;}
+.empty .icon{font-size:36px;margin-bottom:14px;opacity:0.5;}
+.empty .text{font-size:12px;letter-spacing:2px;}
+
+/* Footer */
+.footer{border-top:1px solid #1f1f1f;padding:24px 20px;text-align:center;color:#444;font-size:12px;letter-spacing:2px;margin-top:40px;}
+@media(max-width:768px){.nav .links a{margin-left:14px;font-size:12px;}.news-card{padding:20px;}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="index.html">EDY.<span>AI</span>.STUDIO</a>
+  <div class="links">
+    <a href="index.html">首页</a>
+    <a href="skills.html">Skills</a>
+    <a href="camp.html">实战训练营</a>
+    <a href="financial-practice.html">Financial</a>
+    <a href="ai-video.html">AI Video</a>
+    <a href="ai-news.html" class="active">AI News</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">// AI NEWS · 不定时更新</div>
+  <h1>AI 动态</h1>
+  <div class="sub">Interesting things in AI · Curated by Edy.AI.Studio</div>
+  <div class="badge">UPDATED 2026.08</div>
+</div>
+
+<div class="container">
+
+  <div class="section-title">🔥 重磅推荐 · Hot Picks</div>
+
+  <div class="news-card hot">
+    <div class="news-head">
+      <span class="fire">🔥</span>
+      <span class="tag">HOT</span>
+      <a class="link-ext" href="https://miora.design/" target="_blank">→ 官网</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      Miora —— 腾讯出品的「有记忆的」Agentic 创意工作室
+      <span class="en">Miora · The Agentic Creative Studio with Memory by Tencent</span>
+    </div>
+    <div class="news-subtitle">
+      一句话 Brief 进去，多模态成品（图片、视频、UI、3D）出来，而且越用越懂你。
+    </div>
+    <div class="news-body">
+
+      <p>Miora 是腾讯设计团队推出的 <strong>AI 原生创意工作室</strong>，不是普通的 AI 画图工具，而是一个真正能「记住你」的创意合伙人。</p>
+
+      <h3>Agent Memory · 核心亮点</h3>
+      <p>大多数 AI 工具每次对话都失忆。Miora 会记住你的<strong>品牌色、语气、审美偏好、创作规则</strong>，甚至「绝对不要做的事」。用得越久，越像你自己的风格。</p>
+
+      <h3>Specialist Network · 创意专家团队</h3>
+      <p>直接调用不同领域的专家 Agent：<strong>Brand、Storyboard、Illustration、UI/UX、Video、3D</strong>……它们协作完成完整项目，而不是单一生成一张图。</p>
+
+      <h3>Brief → Delivery · 一站式成品</h3>
+      <p>在同一个可编辑画布上，从概念、分镜、插画到视频、界面、3D 资产，全部搞定，产出可直接用于生产的素材包。</p>
+
+      <h3>Skills + Community · 社区生态</h3>
+      <p>把好用的工作流保存成可复用的「Skill」，下次一键调用。还能分享到社区，或从 Inspiration Box 里发现别人的优质流程。</p>
+
+      <h3>简单使用方法</h3>
+      <ul>
+        <li>打开官网 <code>https://miora.design/</code></li>
+        <li>点击 <strong>START CREATING</strong></li>
+        <li>在画布上直接输入 Brief（例如：「为一款黑暗奇幻 RPG 设计三名战士角色概念」）</li>
+        <li>系统自动读取你的记忆风格，调动相关专家 Agent 开始工作</li>
+        <li>在画布上迭代修改，导出多模态成品</li>
+        <li>满意的工作流可保存为 Skill，下次复用</li>
+      </ul>
+
+      <p><strong>适合：</strong>独立创作者、设计师、内容团队、游戏概念设计师、品牌方……一个人就能当整个创意工作室。</p>
+
+      <p>Miora 的定位很清晰——不是一次性生成工具，而是长期陪伴你、越用越懂你的创意工作室。喜欢做视觉、品牌、内容的朋友强烈建议亲自试一下。</p>
+    </div>
+    <div class="news-meta">
+      <span class="pill">Tencent</span>
+      <span class="pill">Agentic</span>
+      <span class="pill">Creative AI</span>
+      <span class="pill">Brand Design</span>
+      <span class="pill">Memory System</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  EDY.AI.STUDIO · AI NEWS &nbsp;|&nbsp; <a href="https://github.com/michoney/edystudio" style="color:#ff4444;text-decoration:none;">michoney/edystudio</a>
+</div>
+
+</body>
+</html>
