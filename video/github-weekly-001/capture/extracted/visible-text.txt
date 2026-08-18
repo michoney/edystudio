@@ -1,0 +1,83 @@
+[a] ← EDY.AI.STUDIO
+[span] ● WEEKLY SIGNAL ONLINE
+[span] GITHUB WEEKLY TRENDING
+[h1] GitHub 本周热榜
+[p] AI Agent 和编码工具集体霸榜，OpenCut、Skills、Code Graph 一周涨势最猛。
+[button] 全部 10
+[button] 创作工具
+[button] AI AGENT
+[button] 编码工具
+[a] ▶ 下载竖屏视频
+[span] #01 · OPENCUT
+[h2] opencut
+[span] ★ 77.1K
+[span] ↗ 本周 +8.3K
+[p] 开源版剪映替代，跨 Web、桌面和移动端。
+[div] 选题：免费剪映真能用吗？
+[a] OpenCut
+[span] #02 · SKILLS
+[h2] skills
+[span] ★ 180.8K
+[span] ↗ 本周 +10.7K
+[p] 真正工程师在用的 Agent Skills 集合。
+[div] 选题：给 Codex 装上工程师大脑
+[a] Skills
+[span] #03 · HALLMARK
+[span] CSS
+[h2] hallmark
+[span] ★ 15.1K
+[span] ↗ 本周 +8.9K
+[p] 治疗 AI 生成页面“塑料味”的设计 Skill。
+[div] 选题：一眼 AI 的网页怎么救？
+[a] Hallmark
+[span] #04 · CODE-GRAPH
+[h2] code graph
+[span] ★ 24.7K
+[span] ↗ 本周 +4.8K
+[p] 把代码仓库变成 AI 可查询的知识图谱。
+[div] 选题：AI 为什么读不懂大项目？
+[a] Code Graph
+[span] #05 · AWESOME-LLM-APPS
+[h2] awesome-llm-apps
+[span] ★ 125.9K
+[span] ↗ 本周 +5.4K
+[p] 100+ 开箱即用的 AI Agent 和 RAG 应用。
+[div] 选题：每周实测一个 AI Agent
+[a] Awesome LLM Apps
+[span] #06 · VIBE-TRADING
+[h2] vibe-trading
+[span] ★ 26.2K
+[span] ↗ 本周 +3.7K
+[p] 一句话驱动的个人交易 Agent。
+[div] 选题：AI 交易员能不能赚到钱？
+[a] Vibe Trading
+[span] #07 · ORCA
+[h2] orca
+[span] ★ 25.2K
+[span] ↗ 本周 +5.7K
+[p] 并行运行多个 Coding Agent 的桌面端。
+[div] 选题：一个人指挥 5 个 AI 开发
+[a] Orca
+[span] #08 · OFFICECLI
+[h2] officecli
+[span] ★ 20.7K
+[span] ↗ 本周 +4.0K
+[p] 让 AI 读写 Word、Excel 和 PPT 的单二进制工具。
+[div] 选题：一句话批量改 100 份 PPT
+[a] OfficeCLI
+[span] #09 · OPENINTERPRETER
+[h2] openinterpreter
+[span] ★ 67.1K
+[span] ↗ 本周 +2.2K
+[p] 为便宜模型代打的开源编码 Agent。
+[div] 选题：开源模型能替代 Codex 吗？
+[a] OpenInterpreter
+[span] #10 · CODEX
+[h2] codex
+[span] ★ 100.5K
+[span] ↗ 本周 +2.4K
+[p] OpenAI 官方终端轻量编码 Agent。
+[div] 选题：Codex 最值得安装的 5 个插件
+[a] Codex
+[span] ISSUE 001 · 2026.07.22 · SHENZHEN
+[span] 数据参考 GITHUB WEEKLY TRENDING · 编辑排名

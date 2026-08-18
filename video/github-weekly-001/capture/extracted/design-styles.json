@@ -1,0 +1,237 @@
+{
+  "typography": [
+    {
+      "role": "display",
+      "fontFamily": "Arial Rounded MT Bold",
+      "fontSize": "104px",
+      "fontWeight": "700",
+      "lineHeight": "98.8px",
+      "letterSpacing": "-7.28px",
+      "color": "#EDF1F2",
+      "sampleText": "GitHub 本周热榜"
+    },
+    {
+      "role": "heading",
+      "fontFamily": "Arial Rounded MT Bold",
+      "fontSize": "48px",
+      "fontWeight": "900",
+      "lineHeight": "48px",
+      "letterSpacing": "-2.88px",
+      "color": "#080B0D",
+      "sampleText": "opencut"
+    },
+    {
+      "role": "body",
+      "fontFamily": "Arial Rounded MT Bold",
+      "fontSize": "20px",
+      "fontWeight": "800",
+      "lineHeight": "normal",
+      "letterSpacing": "1.2px",
+      "color": "#E9EEF0",
+      "sampleText": "AI Agent 和编码工具集体霸榜，OpenCut、Skills、Code Graph 一周涨势最猛。"
+    },
+    {
+      "role": "link",
+      "fontFamily": "monospace",
+      "fontSize": "12px",
+      "fontWeight": "700",
+      "lineHeight": "12px",
+      "letterSpacing": "1.44px",
+      "color": "#A8BCC2",
+      "sampleText": "← EDY.AI.STUDIO"
+    }
+  ],
+  "spacing": {
+    "observed": [
+      8,
+      9,
+      10,
+      12,
+      15,
+      16,
+      22,
+      24,
+      25
+    ],
+    "baseUnit": 8
+  },
+  "radius": [
+    "27px",
+    "999px"
+  ],
+  "shadows": [
+    {
+      "value": "rgba(0, 0, 0, 0.92) 10px 11px 0px 0px",
+      "count": 10
+    },
+    {
+      "value": "rgb(8, 11, 13) 3px 3px 0px 0px",
+      "count": 1
+    }
+  ],
+  "buttons": [
+    {
+      "label": "全部 10",
+      "background": "#56D7EF",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#080B0D",
+      "padding": "9px 15px",
+      "borderRadius": "999px",
+      "border": "2px solid rgb(8, 11, 13)",
+      "boxShadow": "rgb(8, 11, 13) 3px 3px 0px 0px",
+      "fontSize": "11px",
+      "fontWeight": "800",
+      "height": "33px"
+    },
+    {
+      "label": "创作工具",
+      "background": "#10171B",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#9EB0B5",
+      "padding": "9px 15px",
+      "borderRadius": "999px",
+      "border": "2px solid rgb(57, 70, 75)",
+      "boxShadow": "none",
+      "fontSize": "11px",
+      "fontWeight": "800",
+      "height": "33px"
+    }
+  ],
+  "cards": [
+    {
+      "label": "card",
+      "background": "#FF6C9F",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#080B0D",
+      "padding": "22px 24px 25px",
+      "borderRadius": "27px",
+      "border": "3px solid rgb(8, 11, 13)",
+      "boxShadow": "rgba(0, 0, 0, 0.92) 10px 11px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "269.641px"
+    },
+    {
+      "label": "card",
+      "background": "#FFD13B",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#080B0D",
+      "padding": "22px 24px 25px",
+      "borderRadius": "27px",
+      "border": "3px solid rgb(8, 11, 13)",
+      "boxShadow": "rgba(0, 0, 0, 0.92) 10px 11px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "269.641px"
+    },
+    {
+      "label": "card",
+      "background": "#53D8F3",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#080B0D",
+      "padding": "22px 24px 25px",
+      "borderRadius": "27px",
+      "border": "3px solid rgb(8, 11, 13)",
+      "boxShadow": "rgba(0, 0, 0, 0.92) 10px 11px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "269.641px"
+    },
+    {
+      "label": "card",
+      "background": "#AA82F4",
+      "backgroundImage": "",
+      "backdropFilter": "",
+      "color": "#080B0D",
+      "padding": "22px 24px 25px",
+      "borderRadius": "27px",
+      "border": "3px solid rgb(8, 11, 13)",
+      "boxShadow": "rgba(0, 0, 0, 0.92) 10px 11px 0px 0px",
+      "fontSize": "16px",
+      "fontWeight": "400",
+      "height": "269.641px"
+    }
+  ],
+  "nav": {
+    "label": "navigation",
+    "background": "transparent",
+    "backgroundImage": "",
+    "backdropFilter": "",
+    "color": "#E9EEF0",
+    "padding": "0px",
+    "borderRadius": "0px",
+    "border": "",
+    "boxShadow": "none",
+    "fontSize": "12px",
+    "fontWeight": "700",
+    "height": "66px"
+  },
+  "chips": [
+    {
+      "label": "GITHUB WEEKLY TRENDING",
+      "background": "#172127",
+      "color": "#5BD7F3",
+      "padding": "8px 22px",
+      "borderRadius": "99px",
+      "border": "1px solid rgb(39, 57, 65)",
+      "boxShadow": "rgba(74, 196, 224, 0.08) 0px 0px 16px 0px inset, rgba(70, 195, 226, 0.08) 0px 0px 22px 0px",
+      "fontSize": "12px",
+      "fontWeight": "800",
+      "height": "30px"
+    },
+    {
+      "label": "▶ 下载竖屏视频",
+      "background": "#10171B",
+      "color": "#9EB0B5",
+      "padding": "9px 15px",
+      "borderRadius": "999px",
+      "border": "2px solid rgb(57, 70, 75)",
+      "boxShadow": "none",
+      "fontSize": "11px",
+      "fontWeight": "800",
+      "height": "33px"
+    },
+    {
+      "label": "★ 77.1K",
+      "background": "#FFFFFF",
+      "color": "#080B0D",
+      "padding": "7px 11px",
+      "borderRadius": "999px",
+      "border": "3px solid rgb(8, 11, 13)",
+      "boxShadow": "rgb(8, 11, 13) 2px 3px 0px 0px",
+      "fontSize": "11px",
+      "fontWeight": "900",
+      "height": "31px"
+    },
+    {
+      "label": "↗ 本周 +8.3K",
+      "background": "#080B0D",
+      "color": "#FFFFFF",
+      "padding": "7px 11px",
+      "borderRadius": "999px",
+      "border": "3px solid rgb(8, 11, 13)",
+      "boxShadow": "rgb(8, 11, 13) 2px 3px 0px 0px",
+      "fontSize": "11px",
+      "fontWeight": "900",
+      "height": "31px"
+    }
+  ],
+  "statCells": [],
+  "tabs": [],
+  "backgrounds": [
+    {
+      "value": "linear-gradient(rgba(94, 153, 165, 0.12) 1px, rgba(0, 0, 0, 0) 1px), linear-gradient(90deg, rgba(94, 153, 165, 0.12) 1px, rgba(0, 0, 0, 0) 1px), radial-gradient(circle at 50% 0px, rgba(32, 134, 159, 0.18), rgba(0, 0, 0, 0) 40%)",
+      "area": 4040820
+    },
+    {
+      "value": "repeating-linear-gradient(0deg, rgba(0, 0, 0, 0) 0px, rgba(0, 0, 0, 0) 3px, rgba(255, 255, 255, 0.02) 4px)",
+      "area": 4040820
+    }
+  ],
+  "glass": []
+}

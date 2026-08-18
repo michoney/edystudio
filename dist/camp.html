@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>实战训练营 · Edy.AI.Studio</title>
+<style>
+  * { margin: 0; padding: 0; }
+  body { background: #080808; overflow: hidden; }
+  canvas { display: block; }
+
+  /* ====== 主内容层 ====== */
+  .page {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .inner {
+    text-align: center;
+    pointer-events: auto;
+    max-width: 860px;
+    padding: 20px;
+  }
+
+  /* 顶部品牌 */
+  .brand-top {
+    font-size: 7px;
+    color: #2d6a2d;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 4px;
+    margin-bottom: 24px;
+    -webkit-text-stroke: 0.3px #1a4a1a;
+    font-weight: 900;
+  }
+
+  .title-cn {
+    font-size: 24px;
+    color: #9b59b6;
+    font-weight: 900;
+    letter-spacing: 6px;
+    margin-bottom: 6px;
+    font-family: 'Courier New', monospace;
+    -webkit-text-stroke: 0.3px #6b2d8b;
+  }
+  .title-en {
+    font-size: 11px;
+    color: #4a6a4a;
+    letter-spacing: 3px;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 30px;
+  }
+
+  .divider {
+    width: 60px;
+    height: 1px;
+    background: #2d6a2d;
+    margin: 0 auto 24px;
+  }
+
+  /* ====== 概览行 ====== */
+  .overview {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin-bottom: 28px;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    color: #4a6a4a;
+    letter-spacing: 1.5px;
+  }
+  .overview .item .v {
+    color: #9b59b6;
+    font-size: 16px;
+    font-weight: 900;
+    margin-right: 4px;
+  }
+
+  /* ====== 课时列表 ====== */
+  .lessons {
+    margin-bottom: 28px;
+  }
+  .lesson-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .lesson {
+    border: 1px solid #1a2a1a;
+    padding: 12px 10px;
+    text-align: left;
+    transition: border-color 0.2s;
+  }
+  .lesson:hover { border-color: #2d6a2d; }
+  .lesson .num {
+    font-size: 14px;
+    color: #9b59b6;
+    font-weight: 900;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 4px;
+  }
+  .lesson h3 {
+    font-size: 12px;
+    color: #ddd;
+    font-weight: 700;
+    margin-bottom: 4px;
+    letter-spacing: 0.5px;
+  }
+  .lesson .en {
+    font-size: 9px;
+    color: #4a6a4a;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    margin-bottom: 4px;
+  }
+  .lesson p {
+    font-size: 10px;
+    color: #556655;
+    line-height: 1.5;
+  }
+
+  /* ====== 价格表 ====== */
+  .pricing {
+    margin-bottom: 28px;
+  }
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  .tier {
+    border: 1px solid #1a2a1a;
+    padding: 16px 10px;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .tier:hover { border-color: #2d6a2d; }
+  .tier.featured {
+    border-color: #9b59b6;
+    background: rgba(155,89,182,0.05);
+  }
+  .tier .tier-name {
+    font-size: 13px;
+    color: #ddd;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 2px;
+  }
+  .tier .tier-tag {
+    font-size: 9px;
+    color: #4a6a4a;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+  }
+  .tier .price {
+    font-size: 24px;
+    color: #9b59b6;
+    font-weight: 900;
+    font-family: 'Courier New', monospace;
+    margin-bottom: 2px;
+  }
+  .tier .price-sub {
+    font-size: 10px;
+    color: #556655;
+    margin-bottom: 10px;
+  }
+  .tier .line {
+    height: 1px;
+    background: #1a2a1a;
+    margin: 8px 0;
+  }
+  .tier ul {
+    list-style: none;
+    text-align: left;
+  }
+  .tier ul li {
+    font-size: 10px;
+    color: #778877;
+    padding: 3px 0;
+    line-height: 1.4;
+  }
+  .tier ul li::before {
+    content: '›';
+    color: #9b59b6;
+    margin-right: 4px;
+    font-weight: 700;
+  }
+  .tier .badge {
+    display: inline-block;
+    background: #9b59b6;
+    color: #0a0a0a;
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 2px 10px;
+    margin-bottom: 8px;
+    font-family: 'Courier New', monospace;
+  }
+
+  /* ====== 硬件要求 ====== */
+  .hardware {
+    max-width: 700px;
+    margin: 0 auto 24px;
+    border: 1px solid #1a2a1a;
+    border-left: 2px solid #2d6a2d;
+    padding: 14px 18px;
+    text-align: left;
+  }
+  .hardware h4 {
+    font-size: 11px;
+    color: #9b59b6;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    font-family: 'Courier New', monospace;
+  }
+  .hardware p {
+    font-size: 11px;
+    color: #778877;
+    line-height: 1.8;
+    font-family: 'Courier New', monospace;
+  }
+  .hardware strong { color: #ddd; }
+
+  /* ====== 底部 ====== */
+  .footer-links {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 16px;
+    font-size: 11px;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1.5px;
+  }
+  .footer-links a {
+    color: #4a6a4a;
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: #9b59b6; }
+
+  .copyright {
+    margin-top: 24px;
+    font-size: 9px;
+    color: #334433;
+    letter-spacing: 2px;
+    font-family: 'Courier New', monospace;
+  }
+
+  @media (max-width: 720px) {
+    .lesson-grid, .price-grid { grid-template-columns: repeat(2, 1fr); }
+    .overview { flex-wrap: wrap; gap: 16px; }
+    .title-cn { font-size: 18px; }
+  }
+  @media (max-width: 440px) {
+    .lesson-grid, .price-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="c"></canvas>
+<script>
+const canvas = document.getElementById('c');
+const ctx = canvas.getContext('2d');
+let W, H, COLS, ROWS;
+const CELL = 16;
+const CHARS = '·∘○◎●◉◈◇◆□■△▲▽▼☆★♢♤♧♡♢♦♥♣♠•◦◯◉◈◇◆';
+let h0, h1, v;
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  COLS = Math.ceil(W / CELL) + 2;
+  ROWS = Math.ceil(H / CELL) + 2;
+  h0 = new Float32Array(COLS * ROWS);
+  h1 = new Float32Array(COLS * ROWS);
+  v  = new Float32Array(COLS * ROWS);
+}
+resize();
+window.addEventListener('resize', resize);
+function idx(x, y) { return y * COLS + x; }
+function drop() {
+  const x = 2 + Math.floor(Math.random() * (COLS - 4));
+  const y = 2 + Math.floor(Math.random() * (ROWS - 4));
+  const r = 3;
+  for (let dy = -r; dy <= r; dy++)
+    for (let dx = -r; dx <= r; dx++) {
+      const dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist <= r) {
+        const i = idx(x + dx, y + dy);
+        if (i >= 0 && i < h1.length)
+          h1[i] += (1 - dist/r) * 4;
+      }
+    }
+}
+for (let i = 0; i < 3; i++) drop();
+setInterval(drop, 15000);
+function draw() {
+  const damp = 0.999;
+  for (let y = 1; y < ROWS - 1; y++)
+    for (let x = 1; x < COLS - 1; x++) {
+      const i = idx(x, y);
+      const laplacian = (h1[idx(x-1,y)] + h1[idx(x+1,y)] + h1[idx(x,y-1)] + h1[idx(x,y+1)]) / 2 - 2 * h1[i];
+      v[i] = (v[i] + laplacian * 0.02) * damp;
+    }
+  for (let i = 0; i < h0.length; i++) {
+    h0[i] = h1[i] + v[i];
+    h1[i] = h0[i];
+  }
+  ctx.fillStyle = 'rgba(8, 8, 8, 0.03)';
+  ctx.fillRect(0, 0, W, H);
+  ctx.font = (CELL - 2) + 'px "Courier New"';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (let y = 1; y < ROWS - 1; y++)
+    for (let x = 1; x < COLS - 1; x++) {
+      const i = idx(x, y);
+      const val = h1[i];
+      if (Math.abs(val) < 0.05) continue;
+      const absVal = Math.min(Math.abs(val), 3);
+      const charIdx = Math.floor(absVal / 3 * (CHARS.length - 1));
+      const char = CHARS[Math.min(charIdx, CHARS.length - 1)];
+      const px = x * CELL + val * 3;
+      const py = y * CELL + val * 2;
+      const alpha = 0.15 + absVal * 0.25;
+      ctx.fillStyle = `rgba(40,80,40,${alpha.toFixed(2)})`;
+      ctx.fillText(char, px, py);
+    }
+  requestAnimationFrame(draw);
+}
+draw();
+</script>
+
+<div class="page">
+<div class="inner">
+
+<div class="brand-top">EDY.AI.STUDIO · CAMP 2026</div>
+
+<div class="title-cn">实战训练营</div>
+<div class="title-en">PRACTICE CAMP · ENROLLMENT</div>
+<div class="divider"></div>
+
+<!-- 概览 -->
+<div class="overview">
+  <div class="item"><span class="v">6</span>课时</div>
+  <div class="item"><span class="v">3~6</span>周</div>
+  <div class="item"><span class="v">1</span>次/周</div>
+  <div class="item"><span class="v">10~20</span>人/期</div>
+</div>
+
+<!-- 课时大纲 -->
+<div class="lessons">
+  <div class="lesson-grid">
+    <div class="lesson">
+      <div class="num">01</div>
+      <h3>OpenClaw · AI 智能体</h3>
+      <div class="en">AGENT SETUP</div>
+      <p>搭建本地微信智能体，从配置到跑通第一个 AI 助手，理解 Agent 思维。</p>
+    </div>
+    <div class="lesson">
+      <div class="num">02</div>
+      <h3>Hermes Agent · 多 AI 调度</h3>
+      <div class="en">MULTI-AI PIPELINE</div>
+      <p>用 Hermes Agent 调度双 AI 分工协作，形成流水线。</p>
+    </div>
+    <div class="lesson">
+      <div class="num">03</div>
+      <h3>Codex &amp; Claude Code</h3>
+      <div class="en">AI CODING</div>
+      <p>AI 编程实战——用 Codex / Claude Code 写代码、跑项目、提交 PR。</p>
+    </div>
+    <div class="lesson">
+      <div class="num">04</div>
+      <h3>本地知识库搭建</h3>
+      <div class="en">LOCAL KB · RAG</div>
+      <p>Ollama + AnythingLLM 部署个人知识库，接入 Obsidian，RAG 检索实战。</p>
+    </div>
+    <div class="lesson">
+      <div class="num">05</div>
+      <h3>ComfyUI · AIGC 动画</h3>
+      <div class="en">COMFYUI · AIGC</div>
+      <p>从生图到生视频——ComfyUI 工作流编排、IP-Adapter、LTX Video、Wan I2V。</p>
+    </div>
+    <div class="lesson">
+      <div class="num">06</div>
+      <h3>硬件部署 &amp; 毕业项目</h3>
+      <div class="en">DEPLOY · FINAL</div>
+      <p>RTX 5090 整机部署、集群搭建、学员结业项目展示与答疑。</p>
+    </div>
+  </div>
+</div>
+
+<!-- 价格表 -->
+<div class="pricing">
+  <div class="price-grid">
+    <div class="tier">
+      <div class="tier-name">入门</div>
+      <div class="tier-tag">STARTER</div>
+      <div class="price">¥1,499</div>
+      <div class="price-sub">AI 零基础 · 先上车</div>
+      <div class="line"></div>
+      <ul>
+        <li>课时 01: OpenClaw 智能体</li>
+        <li>课时 02: Hermes Agent 双 AI 调度</li>
+        <li>本地环境 1v1 辅导</li>
+        <li>微信答疑群 3 个月</li>
+      </ul>
+    </div>
+    <div class="tier featured">
+      <span class="badge">POPULAR</span>
+      <div class="tier-name">中级</div>
+      <div class="tier-tag">PROGRESSIVE</div>
+      <div class="price">¥3,288</div>
+      <div class="price-sub">深入 AI 编程的实践者</div>
+      <div class="line"></div>
+      <ul>
+        <li>入门档全部内容</li>
+        <li>课时 03: Codex &amp; Claude Code</li>
+        <li>课时 04: 本地知识库 RAG</li>
+        <li>Obsidian + AnythingLLM 实战</li>
+        <li>个人项目 1 对 1 辅导</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="tier-name">中高级</div>
+      <div class="tier-tag">ADVANCED</div>
+      <div class="price">¥4,988</div>
+      <div class="price-sub">进阶开发者 · 追求效率</div>
+      <div class="line"></div>
+      <ul>
+        <li>中级档全部内容</li>
+        <li>课时 05: ComfyUI AIGC 动画</li>
+        <li>多 AI 协同自动化流水线</li>
+        <li>模型本地部署 vLLM / Ollama</li>
+        <li>毕业项目答辩</li>
+      </ul>
+    </div>
+    <div class="tier">
+      <div class="tier-name">高级</div>
+      <div class="tier-tag">ELITE</div>
+      <div class="price">¥7,988</div>
+      <div class="price-sub">全栈 AI 实战 · 硬件 + 集群</div>
+      <div class="line"></div>
+      <ul>
+        <li>中高级档全部内容</li>
+        <li>课时 06: 硬件部署 &amp; 集群</li>
+        <li>RTX 5090 整机部署实操</li>
+        <li>多机 exo 集群搭建</li>
+        <li>场地合作 · 分润计划</li>
+        <li>终身校友群 · 项目对接</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 硬件要求 -->
+<div class="hardware">
+  <h4>// 学员硬件要求 · REQUIREMENTS</h4>
+  <p>
+    <strong>电脑:</strong> M1 Pro Mac（8+ 核 CPU，32GB+ RAM）<br>
+    <strong>显卡:</strong> 高级档需 RTX 4090 / 5090 或云端 GPU<br>
+    <strong>网络:</strong> 稳定 50Mbps+（海外模型源需代理）<br>
+    <strong>场地:</strong> RTX 5090 × 1~2 + 27 寸显示器 × 10 台
+  </p>
+</div>
+
+<!-- 底部 -->
+<div class="footer-links">
+  <a href="index.html">← 返回首页</a>
+  <a href="financial-practice.html">Financial</a>
+  <a href="skills.html">Skills</a>
+</div>
+<div class="copyright">EDY.AI.STUDIO · PRACTICE CAMP · 2026</div>
+
+</div>
+</div>
+
+</body>
+</html>

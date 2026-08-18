@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width,initial-scale=1,viewport-fit=cover"
+    />
+    <title>Amphitheatre Particle Study</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: #06080d;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        height: 100%;
+        touch-action: none;
+      }
+      #status {
+        position: fixed;
+        left: 18px;
+        bottom: 16px;
+        color: #eadde5;
+        font: 11px/1.5 monospace;
+        letter-spacing: 0.08em;
+        opacity: 0.6;
+        pointer-events: none;
+      }
+      #status.error {
+        color: #ffb6b6;
+        opacity: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="status">LOADING AMPHITHEATRE POINT CLOUD...</div>
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.module.js"
+        }
+      }
+    </script>
+    <script type="module">
+      import * as THREE from "three";
+      import { PCDLoader } from "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/loaders/PCDLoader.js";
+      import { VERTEX_SHADER, FRAGMENT_SHADER } from "./shaders.js";
+
+      const status = document.querySelector("#status");
+      const scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x06080d);
+      const camera = new THREE.PerspectiveCamera(
+        40,
+        innerWidth / innerHeight,
+        1,
+        10000,
+      );
+      camera.position.set(0, 8, 18);
+      camera.rotation.order = "YXZ";
+      const renderer = new THREE.WebGLRenderer({
+        antialias: true,
+        powerPreference: "high-performance",
+      });
+      renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+      renderer.setSize(innerWidth, innerHeight);
+      document.body.prepend(renderer.domElement);
+
+      const dot = document.createElement("canvas");
+      dot.width = dot.height = 64;
+      const ctx = dot.getContext("2d"),
+        gradient = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+      gradient.addColorStop(0, "rgba(255,255,255,1)");
+      gradient.addColorStop(0.28, "rgba(255,255,255,.9)");
+      gradient.addColorStop(1, "rgba(255,255,255,0)");
+      ctx.fillStyle = gradient;
+      ctx.fillRect(0, 0, 64, 64);
+      const uniforms = {
+        uTime: { value: 0 },
+        uScale: {
+          value: (innerHeight / 1000) * 240 * Math.min(devicePixelRatio, 2),
+        },
+        uSize: { value: 10 },
+        uSizeRandom: { value: 0.8 },
+        uPositionRandom: { value: 2.2 },
+        uDepth: { value: 18 },
+        uFlat: { value: 0 },
+        uAlpha: { value: 1 },
+        uAlphaMin: { value: 0.18 },
+        uAlphaMax: { value: 0.45 },
+        uMobile: { value: innerWidth < 769 ? 1 : 0 },
+        uMove: { value: new THREE.Vector3(1, 1, 1) },
+        uAudioStrength: { value: 0 },
+        uAudioLow: { value: 0 },
+        uAudioMid: { value: 0 },
+        uAudioHigh: { value: 0 },
+        uTempo: { value: 6 },
+        pointTexture: { value: new THREE.CanvasTexture(dot) },
+      };
+      let cloud = null,
+        targetX = 0,
+        targetY = 0,
+        shiftX = 0,
+        shiftY = 0,
+        settleStart = 0;
+
+      new PCDLoader().load(
+        "./amphitheatre-mobile.pcd",
+        (points) => {
+          const geometry = points.geometry,
+            count = geometry.getAttribute("position").count;
+          const size = new Float32Array(count),
+            alpha = new Float32Array(count),
+            amplitude = new Float32Array(count * 3),
+            audio = new Float32Array(count * 3),
+            pole = new Float32Array(count);
+          for (let i = 0; i < count; i++) {
+            size[i] = 0.4 + Math.random() * 1.6;
+            alpha[i] = 0.45 + Math.random() * 0.55;
+            amplitude[i * 3] = Math.random();
+            amplitude[i * 3 + 1] = Math.random();
+            amplitude[i * 3 + 2] = Math.random();
+            audio[i * 3] = Math.random();
+            audio[i * 3 + 1] = Math.random();
+            audio[i * 3 + 2] = Math.random();
+            pole[i] = 0;
+          }
+          geometry.setAttribute("size", new THREE.BufferAttribute(size, 1));
+          geometry.setAttribute("alpha", new THREE.BufferAttribute(alpha, 1));
+          geometry.setAttribute(
+            "amplitude",
+            new THREE.BufferAttribute(amplitude, 3),
+          );
+          geometry.setAttribute("audio", new THREE.BufferAttribute(audio, 3));
+          geometry.setAttribute("pole", new THREE.BufferAttribute(pole, 1));
+          const material = new THREE.ShaderMaterial({
+            uniforms,
+            vertexShader: VERTEX_SHADER,
+            fragmentShader: FRAGMENT_SHADER,
+            vertexColors: true,
+            transparent: true,
+            depthWrite: false,
+            blending: THREE.AdditiveBlending,
+          });
+          cloud = new THREE.Points(geometry, material);
+          cloud.rotation.set(
+            THREE.MathUtils.degToRad(-90),
+            0,
+            THREE.MathUtils.degToRad(-150),
+          );
+          scene.add(cloud);
+          settleStart = performance.now();
+          status.textContent = `CONVERGING / ${count.toLocaleString()} POINTS`;
+          requestAnimationFrame(render);
+        },
+        (progress) => {
+          if (progress.total)
+            status.textContent = `LOADING ${Math.round((progress.loaded / progress.total) * 100)}%`;
+        },
+        (error) => {
+          status.className = "error";
+          status.textContent = "LOAD FAILED: " + (error.message || error);
+        },
+      );
+
+      function point(x, y) {
+        targetX = (x / innerWidth - 0.5) * 2;
+        targetY = (y / innerHeight - 0.5) * 2;
+      }
+      addEventListener(
+        "pointermove",
+        (event) => point(event.clientX, event.clientY),
+        { passive: true },
+      );
+      addEventListener(
+        "touchmove",
+        (event) => {
+          if (event.touches[0])
+            point(event.touches[0].clientX, event.touches[0].clientY);
+        },
+        { passive: true },
+      );
+      function render(now) {
+        if (!cloud) return;
+        const raw = Math.min(1, (now - settleStart) / 18000);
+        const settled = raw * raw * (3 - 2 * raw);
+        const easeOut = 1 - Math.pow(1 - raw, 3);
+        uniforms.uPositionRandom.value = THREE.MathUtils.lerp(
+          2.2,
+          0.018,
+          settled,
+        );
+        uniforms.uDepth.value = THREE.MathUtils.lerp(18, 0.55, settled);
+        uniforms.uSizeRandom.value = THREE.MathUtils.lerp(0.8, 0.18, easeOut);
+        uniforms.uAlphaMin.value = THREE.MathUtils.lerp(0.18, 0.86, easeOut);
+        uniforms.uAlphaMax.value = THREE.MathUtils.lerp(0.45, 1, easeOut);
+        shiftX += (targetX - shiftX) * 0.012;
+        shiftY += (targetY - shiftY) * 0.012;
+        camera.position.x = shiftX * 0.55;
+        camera.position.y = 8 - shiftY * 0.16;
+        camera.rotation.y = -shiftX * THREE.MathUtils.degToRad(1.2);
+        camera.rotation.x = shiftY * THREE.MathUtils.degToRad(0.5);
+        uniforms.uTime.value = now * 0.00022;
+        const breath = 0.5 + 0.5 * Math.sin(now * 0.00018);
+        uniforms.uAudioStrength.value =
+          raw < 1 ? (1 - raw) * 1.5 : 0.15 + breath * 0.12;
+        uniforms.uAudioLow.value =
+          raw < 1 ? 1 - raw : 0.08 + breath * 0.06;
+        uniforms.uAudioHigh.value = 0.04;
+        if (raw >= 1 && status.style.opacity !== "0") {
+          status.textContent = "AMPHITHEATRE / IMAGE STABLE";
+          status.style.transition = "opacity 2s";
+          status.style.opacity = 0;
+        }
+        renderer.render(scene, camera);
+        requestAnimationFrame(render);
+      }
+      addEventListener("resize", () => {
+        camera.aspect = innerWidth / innerHeight;
+        camera.updateProjectionMatrix();
+        renderer.setSize(innerWidth, innerHeight);
+        uniforms.uScale.value =
+          (innerHeight / 1000) * 240 * Math.min(devicePixelRatio, 2);
+      });
+    </script>
+  <script src="../src-viewer.js"></script>
+</body>
+</html>

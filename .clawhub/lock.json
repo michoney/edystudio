@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "cn-last30days": {
+      "version": "1.0.2",
+      "installedAt": 1786217002973,
+      "ownerHandle": "redfox-data"
+    }
+  }
+}

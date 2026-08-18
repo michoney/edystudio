@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edy.AI.Studio · Skills</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif; line-height: 1.8; }
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 32px; border-bottom: 1px solid #1a1a1a; background: #0d0d0d; position: sticky; top: 0; z-index: 100; }
+.nav .brand { font-size: 16px; font-weight: 300; letter-spacing: 4px; color: #f5f5f5; text-decoration: none; }
+.nav .brand span { color: #ff3333; font-weight: 700; }
+.nav .links a { color: #888; text-decoration: none; font-size: 13px; letter-spacing: 1px; margin-left: 24px; transition: color 0.2s; }
+.nav .links a:hover { color: #f5f5f5; }
+.hero { text-align: center; padding: 50px 20px 30px; border-bottom: 1px solid #1f1f1f; }
+.hero .eyebrow { font-size: 12px; letter-spacing: 4px; color: #ff4444; font-family: 'Courier New', monospace; margin-bottom: 16px; }
+.hero h1 { font-size: 32px; font-weight: 300; letter-spacing: 6px; color: #f5f5f5; margin-bottom: 12px; }
+.hero .sub { color: #666; font-size: 13px; letter-spacing: 2px; }
+.container { max-width: 880px; margin: 40px auto; padding: 0 20px; }
+.section-title { font-size: 18px; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; color: #ccc; }
+.skill-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.skill-card { background: #111; border: 1px solid #1f1f1f; border-radius: 8px; padding: 20px; transition: border-color 0.2s; }
+.skill-card:hover { border-color: #ff3333; }
+.skill-card .num { font-size: 22px; font-weight: 700; color: #ff3333; font-family: 'Courier New', monospace; margin-bottom: 8px; }
+.skill-card h3 { font-size: 15px; font-weight: 700; color: #f5f5f5; margin-bottom: 4px; letter-spacing: 1px; }
+.skill-card .tag { font-size: 10px; color: #666; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Courier New', monospace; }
+.skill-card p { font-size: 12px; color: #888; line-height: 1.7; }
+.skill-card .link { display: inline-block; margin-top: 12px; color: #ff4444; font-size: 11px; letter-spacing: 2px; text-decoration: none; font-family: 'Courier New', monospace; }
+.footer { border-top: 1px solid #1f1f1f; padding: 24px 20px; text-align: center; color: #444; font-size: 12px; letter-spacing: 2px; }
+@media (max-width: 768px) { .skill-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="index.html">EDY.<span>AI</span>.STUDIO</a>
+  <div class="links">
+    <a href="index.html">首页</a>
+    <a href="skills.html">Skills</a>
+    <a href="camp.html">实战训练营</a>
+    <a href="financial-practice.html">Financial</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">// AI SKILL LIBRARY</div>
+  <h1>AI 技能库</h1>
+  <div class="sub">Hermes Agent Skills · 跨会话持久 · 一键加载</div>
+</div>
+
+<div class="container">
+  <div class="section-title">已上线 Skills</div>
+  <div class="skill-grid">
+
+    <div class="skill-card">
+      <div class="num">01</div>
+      <h3>仓颉 · 长文蒸馏</h3>
+      <div class="tag">CANGJIE</div>
+      <p>将书、视频、播客等长内容压缩为结构化知识条目，存入 Obsidian vault。支持中文长文 + 多模态输入。</p>
+      <a class="link" href="https://github.com/michoney/skill-library" target="_blank">→ 技能仓库</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">02</div>
+      <h3>女娲 · 人物蒸馏</h3>
+      <div class="tag">NUWA</div>
+      <p>构建人物档案、角色系统、关系网络。从访谈/小说/影视中提取结构化人物数据。</p>
+      <a class="link" href="https://github.com/michoney/skill-library" target="_blank">→ 技能仓库</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">03</div>
+      <h3>达尔文 · 进化</h3>
+      <div class="tag">DARWIN</div>
+      <p>自动发现 Skill 缺陷并触发修复。持续改进知识库，让 Agent 越来越聪明。</p>
+      <a class="link" href="https://github.com/michoney/skill-library" target="_blank">→ 技能仓库</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">04</div>
+      <h3>jshook · 爬虫</h3>
+      <div class="tag">JS_HOOK_MCP</div>
+      <p>636 个 JavaScript hook 工具，覆盖 34 个领域。浏览器自动化、安全研究、反检测爬虫。</p>
+      <a class="link" href="https://github.com/vmoranv/jshookmcp" target="_blank">→ 原项目</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">05</div>
+      <h3>深度研究</h3>
+      <div class="tag">SN-DEEP-RESEARCH</div>
+      <p>规划 → 分维度取证 → 综合 → 成稿全流程。多源搜索整合，产出结构化研究报告。</p>
+      <a class="link" href="https://github.com/michoney/skill-library" target="_blank">→ 技能仓库</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">06</div>
+      <h3>学术搜索</h3>
+      <div class="tag">SN-SEARCH-ACADEMIC</div>
+      <p>ArXiv / Semantic Scholar / PubMed 学术论文搜索，含引用分析与领域知识图谱。</p>
+      <a class="link" href="https://github.com/michoney/skill-library" target="_blank">→ 技能仓库</a>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+  EDY.AI.STUDIO · SKILLS LIBRARY &nbsp;|&nbsp; <a href="https://github.com/michoney/hermes-skills" style="color:#ff4444;text-decoration:none;">michoney/hermes-skills</a>
+</div>
+
+</body>
+</html>
