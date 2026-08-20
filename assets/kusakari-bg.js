@@ -2,8 +2,12 @@
 // Original: https://twitter.com/kusakarism  (art logic kept verbatim)
 // Adaptations for background use: no orbitControl, transparent canvas (clear), windowResized.
 
+function bandHeight() {
+  return Math.max(260, Math.floor(windowHeight * 0.45));
+}
+
 function setup() {
-  createCanvas(windowWidth, windowHeight, WEBGL);
+  createCanvas(windowWidth, bandHeight(), WEBGL);
   colorMode(HSB, 360, 100, 100, 255);
   setObject();
 }
@@ -34,7 +38,7 @@ function setObject() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, windowHeight);
+  resizeCanvas(windowWidth, bandHeight());
   setObject();
 }
 
