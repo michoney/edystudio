@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Live flight radar — open the Flightradar24 view around 22.71N 112.92E in a new tab.">
+<title>Live Flights — Edy.AI.Studio</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { min-height:100vh; background:#0a0e12; color:#e6edf3; font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif; display:flex; flex-direction:column; }
+  .nav { display:flex; justify-content:space-between; align-items:center; padding:16px 28px; border-bottom:1px solid #1c2530; }
+  .nav .brand { color:#f5f5f5; text-decoration:none; font-size:15px; letter-spacing:3px; font-weight:300; }
+  .nav .brand span { color:#3ea6ff; font-weight:700; }
+  .nav .links a { color:#8b98a5; text-decoration:none; font-size:12px; letter-spacing:1px; margin-left:20px; }
+  .nav .links a:hover { color:#fff; }
+  .nav .links a.active { color:#3ea6ff; }
+  .main { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 20px; }
+  .main h1 { font-size:30px; font-weight:300; letter-spacing:4px; color:#f5f5f5; margin-bottom:10px; }
+  .main .sub { color:#6b7a88; font-size:12px; letter-spacing:2px; font-family:'Courier New',monospace; margin-bottom:34px; }
+  .launch { display:inline-flex; align-items:center; gap:10px; padding:16px 34px; border-radius:10px; background:#3ea6ff; color:#fff; text-decoration:none; font-size:16px; letter-spacing:1px; transition:transform .2s, box-shadow .2s; box-shadow:0 6px 24px rgba(62,166,255,.25); }
+  .launch:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(62,166,255,.4); }
+  .coords { margin-top:22px; color:#8b98a5; font-size:13px; letter-spacing:1px; font-family:'Courier New',monospace; }
+  .note { margin-top:26px; max-width:560px; color:#5a6b7a; font-size:12px; line-height:1.9; }
+  footer { text-align:center; padding:22px 0; color:#44525f; font-size:11px; letter-spacing:1.5px; border-top:1px solid #111820; }
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <a class="brand" href="index.html">EDY.<span>AI</span>.STUDIO</a>
+    <div class="links">
+      <a href="index.html">HOME</a>
+      <a href="models.html">MODELS</a>
+      <a href="ai-news.html">AI NEWS</a>
+      <a href="financial-practice.html">FINANCIAL</a>
+      <a href="flights.html" class="active">FLIGHTS</a>
+      <a href="gallery.html">GALLERY</a>
+    </div>
+  </nav>
+
+  <div class="main">
+    <h1>Live Flight Radar</h1>
+    <div class="sub">GUANGDONG · 22.71N 112.92E · ZOOM 8</div>
+    <a class="launch" href="https://www.flightradar24.com/22.71,112.92/8" target="_blank" rel="noopener">✈ Open Live Radar on FlightRadar24 →</a>
+    <div class="coords">https://www.flightradar24.com/22.71,112.92/8</div>
+    <div class="note">Direct embedding is not allowed by Flightradar24, so the live radar opens in a new tab at the exact view above.</div>
+  </div>
+
+  <footer>EDY.AI.STUDIO · LIVE FLIGHTS</footer>
+</body>
+</html>
