@@ -11,15 +11,17 @@
   html,body { margin:0; min-height:100%; background:#050806; color:#edf5f0; font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif; }
   body::before { content:""; position:fixed; inset:0; pointer-events:none; background:radial-gradient(circle at 72% 20%,rgba(44,125,75,.18),transparent 34%),linear-gradient(rgba(145,247,185,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(145,247,185,.025) 1px,transparent 1px); background-size:auto,40px 40px,40px 40px; }
   .shell { position:relative; width:min(1120px,calc(100% - 36px)); margin:auto; padding:28px 0 64px; z-index:1; }
-  /* kusakari particle background — bottom band behind content */
-  canvas { position:fixed; left:0; right:0; bottom:0; z-index:0; pointer-events:none; opacity:.6; }
+  /* kusakari particle background — fixed panel right of the title, does not scroll */
+  #bg-band { position:fixed; top:110px; right:0; width:min(620px,50vw); height:44vh; min-height:260px; z-index:0; pointer-events:none; overflow:hidden; }
+  #bg-band canvas { display:block; width:100%; height:100%; }
+  @media (max-width:900px){ #bg-band { position:static; width:100%; margin-top:26px; } }
   nav { display:flex; justify-content:space-between; align-items:center; font-family:"Courier New",monospace; font-size:12px; letter-spacing:.12em; }
   nav a { color:#a9b2ae; text-decoration:none; }
   .eyebrow { margin-top:96px; color:var(--green); font:12px/1.4 "Courier New",monospace; letter-spacing:.22em; text-transform:uppercase; }
   h1 { max-width:760px; margin:14px 0 18px; font-size:clamp(40px,7vw,82px); line-height:.96; letter-spacing:-.055em; font-weight:600; }
   .intro { max-width:610px; color:#9ba6a1; font-size:16px; line-height:1.8; }
   .grid { margin-top:64px; display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
-  .card { min-height:390px; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end; padding:28px; border:1px solid var(--line); border-radius:18px; color:inherit; text-decoration:none; background:linear-gradient(155deg,rgba(22,39,28,.5),rgba(6,10,7,.68)); backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px); transition:transform .3s ease,border-color .3s ease; }
+  .card { min-height:390px; position:relative; overflow:hidden; display:flex; flex-direction:column; justify-content:flex-end; padding:28px; border:1px solid var(--line); border-radius:18px; color:inherit; text-decoration:none; background:linear-gradient(155deg,rgba(22,39,28,.92),rgba(6,10,7,.98)); transition:transform .3s ease,border-color .3s ease; }
   .card:hover { transform:translateY(-5px); border-color:rgba(145,247,185,.55); }
   .visual { position:absolute; inset:0; opacity:.72; }
   .tree { position:absolute; width:240px; height:240px; left:50%; top:42%; transform:translate(-50%,-50%); border-radius:48% 52% 45% 55%; background:radial-gradient(circle at 36% 30%,rgba(164,255,196,.9) 0 2px,transparent 3px),radial-gradient(circle at 65% 52%,rgba(103,242,156,.9) 0 2px,transparent 3px),radial-gradient(circle at 45% 70%,rgba(81,204,128,.8) 0 2px,transparent 3px); background-size:19px 19px,23px 23px,17px 17px; filter:drop-shadow(0 0 22px rgba(97,255,155,.22)); }
@@ -59,6 +61,7 @@
       <div class="meta"><span class="number">MODEL / 02</span><h2>Tesla Model Y 3D 产品展示</h2><p class="desc">整车 3D 模型 + 后桥电驱 + 电池包爆炸视图，手机自适应横屏，面向汽修门店的客户演示。</p><span class="open">OPEN PRODUCT ↗</span></div>
     </a>
   </section>
+  <div id="bg-band" aria-hidden="true"></div>
   <footer>© EDY AI STUDIO · SHENZHEN</footer>
 </main>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>

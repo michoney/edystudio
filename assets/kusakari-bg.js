@@ -6,8 +6,15 @@ function bandHeight() {
   return Math.max(260, Math.floor(windowHeight * 0.45));
 }
 
+function bandWidth() {
+  const parent = document.getElementById('bg-band');
+  return parent ? Math.max(320, parent.clientWidth) : windowWidth;
+}
+
 function setup() {
-  createCanvas(windowWidth, bandHeight(), WEBGL);
+  const c = createCanvas(bandWidth(), bandHeight(), WEBGL);
+  const parent = document.getElementById('bg-band');
+  if (parent) c.parent(parent);
   colorMode(HSB, 360, 100, 100, 255);
   setObject();
 }
@@ -38,7 +45,7 @@ function setObject() {
 }
 
 function windowResized() {
-  resizeCanvas(windowWidth, bandHeight());
+  resizeCanvas(bandWidth(), bandHeight());
   setObject();
 }
 
