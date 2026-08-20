@@ -52,6 +52,21 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:'PingFang SC','Microsoft YaHei
 .flow-card ol li::marker{color:#ff3333;}
 
 .footer{border-top:1px solid #1f1f1f;padding:24px 20px;text-align:center;color:#444;font-size:12px;letter-spacing:2px;margin-top:40px;}
+/* Works showcase */
+.works-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:8px;}
+.work-card{background:#111;border:1px solid #1f1f1f;border-radius:8px;overflow:hidden;transition:all .2s;}
+.work-card:hover{border-color:#ff3333;transform:translateY(-2px);}
+.work-ph{aspect-ratio:16/9;background:linear-gradient(160deg,#161616,#0c0c0c);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#444;}
+.work-ph .play{font-size:26px;color:#ff3333;}
+.work-ph .tag{font-size:10px;letter-spacing:2px;font-family:'Courier New',monospace;color:#555;}
+.work-meta{padding:14px 16px;}
+.work-meta .date{font-size:10px;color:#555;font-family:'Courier New',monospace;letter-spacing:1px;}
+.work-meta h4{font-size:14px;color:#f5f5f5;margin:4px 0;letter-spacing:1px;}
+.work-meta p{font-size:11px;color:#888;line-height:1.6;}
+.work-meta video{width:100%;display:block;aspect-ratio:16/9;background:#000;}
+.works-note{margin-top:14px;font-size:11px;color:#666;line-height:1.8;background:#111;border:1px solid #1f1f1f;border-radius:6px;padding:12px 16px;}
+.works-note code{color:#ff4444;}
+@media(max-width:768px){.works-grid{grid-template-columns:1fr;}}
 @media(max-width:768px){.skill-grid{grid-template-columns:1fr;}.flow{grid-template-columns:1fr;}.pipeline{gap:4px;}}
 </style>
 </head>
@@ -183,6 +198,42 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:'PingFang SC','Microsoft YaHei
       <a class="link" href="https://github.com/michoney/edystudio/tree/main/ai-video/space-video-cover" target="_blank">→ SKILL.md</a>
     </div>
 
+  </div>
+
+  <div class="section-title" style="margin-top:50px;">Works · 作品展示</div>
+  <div class="works-grid">
+
+    <div class="work-card">
+      <div class="work-ph"><span class="play">▶</span><span class="tag">WORK 01</span></div>
+      <div class="work-meta">
+        <span class="date">2026.08 · PIPELINE</span>
+        <h4>示例成片标题</h4>
+        <p>一句话说明这条视频的主题与流水线产出。</p>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="work-ph"><span class="play">▶</span><span class="tag">WORK 02</span></div>
+      <div class="work-meta">
+        <span class="date">2026.08 · B-ROLL</span>
+        <h4>示例成片标题</h4>
+        <p>一句话说明这条视频的主题与流水线产出。</p>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="work-ph"><span class="play">▶</span><span class="tag">WORK 03</span></div>
+      <div class="work-meta">
+        <span class="date">2026.08 · TOPIC→COVER</span>
+        <h4>示例成片标题</h4>
+        <p>一句话说明这条视频的主题与流水线产出。</p>
+      </div>
+    </div>
+
+  </div>
+  <div class="works-note">
+    📌 如何添加成片：把 mp4 放进仓库 <code>ai-video/works/</code>，然后把上面卡片里的占位块换成
+    <code>&lt;video controls src="ai-video/works/你的文件.mp4"&gt;&lt;/video&gt;</code>，改标题与说明即可。
   </div>
 
   <div class="section-title" style="margin-top:50px;">Workflow · 两种使用方式</div>
