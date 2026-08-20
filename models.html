@@ -10,7 +10,9 @@
   * { box-sizing:border-box; }
   html,body { margin:0; min-height:100%; background:#050806; color:#edf5f0; font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif; }
   body::before { content:""; position:fixed; inset:0; pointer-events:none; background:radial-gradient(circle at 72% 20%,rgba(44,125,75,.18),transparent 34%),linear-gradient(rgba(145,247,185,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(145,247,185,.025) 1px,transparent 1px); background-size:auto,40px 40px,40px 40px; }
-  .shell { position:relative; width:min(1120px,calc(100% - 36px)); margin:auto; padding:28px 0 64px; }
+  .shell { position:relative; width:min(1120px,calc(100% - 36px)); margin:auto; padding:28px 0 64px; z-index:1; }
+  /* kusakari particle background */
+  canvas { position:fixed; inset:0; z-index:0; pointer-events:none; opacity:.92; }
   nav { display:flex; justify-content:space-between; align-items:center; font-family:"Courier New",monospace; font-size:12px; letter-spacing:.12em; }
   nav a { color:#a9b2ae; text-decoration:none; }
   .eyebrow { margin-top:96px; color:var(--green); font:12px/1.4 "Courier New",monospace; letter-spacing:.22em; text-transform:uppercase; }
@@ -59,5 +61,7 @@
   </section>
   <footer>© EDY AI STUDIO · SHENZHEN</footer>
 </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+<script src="assets/kusakari-bg.js"></script>
 </body>
 </html>

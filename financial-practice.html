@@ -58,6 +58,8 @@
   .data-table td { padding: 10px 14px; border-bottom: 1px solid #111; color: #ccc; }
   .data-table tr:hover td { background: #0d0d0d; }
   .data-table .highlight { color: #2ecc71; font-weight: 700; }
+  .mag7 td.red { color:#e74c3c; font-weight:700; font-family:'Courier New',monospace; }
+  .mag7 td.green { color:#2ecc71; font-weight:700; font-family:'Courier New',monospace; }
 
   .key-points { margin-top: 20px; padding: 20px; background: #0d0d0d; border-left: 3px solid #9b59b6; border-radius: 0 6px 6px 0; }
   .key-points h4 { font-size: 13px; color: #9b59b6; letter-spacing: 2px; margin-bottom: 12px; }
@@ -168,11 +170,15 @@
     <div class="stat-row">
       <div class="stat">
         <div class="label"><span class="cn">最新价</span>LATEST PRICE</div>
-        <div class="value red">¥406.49</div>
+        <div class="value">¥<span id="livePrice">--</span></div>
       </div>
       <div class="stat">
         <div class="label"><span class="cn">涨跌</span>CHANGE</div>
-        <div class="value red">-17.13%</div>
+        <div id="liveChange" class="value">--</div>
+      </div>
+      <div class="stat" style="flex-basis:100%">
+        <div class="label"><span class="cn">行情</span>LIVE <span id="liveTime">--</span> · 每 60 秒自动刷新</div>
+        <div id="liveMeta" class="value" style="font-size:12px;color:#999">--</div>
       </div>
       <div class="stat">
         <div class="label"><span class="cn">52周高</span>52W HIGH</div>
@@ -191,6 +197,21 @@
         <div class="value">创业板</div>
       </div>
     </div>
+
+    <div style="margin:34px 0 8px;font-size:15px;letter-spacing:2px;color:#ccc;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;">
+      <strong>大盘看板</strong>
+      <span style="font-size:10px;letter-spacing:2px;color:#ff4444;font-family:'Courier New',monospace;">MARKET INDICES · <span id="indexTime">--</span> · 每 60 秒自动刷新</span>
+    </div>
+    <div class="stat-row" id="indexGrid"><!-- rendered by live-quote.js --></div>
+
+    <div style="margin:34px 0 8px;font-size:15px;letter-spacing:2px;color:#ccc;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;">
+      <strong>自选行情 Watchlist</strong>
+      <span style="font-size:10px;letter-spacing:2px;color:#ff4444;font-family:'Courier New',monospace;">LIVE <span id="mag7Time">--</span> · 每 60 秒自动刷新</span>
+    </div>
+    <table class="data-table mag7">
+      <tr><th>公司</th><th>最新价 USD</th><th>涨跌</th><th>涨跌幅</th></tr>
+      <tbody id="mag7Body"><tr><td colspan="4" style="color:#555">加载中…</td></tr></tbody>
+    </table>
 
     <table class="data-table">
       <tr>
@@ -258,6 +279,23 @@
     </div>
   </div>
 
+  <div style="margin:34px 0 8px;border:1px solid #222;border-radius:10px;background:linear-gradient(160deg,#12121a,#0b0b10);padding:22px 26px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+      <span style="font-size:18px;">🤖</span>
+      <span style="background:#9b59b6;color:#fff;font-size:10px;letter-spacing:2px;padding:3px 10px;border-radius:2px;font-family:'Courier New',monospace;">AI 看股</span>
+      <span style="margin-left:auto;font-size:10px;color:#555;font-family:'Courier New',monospace;letter-spacing:1px;">WHY AI WATCHES</span>
+    </div>
+    <div style="font-size:17px;font-weight:700;color:#f5f5f5;margin-bottom:4px;">用 AI 看股有什么用？</div>
+    <div style="font-size:11px;color:#666;margin-bottom:12px;letter-spacing:1px;">AI as your market information assistant — 不是荐股，是把盯盘交给机器</div>
+    <ul style="margin:0;padding-left:18px;font-size:13px;color:#aaa;line-height:2;">
+      <li><strong style="color:#f5f5f5;">7×24 自动盯盘</strong> — A股 / 港股 / 美股 24 个标的，60 秒自动刷新，不用自己刷行情软件</li>
+      <li><strong style="color:#f5f5f5;">一张看板看全市场</strong> — 7 大指数 + 七姐妹 + 自选股，红涨绿跌一眼看懂</li>
+      <li><strong style="color:#f5f5f5;">不记代码也能答</strong> — 「大盘多少？」→ 上证 3903 点 +0.24%，即看即答</li>
+      <li><strong style="color:#f5f5f5;">AI 做信息助理，你做判断</strong> — 数据归机器整理，决策归人</li>
+    </ul>
+    <div style="margin-top:10px;font-size:11px;color:#555;">行情仅供参考，不构成投资建议。</div>
+  </div>
+
   <div class="footer">
     Edy.AI.Studio &nbsp;·&nbsp; 金融实战训练 &nbsp;·&nbsp;
     <a href="https://github.com/michoney/edystudio" target="_blank">GitHub</a>
@@ -265,5 +303,6 @@
   </div>
 
 </div>
+<script src="assets/live-quote.js"></script>
 </body>
 </html>
