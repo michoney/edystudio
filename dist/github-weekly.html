@@ -9,28 +9,101 @@
 *{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;color:var(--paper);background-color:#0b1115;background-image:linear-gradient(rgba(94,153,165,.12) 1px,transparent 1px),linear-gradient(90deg,rgba(94,153,165,.12) 1px,transparent 1px),radial-gradient(circle at 50% 0,rgba(32,134,159,.18),transparent 40%);background-size:28px 28px,28px 28px,100% 100%;font-family:"Arial Rounded MT Bold","PingFang SC","Microsoft YaHei",sans-serif;min-height:100vh}
 body:after{content:"";position:fixed;inset:0;pointer-events:none;z-index:9;background:repeating-linear-gradient(0deg,transparent 0 3px,rgba(255,255,255,.018) 4px);mix-blend-mode:screen}
 .shell{width:min(1120px,calc(100% - 30px));margin:auto}.topbar{height:66px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid rgba(105,199,219,.22);font:700 12px/1 monospace;letter-spacing:.12em}.topbar a{text-decoration:none;color:#a8bcc2}.live{color:#67daf1;text-shadow:0 0 12px #2ba6c2}.hero{text-align:center;padding:66px 10px 56px;position:relative}.pill{display:inline-block;padding:8px 22px;border:1px solid #273941;border-radius:99px;background:#172127;box-shadow:inset 0 0 16px rgba(74,196,224,.08),0 0 22px rgba(70,195,226,.08);color:#5bd7f3;font:800 12px/1 monospace;letter-spacing:.18em}.hero h1{margin:22px 0 12px;font-size:clamp(48px,10vw,104px);line-height:.95;letter-spacing:-.07em;color:#edf1f2;text-shadow:4px 4px 0 #35434a,0 0 30px rgba(219,245,255,.12);transform:rotate(-1deg)}.hero p{margin:0 auto;max-width:740px;font-size:clamp(14px,2vw,20px);font-weight:800;letter-spacing:.06em}.rainbow{width:min(650px,88%);height:4px;margin:38px auto 0;background:linear-gradient(90deg,transparent,#4dd8f3,#8d70f5,#ff639e,transparent);box-shadow:0 0 13px #5fd9ee}
-.controls{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 0 26px}.filters{display:flex;gap:8px;flex-wrap:wrap}.filter,.video-link{border:2px solid #39464b;border-radius:999px;padding:9px 15px;background:#10171b;color:#9eb0b5;font:800 11px/1 monospace;cursor:pointer;text-decoration:none}.filter.active,.filter:hover,.video-link:hover{background:#56d7ef;border-color:#080b0d;color:#080b0d;box-shadow:3px 3px 0 #080b0d}.board{display:grid;grid-template-columns:1fr 1fr;gap:20px 34px;padding-bottom:70px}.card{--c:#fff;min-height:260px;padding:22px 24px 25px;border:3px solid var(--ink);border-radius:27px;background:var(--c);color:var(--ink);box-shadow:10px 11px 0 rgba(0,0,0,.92);position:relative;overflow:hidden;transition:transform .2s ease}.card:nth-child(even){transform:translateY(74px)}.card:hover{transform:translate(-3px,-5px) rotate(-.4deg)}.card:nth-child(even):hover{transform:translate(-3px,68px) rotate(.4deg)}.card:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;right:-22px;top:-38px;background:rgba(255,255,255,.22)}.card-head{display:flex;justify-content:space-between;border-bottom:3px solid var(--ink);padding-bottom:10px;font:900 12px/1 monospace;letter-spacing:.04em}.lang{opacity:.56}.card h2{font:900 clamp(28px,4.5vw,48px)/1 "Arial Rounded MT Bold","Trebuchet MS",sans-serif;letter-spacing:-.06em;margin:24px 0 16px;overflow-wrap:anywhere}.stats{display:flex;gap:8px;flex-wrap:wrap}.stat{display:inline-flex;align-items:center;padding:7px 11px;border:3px solid var(--ink);border-radius:999px;background:white;font:900 11px/1 monospace;box-shadow:2px 3px 0 var(--ink)}.stat.gain{background:var(--ink);color:white}.card p{margin:22px 0 0;font-size:15px;line-height:1.55;font-weight:800;max-width:90%}.topic{margin-top:12px;font:800 11px/1.4 monospace;opacity:.62}.card a{position:absolute;inset:0;z-index:2;font-size:0}.pink{--c:var(--pink)}.yellow{--c:var(--yellow)}.cyan{--c:var(--cyan)}.purple{--c:var(--purple)}.green{--c:var(--green)}.orange{--c:var(--orange)}
+.controls{display:flex;justify-content:space-between;align-items:center;gap:16px;margin:0 0 26px}.filters{display:flex;gap:8px;flex-wrap:wrap}.filter,.video-link{border:2px solid #39464b;border-radius:999px;padding:9px 15px;background:#10171b;color:#9eb0b5;font:800 11px/1 monospace;cursor:pointer;text-decoration:none}.filter.active,.filter:hover,.video-link:hover{background:#56d7ef;border-color:#080b0d;color:#080b0d;box-shadow:3px 3px 0 #080b0d}.board{display:grid;grid-template-columns:1fr 1fr;gap:20px 34px;padding-bottom:70px;max-height:calc(100vh - 430px);overflow:auto;padding-right:8px;scrollbar-width:thin;scrollbar-color:#425964 #0f161d}.card{--c:#fff;min-height:260px;padding:22px 24px 25px;border:3px solid var(--ink);border-radius:27px;background:var(--c);color:var(--ink);box-shadow:10px 11px 0 rgba(0,0,0,.92);position:relative;overflow:hidden;transition:transform .2s ease;display:flex;flex-direction:column}.card:nth-child(even){transform:translateY(74px)}.card:hover{transform:translate(-3px,-5px) rotate(-.4deg)}.card:nth-child(even):hover{transform:translate(-3px,68px) rotate(.4deg)}.card:after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;right:-22px;top:-38px;background:rgba(255,255,255,.22)}.card-head{display:flex;justify-content:space-between;border-bottom:3px solid var(--ink);padding-bottom:10px;font:900 12px/1 monospace;letter-spacing:.04em}.lang{opacity:.56}.card h2{font:900 clamp(28px,4.5vw,48px)/1 "Arial Rounded MT Bold","Trebuchet MS",sans-serif;letter-spacing:-.06em;margin:24px 0 16px;overflow-wrap:anywhere}.stats{display:flex;gap:8px;flex-wrap:wrap}.stat{display:inline-flex;align-items:center;padding:7px 11px;border:3px solid var(--ink);border-radius:999px;background:white;font:900 11px/1 monospace;box-shadow:2px 3px 0 var(--ink)}.stat.gain{background:var(--ink);color:white}.card p{margin:22px 0 0;font-size:15px;line-height:1.55;font-weight:800;max-width:90%}.topic{margin-top:12px;font:800 11px/1.4 monospace;opacity:.62;flex:0 0 auto}.card-link{position:absolute;inset:0;z-index:2;font-size:0;pointer-events:auto}
+.card-actions{z-index:3;position:relative;display:flex;gap:6px;justify-content:flex-end;margin-top:12px;align-self:flex-end}
+.copy-btn{width:32px;height:32px;padding:0;border-radius:9px;border:2px solid var(--ink);background:#f8fbff;color:#0f1417;cursor:pointer;font:900 14px/1.1 inherit;box-shadow:2px 2px 0 #080b0d}
+.copy-btn:hover{transform:translate(-1px,-1px)}
+.copy-btn:active{transform:translate(1px,1px)}
+.copy-btn.copied{background:var(--green);border-color:#0a1811}
+.pink{--c:var(--pink)}.yellow{--c:var(--yellow)}.cyan{--c:var(--cyan)}.purple{--c:var(--purple)}.green{--c:var(--green)}.orange{--c:var(--orange)}
 .foot{border-top:1px solid rgba(105,199,219,.22);padding:30px 0 50px;color:#71868c;font:700 11px/1.6 monospace;display:flex;justify-content:space-between}.hidden{display:none!important}
-@media(max-width:650px){.shell{width:min(100% - 22px,560px)}.topbar{height:54px}.hero{padding:48px 0 38px}.hero h1{font-size:54px}.hero p{font-size:14px}.controls{align-items:flex-start;flex-direction:column}.board{gap:12px 10px}.card{min-height:235px;padding:15px 14px;border-radius:20px;box-shadow:6px 7px 0 #000}.card:nth-child(even){transform:translateY(42px)}.card:nth-child(even):hover{transform:translateY(42px)}.card h2{font-size:clamp(22px,7vw,34px);margin:19px 0 13px}.card p{font-size:12px;max-width:100%;margin-top:18px}.card-head{font-size:9px}.stat{padding:6px 8px;font-size:9px;border-width:2px}.foot{margin-top:30px;flex-direction:column;gap:8px}}
+@media(max-width:650px){.shell{width:min(100% - 22px,560px)}.topbar{height:54px}.hero{padding:48px 0 38px}.hero h1{font-size:54px}.hero p{font-size:14px}.controls{align-items:flex-start;flex-direction:column}.board{gap:12px 10px;max-height:calc(100vh - 330px);overflow:auto;padding-right:8px;scrollbar-width:thin;scrollbar-color:#425964 #0f161d}.card{min-height:235px;padding:15px 14px;border-radius:20px;box-shadow:6px 7px 0 #000}.card:nth-child(even){transform:translateY(42px)}.card:nth-child(even):hover{transform:translateY(42px)}.card h2{font-size:clamp(22px,7vw,34px);margin:19px 0 13px}.card p{font-size:12px;max-width:100%;margin-top:18px}.card-head{font-size:9px}.stat{padding:6px 8px;font-size:9px;border-width:2px}.copy-btn{width:28px;height:28px;font-size:12px;border-radius:7px}.foot{margin-top:30px;flex-direction:column;gap:8px}}
 </style>
 </head>
 <body><div class="shell">
 <nav class="topbar"><a href="index.html">← EDY.AI.STUDIO</a><span class="live">● WEEKLY SIGNAL ONLINE</span></nav>
-<header class="hero"><span class="pill">GITHUB WEEKLY TRENDING</span><h1>GitHub 本周热榜</h1><p>官方 Weekly Trending 实时前十：Hallmark、OpenCut、DeepTutor 与代码 Agent 集体升温。</p><div class="rainbow"></div></header>
-<div class="controls"><div class="filters"><button class="filter active" data-filter="all">全部 10</button><button class="filter" data-filter="creator">创作工具</button><button class="filter" data-filter="agent">AI AGENT</button><button class="filter" data-filter="dev">编码工具</button></div><a class="video-link" href="assets/github-weekly-001.mp4" download>▶ 下载竖屏视频</a></div>
+<header class="hero"><span class="pill">GITHUB WEEKLY TRENDING</span><h1>GitHub 本周热榜</h1><p>官方 Weekly Trending 实时前十：buzz、orca、i-have-adhd 与 AI Agent 集体升温。</p><div class="rainbow"></div></header>
+<div class="controls"><div class="filters"><button class="filter active" data-filter="all">全部 10</button><button class="filter" data-filter="month">本月热榜</button><button class="filter" data-filter="creator">创作工具</button><button class="filter" data-filter="agent">AI AGENT</button><button class="filter" data-filter="dev">编码工具</button></div><a class="video-link" href="assets/github-weekly-001.mp4" download>▶ 下载竖屏视频</a></div>
 <main class="board">
-<article class="card pink" data-cat="creator dev"><div class="card-head"><span>#01 · HALLMARK</span><span class="lang">CSS</span></div><h2>hallmark</h2><div class="stats"><span class="stat">★ 15,089</span><span class="stat gain">↗ 本周 +8,948</span></div><p>为 Claude Code、Cursor 和 Codex 准备的去 AI 味设计 Skill。</p><div class="topic">官方描述：Anti-AI-slop design skill</div><a href="https://github.com/Nutlope/hallmark" target="_blank" rel="noreferrer">Hallmark</a></article>
-<article class="card yellow" data-cat="creator"><div class="card-head"><span>#02 · OPENCUT</span><span class="lang">TS</span></div><h2>opencut</h2><div class="stats"><span class="stat">★ 77,134</span><span class="stat gain">↗ 本周 +8,341</span></div><p>开源 CapCut 替代品。</p><div class="topic">官方描述：The open-source CapCut alternative</div><a href="https://github.com/OpenCut-app/OpenCut" target="_blank" rel="noreferrer">OpenCut</a></article>
-<article class="card cyan" data-cat="agent"><div class="card-head"><span>#03 · DEEPTUTOR</span><span class="lang">PY</span></div><h2>deeptutor</h2><div class="stats"><span class="stat">★ 28,903</span><span class="stat gain">↗ 本周 +2,908</span></div><p>终身个性化 AI 导师。</p><div class="topic">官方描述：Lifelong Personalized Tutoring</div><a href="https://github.com/HKUDS/DeepTutor" target="_blank" rel="noreferrer">DeepTutor</a></article>
-<article class="card purple" data-cat="dev agent"><div class="card-head"><span>#04 · CODE-REVIEW-GRAPH</span><span class="lang">PY</span></div><h2>code-review-graph</h2><div class="stats"><span class="stat">★ 24,779</span><span class="stat gain">↗ 本周 +4,791</span></div><p>本地优先的代码智能图谱，支持 MCP 与 CLI。</p><div class="topic">官方描述：Local-first code intelligence graph</div><a href="https://github.com/tirth8205/code-review-graph" target="_blank" rel="noreferrer">Code Review Graph</a></article>
-<article class="card green" data-cat="agent"><div class="card-head"><span>#05 · AWESOME-LLM-APPS</span><span class="lang">PY</span></div><h2>awesome-llm-apps</h2><div class="stats"><span class="stat">★ 125,908</span><span class="stat gain">↗ 本周 +5,385</span></div><p>100+ 开源 AI Agent、Agent Skills 和 RAG 应用。</p><div class="topic">官方描述：Free and Open Source</div><a href="https://github.com/Shubhamsaboo/awesome-llm-apps" target="_blank" rel="noreferrer">Awesome LLM Apps</a></article>
-<article class="card orange" data-cat="agent dev"><div class="card-head"><span>#06 · KIMI-CLI</span><span class="lang">PY</span></div><h2>kimi-cli</h2><div class="stats"><span class="stat">★ 10,542</span><span class="stat gain">↗ 本周 +1,294</span></div><p>Kimi Code 命令行编程 Agent。</p><div class="topic">官方描述：Your next CLI agent</div><a href="https://github.com/MoonshotAI/kimi-cli" target="_blank" rel="noreferrer">Kimi CLI</a></article>
-<article class="card purple" data-cat="creator dev"><div class="card-head"><span>#07 · UI-SKILLS</span><span class="lang">TS</span></div><h2>ui-skills</h2><div class="stats"><span class="stat">★ 5,885</span><span class="stat gain">↗ 本周 +2,094</span></div><p>面向设计工程师的 Skills。</p><div class="topic">官方描述：Skills for Design Engineers</div><a href="https://github.com/ibelick/ui-skills" target="_blank" rel="noreferrer">UI Skills</a></article>
-<article class="card pink" data-cat="agent dev"><div class="card-head"><span>#08 · JCODE</span><span class="lang">RS</span></div><h2>jcode</h2><div class="stats"><span class="stat">★ 10,452</span><span class="stat gain">↗ 本周 +1,769</span></div><p>面向代码的智能 Agent Harness。</p><div class="topic">官方描述：Agent harness for code</div><a href="https://github.com/1jehuang/jcode" target="_blank" rel="noreferrer">JCode</a></article>
-<article class="card cyan" data-cat="creator agent"><div class="card-head"><span>#09 · CANGJIE-SKILL</span><span class="lang">PY</span></div><h2>cangjie-skill</h2><div class="stats"><span class="stat">★ 4,297</span><span class="stat gain">↗ 本周 +1,364</span></div><p>把书、长视频和播客蒸馏成 Agent Skills。</p><div class="topic">中文开源项目</div><a href="https://github.com/kangarooking/cangjie-skill" target="_blank" rel="noreferrer">仓颉 Skill</a></article>
-<article class="card green" data-cat="agent"><div class="card-head"><span>#10 · VIBE-TRADING</span><span class="lang">PY</span></div><h2>vibe-trading</h2><div class="stats"><span class="stat">★ 26,206</span><span class="stat gain">↗ 本周 +3,679</span></div><p>个人 AI 交易 Agent。</p><div class="topic">官方描述：Your Personal Trading Agent</div><a href="https://github.com/HKUDS/Vibe-Trading" target="_blank" rel="noreferrer">Vibe Trading</a></article>
+<article class="card pink" data-month="1" data-cat="dev"><div class="card-head"><span>#01 · BUZZ</span><span class="lang">RUST</span></div><h2>buzz</h2><div class="stats"><span class="stat">★ 21,194</span><span class="stat gain">↗ 本周 +28</span></div><p>A hive mind communication platform</p><div class="topic">官方描述：A hive mind communication platform 中文说明：这是一个群体智慧沟通平台，强调协作讨论和透明信息流。</div><a class="card-link" href="https://github.com/block/buzz" target="_blank" rel="noreferrer">buzz</a></article>
+<article class="card yellow" data-month="1" data-cat="agent dev"><div class="card-head"><span>#02 · ORCA</span><span class="lang">TYPE</span></div><h2>orca</h2><div class="stats"><span class="stat">★ 35,918</span><span class="stat gain">↗ 本周 +24</span></div><p>Orca is the ADE for working with a fleet of parallel agents. Run any coding a...</p><div class="topic">官方描述：Orca is the ADE for working with a fleet of parallel agents.... 中文说明：Orca 是用于并行多 Agent 协作的 ADE（应用开发环境），支持多智能体协同执行任务。</div><a class="card-link" href="https://github.com/stablyai/orca" target="_blank" rel="noreferrer">orca</a></article>
+<article class="card cyan" data-month="1" data-cat="agent dev"><div class="card-head"><span>#03 · I-HAVE-ADHD</span><span class="lang">PYTH</span></div><h2>i-have-adhd</h2><div class="stats"><span class="stat">★ 15,752</span><span class="stat gain">↗ 本周 +23</span></div><p>A skill to stop your coding agent from burying the answer. ADHD-friendly output.</p><div class="topic">官方描述：A skill to stop your coding agent from burying the answer. A... 中文说明：用于约束编码 Agent 的输出，减少啰嗦信息，让答案更直接、更容易快速识别。</div><a class="card-link" href="https://github.com/ayghri/i-have-adhd" target="_blank" rel="noreferrer">i-have-adhd</a></article>
+<article class="card purple" data-month="1" data-cat="agent dev"><div class="card-head"><span>#04 · BOOK-TO-SKILL</span><span class="lang">PYTH</span></div><h2>book-to-skill</h2><div class="stats"><span class="stat">★ 15,453</span><span class="stat gain">↗ 本周 +20</span></div><p>Turn any technical book PDF into a Claude Code skill — ready to study, refere...</p><div class="topic">官方描述：Turn any technical book PDF into a Claude Code skill — ready... 中文说明：将技术类 PDF 自动转成 Claude Code Skill，便于按章节学习与复用。</div><a class="card-link" href="https://github.com/virgiliojr94/book-to-skill" target="_blank" rel="noreferrer">book-to-skill</a></article>
+<article class="card green" data-month="1" data-cat="dev"><div class="card-head"><span>#05 · PDF-INSPECTOR</span><span class="lang">RUST</span></div><h2>pdf-inspector</h2><div class="stats"><span class="stat">★ 6,225</span><span class="stat gain">↗ 本周 +13</span></div><p>Fast Rust library for PDF inspection, classification, and text extraction. In...</p><div class="topic">官方描述：Fast Rust library for PDF inspection, classification, and te... 中文说明：Rust 编写的 PDF 检查工具，支持快速归类与文本抽取。</div><a class="card-link" href="https://github.com/firecrawl/pdf-inspector" target="_blank" rel="noreferrer">pdf-inspector</a></article>
+<article class="card orange" data-month="1" data-cat="agent"><div class="card-head"><span>#06 · QM</span><span class="lang">TYPE</span></div><h2>qm</h2><div class="stats"><span class="stat">★ 7,493</span><span class="stat gain">↗ 本周 +11</span></div><p>Multiplayer agent harness for work</p><div class="topic">官方描述：Multiplayer agent harness for work 中文说明：多人协作 AI Agent 的统一调度入口，适合并行处理复杂工作流。</div><a class="card-link" href="https://github.com/yc-software/qm" target="_blank" rel="noreferrer">qm</a></article>
+<article class="card purple" data-month="1" data-cat="dev"><div class="card-head"><span>#07 · OPENWORKER</span><span class="lang">PYTH</span></div><h2>openworker</h2><div class="stats"><span class="stat">★ 12,101</span><span class="stat gain">↗ 本周 +15</span></div><p></p><div class="topic">官方描述： 中文说明：仓库官方描述为空，建议按项目 README 补充后再写。</div><a class="card-link" href="https://github.com/andrewyng/openworker" target="_blank" rel="noreferrer">openworker</a></article>
+<article class="card pink" data-month="1" data-cat="creator dev"><div class="card-head"><span>#08 · IMG2THREEJS</span><span class="lang">PYTH</span></div><h2>img2threejs</h2><div class="stats"><span class="stat">★ 9,149</span><span class="stat gain">↗ 本周 +18</span></div><p>Rebuild the object in a reference image as a code-only, procedural, quality-g...</p><div class="topic">官方描述：Rebuild the object in a reference image as a code-only, proc... 中文说明：把参考图中的对象重建为纯代码、程序化且高保真度的 3D 表达。</div><a class="card-link" href="https://github.com/img2threejs/img2threejs" target="_blank" rel="noreferrer">img2threejs</a></article>
+<article class="card cyan" data-month="1" data-cat="agent"><div class="card-head"><span>#09 · QWENPAW</span><span class="lang">PYTH</span></div><h2>qwenpaw</h2><div class="stats"><span class="stat">★ 32,256</span><span class="stat gain">↗ 本周 +16</span></div><p>Your Personal AI Assistant; easy to install, deploy on your own machine or on...</p><div class="topic">官方描述：Your Personal AI Assistant; easy to install, deploy on your ... 中文说明：个人 AI 助手，支持本地或云端部署，目标是更轻量可控的日常助手能力。</div><a class="card-link" href="https://github.com/agentscope-ai/QwenPaw" target="_blank" rel="noreferrer">QwenPaw</a></article>
+<article class="card green" data-month="1" data-cat="agent dev"><div class="card-head"><span>#10 · OMNIROUTE</span><span class="lang">TYPE</span></div><h2>omniroute</h2><div class="stats"><span class="stat">★ 37,994</span><span class="stat gain">↗ 本周 +14</span></div><p>Never stop coding. Free MIT AI gateway: one endpoint, 290+ providers (90+ fre...</p><div class="topic">官方描述：Never stop coding. Free MIT AI gateway: one endpoint, 290+ p... 中文说明：开源 AI 网关，统一单一接入端点并聚合大量模型提供商（含免费额度）。</div><a class="card-link" href="https://github.com/diegosouzapw/OmniRoute" target="_blank" rel="noreferrer">OmniRoute</a></article>
 </main>
-<footer class="foot"><span>ISSUE 001 · 2026.07.22 · SHENZHEN</span><span>GITHUB WEEKLY TRENDING 官方顺序 · 实时数据</span></footer>
+<footer class="foot"><span>ISSUE 001 · 2026.08.03 · SHENZHEN</span><span>GITHUB WEEKLY TRENDING 官方顺序 · 实时数据</span></footer>
 </div><script>
-const buttons=[...document.querySelectorAll('.filter')],cards=[...document.querySelectorAll('.card')];buttons.forEach(b=>b.onclick=()=>{buttons.forEach(x=>x.classList.remove('active'));b.classList.add('active');let f=b.dataset.filter;cards.forEach(c=>c.classList.toggle('hidden',f!=='all'&&!c.dataset.cat.split(' ').includes(f)))})
+const buttons=[...document.querySelectorAll('.filter')],
+      cards=[...document.querySelectorAll('.card')];
+
+function applyFilter(f){
+  cards.forEach(card => {
+    if (f === 'all') {
+      card.classList.remove('hidden');
+      return;
+    }
+    if (f === 'month') {
+      card.classList.toggle('hidden', card.dataset.month !== '1');
+      return;
+    }
+    card.classList.toggle('hidden', !card.dataset.cat.split(' ').includes(f));
+  });
+}
+
+function copyText(str){
+  const fallback = ()=>{
+    const ta=document.createElement('textarea');
+    ta.value=str;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    return navigator.clipboard.writeText(str).then(()=>true).catch(()=>{fallback(); return true;});
+  }
+  fallback();
+  return Promise.resolve(true);
+}
+
+buttons.forEach(b => {
+  b.onclick = () => {
+    buttons.forEach(x => x.classList.remove('active'));
+    b.classList.add('active');
+    applyFilter(b.dataset.filter);
+  };
+});
+
+cards.forEach(card => {
+  const link = card.querySelector('.card-link');
+  if (!link) return;
+  const wrap = document.createElement('div');
+  wrap.className = 'card-actions';
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'copy-btn';
+  btn.textContent = '⎘';
+  btn.title = '复制 git clone 命令';
+  btn.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const repoUrl = link.href.replace(/\/$/, '');
+    await copyText(`git clone ${repoUrl}`);
+    btn.classList.add('copied');
+    btn.textContent = '✓';
+    setTimeout(() => {
+      btn.classList.remove('copied');
+      btn.textContent = '⎘';
+    }, 1000);
+  });
+  wrap.appendChild(btn);
+  card.appendChild(wrap);
+});
+
+applyFilter('all');
 </script></body></html>
