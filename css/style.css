@@ -69,6 +69,24 @@ body {
   z-index: 5;
 }
 
+#back {
+  position: fixed;
+  top: calc(58px + env(safe-area-inset-top));
+  right: calc(12px + env(safe-area-inset-right));
+  color: #8fa8c8;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: .12em;
+  padding: 8px 16px;
+  border: 1px solid rgba(140, 180, 240, .28);
+  border-radius: 999px;
+  background: rgba(8, 12, 22, .55);
+  backdrop-filter: blur(8px);
+  transition: color .2s, border-color .2s, background .2s;
+  z-index: 20;
+}
+#back:hover { color: #fff; border-color: rgba(140, 180, 240, .65); background: rgba(14, 22, 40, .7); }
+
 #panel {
   position: fixed;
   left: 50%;
