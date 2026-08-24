@@ -32,6 +32,12 @@
   .tesla { position:absolute; width:260px; height:118px; left:50%; top:42%; transform:translate(-50%,-50%); border:1px solid rgba(145,247,185,.48); border-radius:38px 38px 18px 18px; background:linear-gradient(150deg,rgba(31,58,40,.92),rgba(5,9,6,.97)); box-shadow:inset 0 0 34px rgba(93,236,145,.10),0 0 30px rgba(77,231,134,.14); }
   .tesla::before { content:""; position:absolute; left:50%; top:-33px; transform:translateX(-50%); width:98px; height:47px; border:1px solid rgba(145,247,185,.42); border-radius:30px 30px 9px 9px; background:rgba(13,24,16,.94); }
   .tesla::after { content:""; position:absolute; left:32px; right:32px; bottom:-13px; height:13px; background:radial-gradient(circle at 14% 50%,rgba(145,247,185,.85) 0 6px,transparent 7px),radial-gradient(circle at 86% 50%,rgba(145,247,185,.85) 0 6px,transparent 7px); }
+  .earth { position:absolute; width:250px; height:250px; left:50%; top:42%; transform:translate(-50%,-50%); border-radius:50%; border:1px solid rgba(120,200,255,.5); background:radial-gradient(circle at 32% 30%,rgba(120,200,255,.9) 0 3px,transparent 4px),radial-gradient(circle at 68% 55%,rgba(96,225,150,.85) 0 3px,transparent 4px),radial-gradient(circle at 42% 70%,rgba(70,180,255,.8) 0 3px,transparent 4px),radial-gradient(circle at 55% 25%,rgba(140,255,190,.8) 0 2px,transparent 3px); background-size:34px 34px,42px 42px,30px 30px,26px 26px; box-shadow:inset 0 0 40px rgba(80,180,255,.25),0 0 34px rgba(90,200,255,.18); }
+  .earth::before { content:""; position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.28),transparent 34%); }
+  .earth::after { content:""; position:absolute; left:0; right:0; top:50%; height:1px; background:linear-gradient(90deg,transparent,rgba(120,200,255,.6),transparent); transform:rotate(-18deg); box-shadow:0 52px rgba(120,200,255,.35),0 -52px rgba(120,200,255,.3); }
+  .blackhole { position:absolute; width:240px; height:240px; left:50%; top:42%; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle at 50% 50%,#000 0 40%,#10161b 55%,transparent 66%); box-shadow:0 0 50px rgba(255,150,40,.22); }
+  .blackhole::before { content:""; position:absolute; inset:-16px; border-radius:50%; border:3px solid transparent; border-top-color:rgba(255,170,70,.9); border-right-color:rgba(255,210,140,.55); transform:rotate(30deg); filter:drop-shadow(0 0 10px rgba(255,160,50,.5)); }
+  .blackhole::after { content:""; position:absolute; inset:6px; border-radius:50%; background:radial-gradient(circle, rgba(255,200,120,.16) 0 22%, transparent 26%); }
   .meta { position:relative; z-index:2; }
   .number { color:var(--green); font:11px "Courier New",monospace; letter-spacing:.16em; }
   h2 { margin:9px 0 8px; font-size:25px; font-weight:550; letter-spacing:-.025em; }
@@ -59,6 +65,14 @@
     <a class="card" href="https://michoney.github.io/tesla-model3/" target="_blank" rel="noopener">
       <div class="visual"><div class="tesla"></div></div>
       <div class="meta"><span class="number">MODEL / 02</span><h2>Tesla Model Y 3D 产品展示</h2><p class="desc">整车 3D 模型 + 后桥电驱 + 电池包爆炸视图，手机自适应横屏，面向汽修门店的客户演示。</p><span class="open">OPEN PRODUCT ↗</span></div>
+    </a>
+    <a class="card" href="https://michoney.github.io/earth-ai-dashboard/" target="_blank" rel="noopener">
+      <div class="visual"><div class="earth"></div></div>
+      <div class="meta"><span class="number">MODEL / 03</span><h2>Earth AI 控制中心</h2><p class="desc">3D 地球气象监控仪表盘 · 卫星云图、实时数据大屏与交互视界。</p><span class="open">OPEN PRODUCT ↗</span></div>
+    </a>
+    <a class="card" href="https://michoney.github.io/schwarzschild-blackhole/" target="_blank" rel="noopener">
+      <div class="visual"><div class="blackhole"></div></div>
+      <div class="meta"><span class="number">MODEL / 04</span><h2>施瓦西黑洞 · Schwarzschild</h2><p class="desc">WebGL 黑洞实时渲染：引力透镜、吸积盘与时空扭曲视效。</p><span class="open">OPEN DEMO ↗</span></div>
     </a>
   </section>
   <div id="bg-band" aria-hidden="true"></div>
