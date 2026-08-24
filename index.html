@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<title>施瓦西黑洞 · Schwarzschild Black Hole</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<canvas id="view"></canvas>
+
+<div id="fallback" class="hidden">需要支持 WebGL2 的现代浏览器<br>（Chrome / Edge / Firefox / Safari 15+）</div>
+
+<div id="hud">
+  <h1>施瓦西黑洞</h1>
+  <p>SCHWARZSCHILD BLACK HOLE · GRAVITATIONAL LENSING</p>
+  <div id="fps">-- fps</div>
+</div>
+
+<button id="gear" title="设置">⚙</button>
+
+<div id="panel">
+  <div class="row"><label>曝光</label><input id="ex" type="range" min="0.3" max="3" step="0.05" value="1.15"></div>
+  <div class="row"><label>吸积盘</label><input id="dg" type="range" min="0" max="3" step="0.05" value="1"></div>
+  <div class="row"><label>星空</label><input id="star" type="range" min="0" max="2" step="0.05" value="1"></div>
+  <div class="row"><label>倾角 °</label><input id="incl" type="range" min="-83" max="83" step="1" value="9"></div>
+  <div class="row"><label>距离 rs</label><input id="distR" type="range" min="6" max="40" step="0.5" value="16"></div>
+  <div class="row">
+    <label>画质</label>
+    <select id="quality">
+      <option value="120">低（省电）</option>
+      <option value="220" selected>中</option>
+      <option value="340">高</option>
+    </select>
+    <span class="chk"><input id="autoChk" type="checkbox" checked><span>自动环绕</span></span>
+  </div>
+  <div class="btns">
+    <button class="act" id="reset">重置视角</button>
+    <button class="act" id="hide">收起面板</button>
+  </div>
+</div>
+
+<noscript><div style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;color:#f88;background:#000;">请启用 JavaScript</div></noscript>
+
+<script src="js/shaders.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
