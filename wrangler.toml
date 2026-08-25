@@ -1,11 +1,9 @@
-# Cloudflare Workers 静态站点部署配置
+# Cloudflare Workers 反向代理部署配置
+# 实时镜像 https://michoney.github.io/edystudio/ （海外 GitHub Pages）
 # 部署命令: ./deploy.sh  或  npx wrangler deploy
-# 部署后访问: https://edystudio.michoney68.workers.dev
-# 注意: assets.directory 指向构建产物目录 dist/（由 deploy.sh 生成，仅含站点文件）
+# 访问地址: https://edystudio.michoney68.workers.dev
 
 name = "edystudio"
 compatibility_date = "2025-06-01"
-
-[assets]
-directory = "dist"
-not_found_handling = "404-page"
+main = "src/index.js"
+workers_dev = true

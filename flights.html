@@ -3,25 +3,36 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Live flight radar — open the Flightradar24 view around 22.71N 112.92E in a new tab.">
+<meta name="description" content="Live flight information near Guangdong (22.71N 112.92E) — real-time aircraft positions via OpenSky Network + direct Flightradar24 link.">
 <title>Live Flights — Edy.AI.Studio</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { min-height:100vh; background:#0a0e12; color:#e6edf3; font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif; display:flex; flex-direction:column; }
+  body { background:#0a0e12; color:#e6edf3; font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif; }
   .nav { display:flex; justify-content:space-between; align-items:center; padding:16px 28px; border-bottom:1px solid #1c2530; }
   .nav .brand { color:#f5f5f5; text-decoration:none; font-size:15px; letter-spacing:3px; font-weight:300; }
   .nav .brand span { color:#3ea6ff; font-weight:700; }
   .nav .links a { color:#8b98a5; text-decoration:none; font-size:12px; letter-spacing:1px; margin-left:20px; }
   .nav .links a:hover { color:#fff; }
   .nav .links a.active { color:#3ea6ff; }
-  .main { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 20px; }
-  .main h1 { font-size:30px; font-weight:300; letter-spacing:4px; color:#f5f5f5; margin-bottom:10px; }
-  .main .sub { color:#6b7a88; font-size:12px; letter-spacing:2px; font-family:'Courier New',monospace; margin-bottom:34px; }
-  .launch { display:inline-flex; align-items:center; gap:10px; padding:16px 34px; border-radius:10px; background:#3ea6ff; color:#fff; text-decoration:none; font-size:16px; letter-spacing:1px; transition:transform .2s, box-shadow .2s; box-shadow:0 6px 24px rgba(62,166,255,.25); }
-  .launch:hover { transform:translateY(-2px); box-shadow:0 10px 32px rgba(62,166,255,.4); }
-  .coords { margin-top:22px; color:#8b98a5; font-size:13px; letter-spacing:1px; font-family:'Courier New',monospace; }
-  .note { margin-top:26px; max-width:560px; color:#5a6b7a; font-size:12px; line-height:1.9; }
-  footer { text-align:center; padding:22px 0; color:#44525f; font-size:11px; letter-spacing:1.5px; border-top:1px solid #111820; }
+  .hero { padding:38px 28px 20px; text-align:center; }
+  .hero h1 { font-size:30px; font-weight:300; letter-spacing:4px; color:#f5f5f5; }
+  .hero .sub { color:#6b7a88; font-size:12px; letter-spacing:2px; margin-top:8px; font-family:'Courier New',monospace; }
+  .hero .badge { display:inline-block; margin-top:14px; padding:4px 12px; border:1px solid #3ea6ff; color:#3ea6ff; font-size:10px; letter-spacing:2px; font-family:'Courier New',monospace; }
+  .controls { display:flex; justify-content:center; gap:12px; margin:16px 0 18px; flex-wrap:wrap; }
+  .btn { padding:9px 20px; border-radius:6px; text-decoration:none; font-size:13px; letter-spacing:1px; border:1px solid #3ea6ff; color:#3ea6ff; background:transparent; cursor:pointer; transition:all .2s; }
+  .btn:hover { background:#3ea6ff; color:#fff; }
+  .btn.solid { background:#3ea6ff; color:#fff; }
+  .map-wrap { position:relative; max-width:1100px; margin:0 auto; padding:0 18px; }
+  #map { height:62vh; border:1px solid #1c2530; border-radius:12px; z-index:0; background:#0d141b; }
+  .stats { display:flex; gap:22px; justify-content:center; margin:16px 0 10px; flex-wrap:wrap; }
+  .stat { text-align:center; }
+  .stat .n { font-size:22px; color:#3ea6ff; font-weight:700; font-family:'Courier New',monospace; }
+  .stat .l { font-size:10px; color:#6b7a88; letter-spacing:2px; font-family:'Courier New',monospace; }
+  .note { max-width:820px; margin:0 auto 30px; padding:14px 18px; border:1px solid #1c2530; border-radius:10px; color:#8b98a5; font-size:12px; line-height:1.9; background:#0d131a; }
+  .note b { color:#e6edf3; }
+  footer { text-align:center; padding:24px 0; color:#44525f; font-size:11px; letter-spacing:1.5px; border-top:1px solid #111820; }
+  .plane { font-size:12px; color:#3ea6ff; text-shadow:0 0 6px rgba(62,166,255,.8); }
 </style>
 </head>
 <body>
@@ -37,14 +48,124 @@
     </div>
   </nav>
 
-  <div class="main">
-    <h1>Live Flight Radar</h1>
-    <div class="sub">GUANGDONG · 22.71N 112.92E · ZOOM 8</div>
-    <a class="launch" href="https://www.flightradar24.com/22.71,112.92/8" target="_blank" rel="noopener">✈ Open Live Radar on FlightRadar24 →</a>
-    <div class="coords">https://www.flightradar24.com/22.71,112.92/8</div>
-    <div class="note">Direct embedding is not allowed by Flightradar24, so the live radar opens in a new tab at the exact view above.</div>
+  <div class="hero">
+    <h1>Live Flight Information</h1>
+    <div class="sub">REAL-TIME AIRCRAFT · 22.71N 112.92E · ZOOM 8</div>
+    <div class="badge">LIVE · OPENSKY NETWORK</div>
   </div>
 
-  <footer>EDY.AI.STUDIO · LIVE FLIGHTS</footer>
+  <div class="controls">
+    <button class="btn solid" onclick="refreshFlights(true)">⟳ Refresh Now</button>
+    <a class="btn" href="https://www.flightradar24.com/22.71,112.92/8" target="_blank" rel="noopener">✈ Open Live Radar on FlightRadar24 →</a>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="n" id="statAircraft">--</div><div class="l">AIRCRAFT</div></div>
+    <div class="stat"><div class="n" id="statMaxAlt">--</div><div class="l">MAX ALT (FT)</div></div>
+    <div class="stat"><div class="n" id="statUpdated">--</div><div class="l">UPDATED</div></div>
+  </div>
+
+  <div class="map-wrap">
+    <div id="map"></div>
+  </div>
+
+  <div class="note">
+    <b>About this page:</b> Live aircraft positions over Guangdong are fetched from the public
+    <a href="https://opensky-network.org/" target="_blank" rel="noopener">OpenSky Network</a> API every 30 seconds
+    and drawn on an OpenStreetMap base. Directly embedding Flightradar24 is not allowed by the site,
+    so the <b>"Open Live Radar"</b> button jumps to the exact Flightradar24 view
+    (<code>22.71, 112.92</code>, zoom 8) in a new tab. Click any plane marker for its callsign, altitude,
+    speed and heading. Data is informational only.
+  </div>
+
+  <footer>EDY.AI.STUDIO · LIVE FLIGHTS · DATA © OPENSKY NETWORK / MAP © OPENSTREETMAP</footer>
+
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script>
+    const BBOX = { lamin: 21.5, lomin: 110.5, lamax: 24.0, lomax: 115.5 };
+    const CENTER = [22.71, 112.92];
+    const ZOOM = 8;
+    const REFRESH_MS = 30000;
+    let map, markers = {};
+    let lastUpdated = null;
+
+    function init() {
+      map = L.map('map', { center: CENTER, zoom: ZOOM, attributionControl: true });
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      }).addTo(map);
+      refreshFlights(false);
+      setInterval(function () { refreshFlights(false); }, REFRESH_MS);
+    }
+
+    async function refreshFlights(manual) {
+      const url = 'https://opensky-network.org/api/states/all?lamin=' + BBOX.lamin +
+        '&lomin=' + BBOX.lomin + '&lamax=' + BBOX.lamax + '&lomax=' + BBOX.lomax;
+      const btn = document.querySelector('.btn.solid');
+      if (btn) btn.textContent = manual ? '⟳ Loading…' : btn.textContent;
+      try {
+        const res = await fetch(url);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+        render(data.states || []);
+        if (btn) btn.textContent = '⟳ Refresh Now';
+      } catch (e) {
+        if (btn) btn.textContent = '⟳ Refresh Now';
+        setStat('statAircraft', '--');
+        setStat('statUpdated', 'ERR');
+        if (!document.getElementById('mapHint')) {
+          const d = document.createElement('div');
+          d.id = 'mapHint';
+          d.style.cssText = 'position:absolute;top:16px;left:50%;transform:translateX(-50%);z-index:1000;background:#1a2330;border:1px solid #3ea6ff;color:#cfe4f7;padding:10px 16px;border-radius:8px;font-size:12px;';
+          d.innerHTML = 'Live feed unavailable from your network — use the <b>FlightRadar24</b> button above.';
+          document.querySelector('.map-wrap').appendChild(d);
+        }
+      }
+    }
+
+    function render(states) {
+      const seen = {};
+      let maxAlt = 0, count = 0;
+      states.forEach(function (s) {
+        const icao = s[0], callsign = (s[1] || '').trim();
+        const lat = s[6], lon = s[5];
+        if (lat == null || lon == null) return;
+        const altFt = Math.round((s[7] != null ? s[7] : 0) * 3.28084);
+        const velKt = Math.round((s[9] != null ? s[9] : 0) * 1.94384);
+        const track = s[10] != null ? Math.round(s[10]) : 0;
+        const onGround = s[8];
+        count++;
+        if (!onGround && altFt > maxAlt) maxAlt = altFt;
+        seen[icao] = true;
+        const label = callsign || icao.slice(0, 6).toUpperCase();
+        const icon = L.divIcon({ className: '', html: '<span class="plane">✈</span>', iconSize: [14, 14], iconAnchor: [7, 7] });
+        const popup = '<b>' + label + '</b><br>Alt: ' + altFt + ' ft' +
+          '<br>Speed: ' + velKt + ' kt<br>Heading: ' + track + '°' +
+          (onGround ? '<br><i style="color:#f0a020">on ground</i>' : '');
+        if (markers[icao]) {
+          markers[icao].setLatLng([lat, lon]).setPopupContent(popup);
+        } else {
+          const m = L.marker([lat, lon], { icon: icon, title: label }).addTo(map);
+          m.bindPopup(popup);
+          markers[icao] = m;
+        }
+      });
+      Object.keys(markers).forEach(function (k) {
+        if (!seen[k]) { map.removeLayer(markers[k]); delete markers[k]; }
+      });
+      lastUpdated = new Date();
+      setStat('statAircraft', count);
+      setStat('statMaxAlt', maxAlt.toLocaleString('en-US'));
+      setStat('statUpdated', lastUpdated.toTimeString().slice(0, 8));
+    }
+
+    function setStat(id, val) {
+      const el = document.getElementById(id);
+      if (el) el.textContent = val;
+    }
+
+    init();
+  </script>
 </body>
 </html>
