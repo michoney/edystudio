@@ -96,6 +96,75 @@ body{background:#0a0a0a;color:#e0e0e0;font-family:'PingFang SC','Microsoft YaHei
     <div class="news-head">
       <span class="fire">🔥</span>
       <span class="tag">HOT</span>
+      <a class="link-ext" href="https://github.com/xmanrui/dsh-im" target="_blank">→ GitHub</a>
+      <a class="link-ext" href="https://github.com/xmanrui/dsh-im" target="_blank">文档</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      dsh-im —— 九种 IM 全部接入 DeepSeek Harness，一个插件搞定
+      <span class="en">dsh-im · Nine IM Platforms Unified into DeepSeek Harness via One Plugin</span>
+    </div>
+    <div class="news-subtitle">
+      飞书、微信、钉钉、企业微信、QQ、Slack、Telegram、Discord、WhatsApp 九渠道多机器人统一管理，还能扫码直连公网 AI Office，零公网 IP / 端口转发。
+    </div>
+    <div class="news-body">
+
+      <p>dsh-im 解决的核心痛点是：<strong>AI 助理被锁在本地终端里</strong>，家人、同事、客户根本用不上。它通过扫码、App Manifest 或已有机器人凭据，把九大 IM 渠道统一接入 DeepSeek Harness——一个插件、一个设置入口，每个渠道还支持多个机器人并行，连接状态、工作区、会话绑定彼此独立。更关键的是，本机 Harness 可以<strong>主动向外连接公网 AI Office</strong>，无需公网 IP、端口转发或自建 WebSocket。</p>
+
+      <h3>九渠道多机器人统一管理</h3>
+      <ul>
+        <li><strong>飞书</strong>：扫码或 App ID+Secret 接入</li>
+        <li><strong>微信</strong>：扫码即绑</li>
+        <li><strong>钉钉 / 企业微信 / QQ / Telegram / Discord / Slack / WhatsApp</strong>：各有官方长连接或轮询方案，全部走内置引导完成配置</li>
+        <li>每个渠道支持<strong>多个机器人并行</strong></li>
+      </ul>
+
+      <h3>原生级 IM 交互体验</h3>
+      <ul>
+        <li>飞书<strong>流式卡片</strong>、企业微信<strong>「正在思考中」</strong>原生显示</li>
+        <li>QQ 私聊<strong>「正在输入」</strong>、WhatsApp <strong>已读回执</strong></li>
+        <li>工具执行进度和回答<strong>逐字流式呈现</strong></li>
+      </ul>
+
+      <h3>安全架构</h3>
+      <ul>
+        <li>所有 Secret/Token 只写入本机凭据存储，AI Office 仅保存设备 ID 和 alias，<strong>绝无本机绝对路径外泄</strong></li>
+        <li>Telegram 机器人支持<strong>私聊白名单</strong>安全模式</li>
+      </ul>
+
+      <h3>AI Office Connector · 逆向连接</h3>
+      <ul>
+        <li>通过 <strong>Heartbeat 鉴权 + SSE 下行流</strong>，任务租约 90 秒、每 30 秒续租，断线自动重连</li>
+        <li>支持 <strong>5MB 内图片</strong>、多图合计 20MB 随消息发送给 Harness</li>
+      </ul>
+
+      <h3>17 条机器人命令</h3>
+      <p><code>/model</code> 切换模型、<code>/steer</code> 实时干预任务、<code>/compact</code> 压缩上下文、远程审批支持中英文回复，把 Harness 的全能力平移到了 IM 对话框。</p>
+
+      <h3>实战落地场景</h3>
+      <ul>
+        <li>技术团队把飞书群变成 AI 研发助理入口，@ 机器人就能让它读代码、跑工具、看测试输出，审批流直接在群里完成</li>
+        <li>知识博主把 Telegram/Discord 机器人开放给订阅者，私聊即享专属 AI 咨询，白名单模式防止骚扰</li>
+        <li>非技术团队在小程序里扫码一下，微信上就能聊 AI，<strong>彻底绕开内网穿透、公网部署这些术语</strong></li>
+      </ul>
+
+    </div>
+    <div class="news-meta">
+      <span class="pill">DeepSeek</span>
+      <span class="pill">IM Bot</span>
+      <span class="pill">飞书</span>
+      <span class="pill">微信</span>
+      <span class="pill">钉钉</span>
+      <span class="pill">Telegram</span>
+      <span class="pill">WhatsApp</span>
+      <span class="pill">Open Source</span>
+    </div>
+  </div>
+
+  <div class="news-card hot">
+    <div class="news-head">
+      <span class="fire">🔥</span>
+      <span class="tag">HOT</span>
       <a class="link-ext" href="https://miora.design/" target="_blank">→ 官网</a>
       <span class="date">2026.08</span>
     </div>
