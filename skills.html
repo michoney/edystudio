@@ -26,6 +26,12 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: 'PingFang SC', 'Microso
 .skill-card .tag { font-size: 10px; color: #666; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Courier New', monospace; }
 .skill-card p { font-size: 12px; color: #888; line-height: 1.7; }
 .skill-card .link { display: inline-block; margin-top: 12px; color: #ff4444; font-size: 11px; letter-spacing: 2px; text-decoration: none; font-family: 'Courier New', monospace; }
+.featured { margin-bottom: 38px; padding: 26px; border: 1px solid #5b5b58; border-radius: 10px; background: radial-gradient(circle at 85% 20%, #303237 0, #151618 34%, #0e0e0f 72%); position: relative; overflow: hidden; }
+.featured::after { content: '▦'; position: absolute; right: 24px; top: 0; color: rgba(255,255,255,.08); font: 120px/1 monospace; }
+.featured .badge { color: #d8d8d2; font: 11px 'Courier New', monospace; letter-spacing: .24em; margin-bottom: 12px; }
+.featured h2 { color: #f5f5f0; font-size: 26px; margin-bottom: 8px; }
+.featured p { max-width: 650px; color: #999; font-size: 13px; }
+.featured a { display: inline-block; margin-top: 16px; color: #eee; border: 1px solid #777; border-radius: 5px; padding: 8px 16px; text-decoration: none; font: 11px 'Courier New', monospace; letter-spacing: .16em; }
 .footer { border-top: 1px solid #1f1f1f; padding: 24px 20px; text-align: center; color: #444; font-size: 12px; letter-spacing: 2px; }
 @media (max-width: 768px) { .skill-grid { grid-template-columns: 1fr; } }
 </style>
@@ -51,6 +57,14 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: 'PingFang SC', 'Microso
 </div>
 
 <div class="container">
+  <div class="section-title">超哥严选 Skill</div>
+  <div class="featured">
+    <div class="badge">CHAO'S PICK · 01</div>
+    <h2>像素点阵画</h2>
+    <p>让人物、产品或品牌素材进入动态点阵世界：主体保持清晰，背景采用 4×4 Bayer 有序抖动、方形像素与缓慢漂移的单色云场。</p>
+    <a href="pixel-dither-art.html">查看动态演示 →</a>
+  </div>
+
   <div class="section-title">已上线 Skills</div>
   <div class="skill-grid">
 
@@ -100,6 +114,14 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: 'PingFang SC', 'Microso
       <div class="tag">SN-SEARCH-ACADEMIC</div>
       <p>ArXiv / Semantic Scholar / PubMed 学术论文搜索，含引用分析与领域知识图谱。</p>
       <a class="link" href="https://github.com/michoney/skill-library" target="_blank">→ 技能仓库</a>
+    </div>
+
+    <div class="skill-card">
+      <div class="num">07</div>
+      <h3>像素点阵画</h3>
+      <div class="tag">PIXEL-DITHER-ART</div>
+      <p>将人物或产品照片制作成动态点阵视觉。主体清晰，Bayer 有序抖动背景缓慢流动。</p>
+      <a class="link" href="pixel-dither-art.html">→ 动态演示</a>
     </div>
 
   </div>

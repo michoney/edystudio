@@ -6,8 +6,8 @@
 <title>Edy.Ai.Studio</title>
 <style>
   * { margin: 0; padding: 0; }
-  body { background: #080808; overflow: hidden; }
-  canvas { display: block; }
+  body { background: #080808; overflow-x: hidden; min-height: 100vh; }
+  canvas { display: block; position: fixed; inset: 0; z-index: 0; }
 </style>
 </head>
 <body>
@@ -108,7 +108,7 @@ function draw() {
 draw();
 </script>
 
-<div style="position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;display:flex;align-items:center;justify-content:center;pointer-events:none;">
+<div style="position:relative;width:100%;min-height:100vh;z-index:1;display:flex;align-items:center;justify-content:center;box-sizing:border-box;padding:70px 16px;pointer-events:none;">
   <div style="text-align:center;pointer-events:auto;">
 
     <div style="position:relative;overflow:hidden;display:inline-block;">
@@ -130,7 +130,7 @@ draw();
     </p>
 
     <div style="display:flex;justify-content:center;flex-wrap:wrap;gap:16px 32px;max-width:min(900px,92vw);margin:0 auto 50px;font-size:13px;color:#777;letter-spacing:1.5px;text-transform:uppercase;font-family:'Courier New',monospace;">
-      <a href="https://michoney.github.io/skill-library/" target="_blank" style="color:#999;text-decoration:none;">Skills</a>
+      <a href="skills.html" style="color:#cfcfcf;text-decoration:none;font-weight:bold;">超哥严选 Skill</a>
       <a href="models.html" style="color:#8bc34a;text-decoration:none;">Models</a>
       <a href="https://urban-tree-ai-demo.michoney68.workers.dev/ai-brain" target="_blank" style="color:#4fc3f7;text-decoration:none;font-weight:bold;">AI 大脑</a>
       <a href="ai-video.html" style="color:#ff4444;text-decoration:none;font-weight:bold;">AI Video</a>
@@ -147,7 +147,14 @@ draw();
       <a href="image-gen.html" style="color:#ffd27a;text-decoration:none;font-weight:bold;">图像生成</a>
     </div>
 
-    <div style="margin:40px auto 0;max-width:680px;padding:22px 26px;border:1px solid rgba(255,210,122,.32);border-radius:10px;background:linear-gradient(160deg,rgba(45,30,10,.55),rgba(8,10,14,.7));text-align:center;">
+    <div style="margin:40px auto 0;max-width:680px;padding:22px 26px;border:1px solid rgba(220,220,220,.28);border-radius:10px;background:linear-gradient(145deg,rgba(55,56,60,.52),rgba(5,5,6,.86));text-align:center;box-shadow:0 18px 60px rgba(0,0,0,.36);">
+      <div style="font-family:'Courier New',monospace;font-size:12px;letter-spacing:.22em;color:#d8d8d2;text-transform:uppercase;margin-bottom:6px;">▦ 超哥严选 SKILL</div>
+      <h2 style="margin:6px 0 8px;font-size:24px;font-weight:600;letter-spacing:-.01em;color:#f4f4ef;">像素点阵画 · Pixel Dither Art</h2>
+      <p style="margin:0 auto 14px;max-width:540px;font-size:14px;line-height:1.7;color:#aaa;">人物保持清晰，以 <strong style="color:#eee;">Bayer 4×4 有序抖动</strong>、方形像素和动态单色云场构建高级科技氛围。</p>
+      <a href="pixel-dither-art.html" style="display:inline-block;padding:9px 22px;border:1px solid #d8d8d2;border-radius:6px;color:#eee;text-decoration:none;font-family:'Courier New',monospace;font-size:12px;letter-spacing:.18em;text-transform:uppercase;">查看动态演示 → VIEW</a>
+    </div>
+
+    <div style="margin:18px auto 0;max-width:680px;padding:22px 26px;border:1px solid rgba(255,210,122,.32);border-radius:10px;background:linear-gradient(160deg,rgba(45,30,10,.55),rgba(8,10,14,.7));text-align:center;">
       <div style="font-family:'Courier New',monospace;font-size:12px;letter-spacing:.22em;color:#ffd27a;text-transform:uppercase;margin-bottom:6px;">▌ NEW ▐</div>
       <h2 style="margin:6px 0 8px;font-size:24px;font-weight:600;letter-spacing:-.01em;color:#fff8e1;">图像生成 · Image Generation</h2>
       <p style="margin:0 auto 14px;max-width:520px;font-size:14px;line-height:1.7;color:#b9b29a;">基于 <strong style="color:#ffd27a;">Ideogram 4</strong> · Qwen-Image · 硅基云 Kolors 的 AI 图片生成平台 · 按次付费 / 支付宝 / 沙箱测试中</p>
