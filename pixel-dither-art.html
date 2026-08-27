@@ -33,7 +33,7 @@
     <section>
       <p class="eyebrow">PIXEL DITHER ART</p>
       <h1>像素<br>点阵画.</h1>
-      <p>原图直接进入 Canvas，人物、服装与花束全部转为 4×4 Bayer 像素点阵；点阵沿人物轮廓呼吸、漂移和流动。</p>
+      <p>原图的脸部与上半身直接进入 Canvas，以多级灰色呈现明暗层次，并转换为 4×4 Bayer 动态像素点阵。</p>
     </section>
     <footer><span>EDY.AI.STUDIO</span><span>MONOCHROME</span><span>PROCEDURAL</span></footer>
   </main>
@@ -58,10 +58,14 @@
       source.width = cols; source.height = rows;
       sctx.fillStyle = '#030303'; sctx.fillRect(0, 0, cols, rows);
       if (!image.naturalWidth) return;
-      const scale = Math.min(cols / image.naturalWidth, rows / image.naturalHeight) * .96;
-      const dw = image.naturalWidth * scale;
-      const dh = image.naturalHeight * scale;
-      sctx.drawImage(image, (cols - dw) * .42, (rows - dh) / 2, dw, dh);
+      const sx = image.naturalWidth * .10;
+      const sy = image.naturalHeight * .23;
+      const sw = image.naturalWidth * .58;
+      const sh = image.naturalHeight * .58;
+      const dh = rows * .92;
+      const dw = dh * (sw / sh);
+      const dx = (cols - dw) * .30;
+      sctx.drawImage(image, sx, sy, sw, sh, dx, (rows - dh) / 2, dw, dh);
       pixels = sctx.getImageData(0, 0, cols, rows).data;
     }
 
@@ -84,10 +88,10 @@
           const threshold = BAYER[(y % 4) * 4 + (x % 4)];
           if (luminance / 255 < threshold * .38) continue;
           const scan = .5 + .5 * Math.sin(y * .12 - t * 1.7);
-          const r = quantize(r0, threshold), g = quantize(g0, threshold), b = quantize(b0, threshold);
+          const gray = quantize(luminance, threshold);
           const size = cell * (.58 + luminance / 255 * .4 + scan * .08);
           const waveY = Math.sin(x * .075 - t * .72) * 1.5;
-          ctx.fillStyle = `rgb(${r},${g},${b})`;
+          ctx.fillStyle = `rgb(${gray},${gray},${gray})`;
           ctx.fillRect(x * cell + waveX, y * cell + waveY, size, size);
         }
       }
