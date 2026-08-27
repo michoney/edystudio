@@ -35,7 +35,7 @@
       <h1>像素<br>点阵画.</h1>
       <p>取自猫侧脸参考的边缘粒子画法：用稀疏灰白光点描出 404 小子、双金币与推车，黑色留白不填满。</p>
     </section>
-    <footer><span>EDY.AI.STUDIO</span><span>MONOCHROME</span><span>FLIP-DOT MOTION</span></footer>
+    <footer><span>EDY.AI.STUDIO</span><span>MONOCHROME</span><span>NEURAL DISCHARGE</span></footer>
   </main>
   <script>
     const canvas = document.querySelector('#field');
@@ -92,7 +92,6 @@
       ctx.scale(breath, breath);
       ctx.translate(-w / 2, -h / 2);
       for (let y = 0; y < rows; y++) {
-        const waveX = Math.sin(y * .105 + t * 1.15) * 2.8;
         for (let x = 0; x < cols; x++) {
           const u = (x - portrait.dx) / portrait.dw;
           const v = (y - portrait.dy) / portrait.dh;
@@ -115,21 +114,35 @@
           const signal = clamp01((edge * .78 + texture * .34 + highlight * .13) * mask);
           const threshold = BAYER[(y % 4) * 4 + (x % 4)];
           if (signal < threshold * .62) continue;
-          const scan = .5 + .5 * Math.sin(y * .12 - t * 1.7);
           const sparkle = signal > .3 && hash(x, y) > .988 ? 1 : 0;
           const gray = Math.round(72 + signal * 183);
-          const size = .7 + signal * 2.15 + scan * .3 + sparkle * 2.8;
-          const waveY = Math.sin(x * .075 - t * .72) * 1.5;
-          // 每个点是一枚微型翻牌；相位沿 X 轴递延，形成横向翻牌波。
-          const flip = reduceMotion ? 1 : Math.cos(t * 1.85 - x * .072 - y * .006);
-          const flipWidth = .07 + Math.abs(flip) * .93;
-          const edgeFlash = Math.pow(1 - Math.abs(flip), 7) * .32;
-          const alpha = Math.min(1, .34 + signal * .66 + edgeFlash);
+          const neuralSeed = hash(x * 1.91, y * 2.37);
+          // 仅约 0.15% 的可见点可成为放电节点，且异步脉冲，控制同屏活跃数量。
+          const isNeuron = neuralSeed > .9985;
+          const neuralPhase = hash(x * 3.17, y * 5.13) * Math.PI * 2;
+          const neuralSpeed = .55 + hash(x * 7.01, y * 1.73) * 1.45;
+          const discharge = reduceMotion || !isNeuron
+            ? 0
+            : Math.pow(Math.max(0, Math.sin(t * neuralSpeed + neuralPhase)), 18);
+          const size = .7 + signal * 2.15 + sparkle * 2.8 + discharge * 4.2;
+          const driftX = reduceMotion ? 0 : Math.sin(t * .43 + neuralPhase) * .45;
+          const driftY = reduceMotion ? 0 : Math.cos(t * .37 + neuralPhase) * .45;
+          const alpha = Math.min(1, .34 + signal * .66 + discharge * .55);
           ctx.fillStyle = `rgba(${gray},${gray},${gray},${alpha})`;
-          const px = x * cell + waveX;
-          const py = y * cell + waveY;
+          const px = x * cell + driftX;
+          const py = y * cell + driftY;
+          if (discharge > .16) {
+            const angle = neuralSeed * Math.PI * 10;
+            const reach = cell * (2.2 + hash(x * 4.7, y * 8.9) * 4.8) * discharge;
+            ctx.strokeStyle = `rgba(225,225,220,${discharge * .58})`;
+            ctx.lineWidth = .45 + discharge * .85;
+            ctx.beginPath();
+            ctx.moveTo(px, py);
+            ctx.lineTo(px + Math.cos(angle) * reach, py + Math.sin(angle) * reach);
+            ctx.stroke();
+          }
           ctx.beginPath();
-          ctx.ellipse(px, py, size * flipWidth / 2, size / 2, 0, 0, Math.PI * 2);
+          ctx.arc(px, py, size / 2, 0, Math.PI * 2);
           ctx.fill();
         }
       }
