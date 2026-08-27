@@ -33,7 +33,7 @@
     <section>
       <p class="eyebrow">PIXEL DITHER ART</p>
       <h1>像素<br>点阵画.</h1>
-      <p>原图的脸部与上半身直接进入 Canvas，以多级灰色呈现明暗层次，并转换为 4×4 Bayer 动态像素点阵。</p>
+      <p>参考猫脸式光点效果：纯黑背景上以稀疏白点、灰点和轮廓高光勾勒人物脸部与上半身。</p>
     </section>
     <footer><span>EDY.AI.STUDIO</span><span>MONOCHROME</span><span>PROCEDURAL</span></footer>
   </main>
@@ -45,14 +45,24 @@
     const sctx = source.getContext('2d', { willReadFrequently: true });
     const image = new Image();
     const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    let w = 1, h = 1, cell = 7, cols = 1, rows = 1, pixels = null;
+    let w = 1, h = 1, cell = 5, cols = 1, rows = 1, pixels = null;
+    let portrait = { dx: 0, dy: 0, dw: 1, dh: 1 };
 
-    const clamp = v => Math.max(0, Math.min(255, v));
-    const quantize = (value, threshold) => clamp(Math.round((value + (threshold - .5) * 42) / 48) * 48);
+    const clamp01 = v => Math.max(0, Math.min(1, v));
+    const hash = (x, y) => {
+      const n = Math.sin(x * 127.1 + y * 311.7) * 43758.5453;
+      return n - Math.floor(n);
+    };
+    const luminanceAt = (x, y) => {
+      x = Math.max(0, Math.min(cols - 1, x));
+      y = Math.max(0, Math.min(rows - 1, y));
+      const i = (y * cols + x) * 4;
+      return pixels[i] * .2126 + pixels[i + 1] * .7152 + pixels[i + 2] * .0722;
+    };
 
     function rebuild() {
       w = innerWidth; h = innerHeight;
-      cell = w < 760 ? 5 : 7;
+      cell = w < 760 ? 5 : 6;
       canvas.width = w; canvas.height = h;
       cols = Math.ceil(w / cell); rows = Math.ceil(h / cell);
       source.width = cols; source.height = rows;
@@ -65,7 +75,9 @@
       const dh = rows * .92;
       const dw = dh * (sw / sh);
       const dx = (cols - dw) * .30;
-      sctx.drawImage(image, sx, sy, sw, sh, dx, (rows - dh) / 2, dw, dh);
+      const dy = (rows - dh) / 2;
+      portrait = { dx, dy, dw, dh };
+      sctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
       pixels = sctx.getImageData(0, 0, cols, rows).data;
     }
 
@@ -81,18 +93,30 @@
       for (let y = 0; y < rows; y++) {
         const waveX = Math.sin(y * .105 + t * 1.15) * 2.8;
         for (let x = 0; x < cols; x++) {
-          const i = (y * cols + x) * 4;
-          const r0 = pixels[i], g0 = pixels[i + 1], b0 = pixels[i + 2];
-          const luminance = r0 * .2126 + g0 * .7152 + b0 * .0722;
-          if (luminance < 10) continue;
+          const u = (x - portrait.dx) / portrait.dw;
+          const v = (y - portrait.dy) / portrait.dh;
+          if (u < 0 || u > 1 || v < 0 || v > 1) continue;
+          const head = ((u - .38) / .24) ** 2 + ((v - .23) / .20) ** 2;
+          const torso = ((u - .43) / .31) ** 2 + ((v - .62) / .46) ** 2;
+          const mask = clamp01(1.24 - Math.min(head, torso));
+          if (mask <= 0) continue;
+          const luminance = luminanceAt(x, y);
+          const gx = Math.abs(luminanceAt(x + 1, y) - luminanceAt(x - 1, y));
+          const gy = Math.abs(luminanceAt(x, y + 1) - luminanceAt(x, y - 1));
+          const edge = clamp01((gx + gy) / 92);
+          const shadow = clamp01((165 - luminance) / 165) * .22;
+          const signal = clamp01((edge * .92 + shadow) * mask);
           const threshold = BAYER[(y % 4) * 4 + (x % 4)];
-          if (luminance / 255 < threshold * .38) continue;
+          if (signal < threshold * .62) continue;
           const scan = .5 + .5 * Math.sin(y * .12 - t * 1.7);
-          const gray = quantize(luminance, threshold);
-          const size = cell * (.58 + luminance / 255 * .4 + scan * .08);
+          const sparkle = hash(x, y) > .992 ? 1 : 0;
+          const gray = Math.round(72 + signal * 183);
+          const size = .7 + signal * 2.15 + scan * .3 + sparkle * 2.8;
           const waveY = Math.sin(x * .075 - t * .72) * 1.5;
-          ctx.fillStyle = `rgb(${gray},${gray},${gray})`;
-          ctx.fillRect(x * cell + waveX, y * cell + waveY, size, size);
+          ctx.fillStyle = `rgba(${gray},${gray},${gray},${.34 + signal * .66})`;
+          const px = x * cell + waveX;
+          const py = y * cell + waveY;
+          ctx.fillRect(px - size / 2, py - size / 2, size, size);
         }
       }
       ctx.restore();
