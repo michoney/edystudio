@@ -29,11 +29,11 @@
   <canvas id="field"></canvas>
   <div class="vignette"></div>
   <main>
-    <header><span><i class="dot"></i>超哥严选 SKILL</span><span>BAYER 4×4 / 8PX</span></header>
+    <header><span><i class="dot"></i>超哥严选 SKILL</span><span>EDGE PARTICLES / MONO</span></header>
     <section>
       <p class="eyebrow">PIXEL DITHER ART</p>
       <h1>像素<br>点阵画.</h1>
-      <p>参考猫脸式光点效果：纯黑背景上以稀疏白点、灰点和轮廓高光勾勒人物脸部与上半身。</p>
+      <p>取自猫侧脸参考的边缘粒子画法：用稀疏灰白光点描出 404 小子、双金币与推车，黑色留白不填满。</p>
     </section>
     <footer><span>EDY.AI.STUDIO</span><span>MONOCHROME</span><span>PROCEDURAL</span></footer>
   </main>
@@ -68,10 +68,11 @@
       source.width = cols; source.height = rows;
       sctx.fillStyle = '#030303'; sctx.fillRect(0, 0, cols, rows);
       if (!image.naturalWidth) return;
+      // 保留 404 小子、双金币和推车，排除外围机房。
       const sx = image.naturalWidth * .10;
-      const sy = image.naturalHeight * .23;
-      const sw = image.naturalWidth * .58;
-      const sh = image.naturalHeight * .58;
+      const sy = image.naturalHeight * .22;
+      const sw = image.naturalWidth * .59;
+      const sh = image.naturalHeight * .68;
       const dh = rows * .92;
       const dw = dh * (sw / sh);
       const dx = (cols - dw) * .30;
@@ -96,27 +97,35 @@
           const u = (x - portrait.dx) / portrait.dw;
           const v = (y - portrait.dy) / portrait.dh;
           if (u < 0 || u > 1 || v < 0 || v > 1) continue;
-          const head = ((u - .38) / .24) ** 2 + ((v - .23) / .20) ** 2;
-          const torso = ((u - .43) / .31) ** 2 + ((v - .62) / .46) ** 2;
-          const mask = clamp01(1.24 - Math.min(head, torso));
+          const boyHead = ((u - .27) / .19) ** 2 + ((v - .25) / .24) ** 2;
+          const boyBody = ((u - .27) / .24) ** 2 + ((v - .57) / .38) ** 2;
+          const coins = ((u - .70) / .28) ** 2 + ((v - .39) / .34) ** 2;
+          const cartX = Math.abs((u - .61) / .39);
+          const cartY = Math.abs((v - .76) / .16);
+          const cart = Math.max(cartX, cartY);
+          const mask = clamp01(1.22 - Math.min(boyHead, boyBody, coins, cart));
           if (mask <= 0) continue;
           const luminance = luminanceAt(x, y);
           const gx = Math.abs(luminanceAt(x + 1, y) - luminanceAt(x - 1, y));
           const gy = Math.abs(luminanceAt(x, y + 1) - luminanceAt(x, y - 1));
           const edge = clamp01((gx + gy) / 92);
-          const shadow = clamp01((165 - luminance) / 165) * .22;
-          const signal = clamp01((edge * .92 + shadow) * mask);
+          const local = (luminanceAt(x - 2, y) + luminanceAt(x + 2, y) + luminanceAt(x, y - 2) + luminanceAt(x, y + 2)) / 4;
+          const highlight = clamp01((luminance - 128) / 127);
+          const texture = clamp01(Math.abs(luminance - local) / 58);
+          const signal = clamp01((edge * .78 + texture * .34 + highlight * .13) * mask);
           const threshold = BAYER[(y % 4) * 4 + (x % 4)];
           if (signal < threshold * .62) continue;
           const scan = .5 + .5 * Math.sin(y * .12 - t * 1.7);
-          const sparkle = hash(x, y) > .992 ? 1 : 0;
+          const sparkle = signal > .3 && hash(x, y) > .988 ? 1 : 0;
           const gray = Math.round(72 + signal * 183);
           const size = .7 + signal * 2.15 + scan * .3 + sparkle * 2.8;
           const waveY = Math.sin(x * .075 - t * .72) * 1.5;
           ctx.fillStyle = `rgba(${gray},${gray},${gray},${.34 + signal * .66})`;
           const px = x * cell + waveX;
           const py = y * cell + waveY;
-          ctx.fillRect(px - size / 2, py - size / 2, size, size);
+          ctx.beginPath();
+          ctx.arc(px, py, size / 2, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
       ctx.restore();
@@ -124,7 +133,7 @@
     }
 
     image.onload = rebuild;
-    image.src = 'assets/pixel-dither-xiaopeng.jpg';
+    image.src = 'assets/pixel-dither-404-boy.png';
     addEventListener('resize', rebuild);
     rebuild(); requestAnimationFrame(draw);
   </script>
