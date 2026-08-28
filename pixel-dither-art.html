@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>像素点阵画 · 超哥严选 Skill · EdyStudio</title>
+  <title>Pixel Dither Art · EdyStudio</title>
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; min-height: 100%; background: #030303; color: #f0f0ea; }
@@ -13,15 +13,11 @@
     main { position: relative; z-index: 1; min-height: 100vh; display: grid; align-content: space-between; padding: clamp(24px, 5vw, 72px); pointer-events: none; }
     header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; letter-spacing: .18em; color: #aaa; }
     .dot { display: inline-block; width: 7px; height: 7px; margin-right: 9px; border-radius: 50%; background: #e9e9e3; box-shadow: 0 0 18px #fff; }
-    section { max-width: min(620px, 46vw); margin-left: auto; position: relative; z-index: 2; text-align: right; }
-    .eyebrow { margin: 0 0 18px; font-size: 12px; letter-spacing: .28em; color: #aaa; }
-    h1 { margin: 0; font: 500 clamp(52px, 10vw, 138px)/.82 Arial, sans-serif; letter-spacing: -.075em; }
-    p { max-width: 560px; margin: 28px 0 0; color: #b7b7b1; font: 14px/1.75 system-ui, sans-serif; }
     footer { display: flex; gap: 28px; font-size: 10px; letter-spacing: .13em; color: #777; }
     @media (max-width: 760px) {
-      section { max-width: 82vw; margin: auto 0 0 auto; padding: 18px; background: linear-gradient(135deg, transparent, rgba(0,0,0,.72)); }
-      h1 { font-size: clamp(54px, 18vw, 92px); }
-      p { max-width: 76vw; }
+      main { padding: 20px; }
+      header, footer { font-size: 8px; letter-spacing: .11em; }
+      footer { gap: 14px; }
     }
   </style>
 </head>
@@ -29,12 +25,7 @@
   <canvas id="field"></canvas>
   <div class="vignette"></div>
   <main>
-    <header><span><i class="dot"></i>超哥严选 SKILL</span><span>EDGE PARTICLES / MONO</span></header>
-    <section>
-      <p class="eyebrow">PIXEL DITHER ART</p>
-      <h1>像素<br>点阵画.</h1>
-      <p>取自猫侧脸参考的边缘粒子画法：用稀疏灰白光点描出 404 小子、双金币与推车，黑色留白不填满。</p>
-    </section>
+    <header><span><i class="dot"></i>SELECTED SKILL</span><span>EDGE PARTICLES / MONO</span></header>
     <footer><span>EDY.AI.STUDIO</span><span>MONOCHROME</span><span>NEURAL DISCHARGE</span></footer>
   </main>
   <script>
@@ -73,10 +64,12 @@
       const sy = image.naturalHeight * .22;
       const sw = image.naturalWidth * .59;
       const sh = image.naturalHeight * .68;
-      const dh = rows * .92;
-      const dw = dh * (sw / sh);
-      const dx = (cols - dw) * .30;
-      const dy = (rows - dh) / 2;
+      const ratio = sw / sh;
+      const mobile = w < 760;
+      const dw = mobile ? cols * .94 : rows * .92 * ratio;
+      const dh = mobile ? dw / ratio : rows * .92;
+      const dx = mobile ? (cols - dw) / 2 : (cols - dw) * .30;
+      const dy = mobile ? (rows - dh) * .46 : (rows - dh) / 2;
       portrait = { dx, dy, dw, dh };
       sctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
       pixels = sctx.getImageData(0, 0, cols, rows).data;
@@ -87,6 +80,7 @@
       if (!pixels) { requestAnimationFrame(draw); return; }
       const t = reduceMotion ? 0 : ms / 1000;
       const breath = 1 + Math.sin(t * .9) * .006;
+      const flowAmp = w < 760 ? 9.5 : 7.5;
       ctx.save();
       ctx.translate(w / 2, h / 2);
       ctx.scale(breath, breath);
@@ -127,10 +121,17 @@
           const size = .7 + signal * 2.15 + sparkle * 2.8 + discharge * 4.2;
           const driftX = reduceMotion ? 0 : Math.sin(t * .43 + neuralPhase) * .45;
           const driftY = reduceMotion ? 0 : Math.cos(t * .37 + neuralPhase) * .45;
+          // MJ 首页式的连续流体波：大尺度位移明显，小尺度扰动克制。
+          const flowX = reduceMotion ? 0
+            : Math.sin(y * .047 + t * .72) * flowAmp
+              + Math.sin((x + y) * .024 - t * .39) * flowAmp * .34;
+          const flowY = reduceMotion ? 0
+            : Math.sin(x * .052 - t * .58) * flowAmp * .68
+              + Math.cos((x - y) * .021 + t * .31) * flowAmp * .22;
           const alpha = Math.min(1, .34 + signal * .66 + discharge * .55);
           ctx.fillStyle = `rgba(${gray},${gray},${gray},${alpha})`;
-          const px = x * cell + driftX;
-          const py = y * cell + driftY;
+          const px = x * cell + driftX + flowX;
+          const py = y * cell + driftY + flowY;
           if (discharge > .16) {
             const angle = neuralSeed * Math.PI * 10;
             const reach = cell * (2.2 + hash(x * 4.7, y * 8.9) * 4.8) * discharge;
