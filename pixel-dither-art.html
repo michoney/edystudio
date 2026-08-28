@@ -80,7 +80,6 @@
       if (!pixels) { requestAnimationFrame(draw); return; }
       const t = reduceMotion ? 0 : ms / 1000;
       const breath = 1 + Math.sin(t * .9) * .006;
-      const flowAmp = w < 760 ? 9.5 : 7.5;
       ctx.save();
       ctx.translate(w / 2, h / 2);
       ctx.scale(breath, breath);
@@ -119,19 +118,10 @@
             ? 0
             : Math.pow(Math.max(0, Math.sin(t * neuralSpeed + neuralPhase)), 18);
           const size = .7 + signal * 2.15 + sparkle * 2.8 + discharge * 4.2;
-          const driftX = reduceMotion ? 0 : Math.sin(t * .43 + neuralPhase) * .45;
-          const driftY = reduceMotion ? 0 : Math.cos(t * .37 + neuralPhase) * .45;
-          // MJ 首页式的连续流体波：大尺度位移明显，小尺度扰动克制。
-          const flowX = reduceMotion ? 0
-            : Math.sin(y * .047 + t * .72) * flowAmp
-              + Math.sin((x + y) * .024 - t * .39) * flowAmp * .34;
-          const flowY = reduceMotion ? 0
-            : Math.sin(x * .052 - t * .58) * flowAmp * .68
-              + Math.cos((x - y) * .021 + t * .31) * flowAmp * .22;
           const alpha = Math.min(1, .34 + signal * .66 + discharge * .55);
           ctx.fillStyle = `rgba(${gray},${gray},${gray},${alpha})`;
-          const px = x * cell + driftX + flowX;
-          const py = y * cell + driftY + flowY;
+          const px = x * cell;
+          const py = y * cell;
           if (discharge > .16) {
             const angle = neuralSeed * Math.PI * 10;
             const reach = cell * (2.2 + hash(x * 4.7, y * 8.9) * 4.8) * discharge;
