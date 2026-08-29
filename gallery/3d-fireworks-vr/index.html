@@ -8,12 +8,11 @@
   html,body{margin:0;height:100%;overflow:hidden;background:#02030a;color:#cfe9ff;font-family:system-ui,-apple-system,"PingFang SC",sans-serif}
   #info{position:fixed;left:14px;bottom:12px;font-size:12px;letter-spacing:.05em;opacity:.7;z-index:2;pointer-events:none}
   #hint{position:fixed;right:14px;top:12px;font-size:12px;opacity:.8;z-index:2;pointer-events:none}
-  a{color:#8fd0ff}
 </style>
 </head>
 <body>
-<div id="hint">🥽 点右上角 VR 按钮进入头显 · 花园项目 Particle Garden</div>
-<div id="info">3D Fireworks VR · 改编自 garden/3d-fireworks · 用控制器可拖放粒子</div>
+<div id="hint">🥽 点右上 VR 按钮 · 左手柄移动 · 右手柄转/上下飞</div>
+<div id="info">3D Fireworks VR · 花园项目</div>
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
@@ -27,44 +26,55 @@ const MAX = 9000;
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x02030a);
 scene.fog = new THREE.Fog(0x02030a, 30, 90);
-
 const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 200);
 camera.position.set(0, 1.6, 8);
-
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(innerWidth, innerHeight);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.xr.enabled = true;
 document.body.appendChild(renderer.domElement);
 document.body.appendChild(VRButton.createButton(renderer));
+const controls = new OrbitControls(camera, renderer.domElement);
 
-new OrbitControls(camera, renderer.domElement);
-
-// 地面参考网格（VR 里给方位感）
 const grid = new THREE.GridHelper(40, 20, 0x2a5a7a, 0x14324a);
 grid.position.y = -1.5;
 scene.add(grid);
 
-// 粒子系统：位置 + 颜色
+// 手柄移动（谷歌地球式）
+const player = new THREE.Group(); player.add(camera); scene.add(player);
+const UP = new THREE.Vector3(0,1,0); const clock = new THREE.Clock();
+const c0 = renderer.xr.getController(0), c1 = renderer.xr.getController(1);
+function hand(h){ const m=new THREE.Mesh(new THREE.BoxGeometry(.05,.05,.12), new THREE.MeshBasicMaterial({color:0xffd166})); m.position.set(0,0,-.08); h.add(m); scene.add(h); }
+hand(c0); hand(c1);
+renderer.xr.addEventListener('sessionstart', () => { controls.enabled = false; });
+renderer.xr.addEventListener('sessionend', () => { controls.enabled = true; });
+function movePlayer(){
+  if (!renderer.xr.isPresenting) return;
+  const dt = Math.min(clock.getDelta(), .1);
+  const fwd = new THREE.Vector3(); camera.getWorldDirection(fwd);
+  const right = new THREE.Vector3().crossVectors(fwd, UP).normalize();
+  const upv = new THREE.Vector3().crossVectors(right, fwd).normalize();
+  const spd = 2.2*dt;
+  const g0 = c0.gamepad, g1 = c1.gamepad;
+  if (g0){ player.position.addScaledVector(fwd, -(g0.axes[1]||0)*spd); player.position.addScaledVector(right, (g0.axes[0]||0)*spd); }
+  if (g1){ player.rotation.y += (g1.axes[0]||0)*1.6*dt; player.position.addScaledVector(upv, (g1.axes[1]||0)*spd); }
+}
+
 const positions = new Float32Array(MAX*3);
 const colors = new Float32Array(MAX*3);
-const sizes = new Float32Array(MAX);
 const vel = new Float32Array(MAX*3);
 const life = new Float32Array(MAX);
 const maxLife = new Float32Array(MAX);
 const geo = new THREE.BufferGeometry();
 geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
 geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
-const mat = new THREE.PointsMaterial({
-  size: 0.09, vertexColors: true, transparent: true, opacity: .95,
-  blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true
-});
+const mat = new THREE.PointsMaterial({ size: 0.09, vertexColors: true, transparent: true, opacity: .95,
+  blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true });
 const points = new THREE.Points(geo, mat);
 scene.add(points);
 
 let cursor = 0, nextFirework = 0;
 const TYPES = ['KIKU','BOTAN','KAMURO','SENRIN','STAR_MINE'];
-
 function hsb2rgb(h,s,b){
   h=((h%360)+360)%360; const c=b*s, x=c*(1-Math.abs((h/60)%2-1)), m=b-c;
   let r=0,g=0,bb=0;
@@ -72,7 +82,6 @@ function hsb2rgb(h,s,b){
   else if(h<240){g=x;bb=c} else if(h<300){r=x;bb=c} else {r=c;bb=x}
   return [r+m,g+m,bb+m];
 }
-
 function spawn(type){
   const hu = type==='KAMURO'?45:Math.random()*360;
   const n = type==='KIKU'?180 : type==='BOTAN'?320 : type==='SENRIN'?40 : 260;
@@ -89,8 +98,8 @@ function spawn(type){
     life[idx]=1; maxLife[idx]=2.2+Math.random()*1.8;
   }
 }
-
 renderer.setAnimationLoop(()=>{
+  movePlayer();
   const t = performance.now()/1000;
   nextFirework--;
   if(nextFirework<=0){ spawn(TYPES[Math.floor(Math.random()*TYPES.length)]); nextFirework=8+Math.random()*14; }
