@@ -39,6 +39,50 @@ const grid = new THREE.GridHelper(20, 12, 0x1e4a34, 0x0d2b1e);
 grid.position.y = -0.01;
 scene.add(grid);
 
+// —— 手柄移动（HTC Vive / 谷歌地球式自由飞行） ——
+const player = new THREE.Group();
+player.add(camera);
+scene.add(player);
+const UP = new THREE.Vector3(0, 1, 0);
+const clock = new THREE.Clock();
+const c0 = renderer.xr.getController(0);
+const c1 = renderer.xr.getController(1);
+function addHand(controller) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.05, 0.12),
+    new THREE.MeshBasicMaterial({ color: 0x8ff0b5 }));
+  m.position.set(0, 0, -0.08);
+  controller.add(m);
+  scene.add(controller);
+}
+addHand(c0); addHand(c1);
+renderer.xr.addEventListener('sessionstart', () => { controls.enabled = false; });
+renderer.xr.addEventListener('sessionend', () => { controls.enabled = true; });
+
+function movePlayer() {
+  if (!renderer.xr.isPresenting) return;
+  const dt = Math.min(clock.getDelta(), 0.1);
+  const fwd = new THREE.Vector3();
+  camera.getWorldDirection(fwd);
+  const right = new THREE.Vector3().crossVectors(fwd, UP).normalize();
+  const upv = new THREE.Vector3().crossVectors(right, fwd).normalize();
+  const spd = 2.2 * dt;
+  const g0 = c0.gamepad, g1 = c1.gamepad;
+  if (g0) {
+    const x = g0.axes[0] || 0, y = g0.axes[1] || 0;
+    player.position.addScaledVector(fwd, -y * spd);
+    player.position.addScaledVector(right, x * spd);
+  }
+  if (g1) {
+    player.rotation.y += (g1.axes[0] || 0) * 1.6 * dt;
+    player.position.addScaledVector(upv, (g1.axes[1] || 0) * spd);
+  }
+}
+
+const hint = document.createElement('div');
+hint.style.cssText = 'position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:3;font-size:12px;opacity:.85;background:rgba(0,0,0,.5);padding:6px 12px;border-radius:20px;pointer-events:none';
+hint.textContent = '左手柄圆盘: 移动 | 右手柄圆盘: 左右转/上下飞';
+document.body.appendChild(hint);
+
 // —— 粒子树：主干 + 枝杈（线段） + 叶片粒子 ——
 function makeTree() {
   const g = new THREE.Group();
@@ -100,6 +144,7 @@ glow.position.set(0, 3.5, 1.5);
 scene.add(glow);
 
 renderer.setAnimationLoop((tms) => {
+  movePlayer();
   const t = tms/1000;
   treeTilt.rotation.y = Math.sin(t*0.08)*0.12;
   tree.rotation.x = Math.sin(t*0.05)*0.03;
