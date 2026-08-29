@@ -14,7 +14,7 @@
 </head>
 <body>
 <div id="hint">🥽 点右上 VR 按钮 · 左手柄移动 · 右手柄转/上下飞 · 左圆盘按一下切造型</div>
-<div id="modes"><button data-m="0" class="active">花朵</button><button data-m="1">爱心</button><button data-m="2">土星</button><button data-m="3">烟花</button></div>
+<div id="modes"><button data-m="0" class="active">花朵</button><button data-m="1">爱心</button><button data-m="2">土星</button><button data-m="3">烟花</button><button data-m="4">地下花园</button></div>
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
                "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
@@ -47,7 +47,7 @@ hand(c0); hand(c1);
 renderer.xr.addEventListener('sessionstart', () => { controls.enabled = false; });
 renderer.xr.addEventListener('sessionend', () => { controls.enabled = true; });
 let mode = 0;
-c0.addEventListener('selectstart', () => { mode = (mode+1)%4; syncMode(); });
+c0.addEventListener('selectstart', () => { mode = (mode+1)%5; syncMode(); });
 function move(){
   if (!renderer.xr.isPresenting) return;
   const dt = Math.min(clock.getDelta(), .1);
@@ -82,6 +82,20 @@ const shapes = [
   // 3 烟花：放射
   (i) => { const th=Math.random()*Math.PI*2, ph=Math.acos(2*Math.random()-1), r=Math.pow(Math.random(),0.4)*2.4;
     return [r*Math.sin(ph)*Math.cos(th), r*Math.cos(ph)*0.8, r*Math.sin(ph)*Math.sin(th)]; },
+  // 4 地下花园：根系 + 发光花 + 萤火虫
+  (i) => { const kind = i % 3;
+    if (kind === 0) { // 根系：从"洞顶"垂落
+      const x = (Math.random()-0.5)*3.4, z = (Math.random()-0.5)*3.4;
+      const y = 1.6 - Math.random()*2.6;
+      return [x, y, z + Math.sin(x*6)*0.1];
+    }
+    if (kind === 1) { // 发光花：地面小圈
+      const a = Math.random()*Math.PI*2, r = 0.5+Math.random()*2.2;
+      return [Math.cos(a)*r, -0.95 + Math.random()*0.35, Math.sin(a)*r];
+    }
+    // 萤火虫：下半空间漂浮
+    return [(Math.random()-0.5)*3.6, -0.6+Math.random()*1.4, (Math.random()-0.5)*3.6];
+  },
 ];
 const pos = new Float32Array(COUNT*3);
 const geo = new THREE.BufferGeometry();
