@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 大脑 VR · Neural Compute Field</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#020806;color:#caf9ff;font-family:system-ui,-apple-system,"PingFang SC",sans-serif}
+  #hint{position:fixed;left:50%;top:12px;transform:translateX(-50%);z-index:3;font-size:12px;opacity:.85;background:rgba(0,0,0,.5);padding:6px 12px;border-radius:20px;pointer-events:none}
+  #modes{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);z-index:3;display:flex;gap:8px;pointer-events:auto}
+  #modes button{background:rgba(2,8,6,.6);border:1px solid rgba(101,191,255,.35);color:#caf9ff;padding:6px 14px;border-radius:20px;cursor:pointer;font-size:12px}
+  #modes button.active{background:rgba(66,245,182,.18);border-color:#42f5b6;color:#d9fff3}
+</style>
+</head>
+<body>
+<div id="hint">🥽 点右上 VR 按钮 · 左手柄移动 · 右手柄转/上下飞 · 左圆盘按一下切换模式</div>
+<div id="modes"><button data-m="0" class="active">脑形场</button><button data-m="1">层级展开</button><button data-m="2">推理路径</button></div>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { VRButton } from 'three/addons/webxr/VRButton.js';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x020806);
+scene.fog = new THREE.FogExp2(0x020806, 0.08);
+const camera = new THREE.PerspectiveCamera(60, innerWidth/innerHeight, 0.1, 100);
+camera.position.set(0, 0.15, 8);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.xr.enabled = true;
+document.body.appendChild(renderer.domElement);
+document.body.appendChild(VRButton.createButton(renderer));
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true; controls.dampingFactor = 0.06; controls.enablePan = false;
+controls.minDistance = 4.5; controls.maxDistance = 12;
+
+// —— 手柄移动（谷歌地球式） ——
+const player = new THREE.Group(); player.add(camera); scene.add(player);
+const UP = new THREE.Vector3(0,1,0); const clock = new THREE.Clock();
+const c0 = renderer.xr.getController(0), c1 = renderer.xr.getController(1);
+function hand(h){ const m=new THREE.Mesh(new THREE.BoxGeometry(.05,.05,.12), new THREE.MeshBasicMaterial({color:0x42f5b6})); m.position.set(0,0,-.08); h.add(m); scene.add(h); }
+hand(c0); hand(c1);
+renderer.xr.addEventListener('sessionstart', () => { controls.enabled = false; });
+renderer.xr.addEventListener('sessionend', () => { controls.enabled = true; });
+let mode = 0;
+c0.addEventListener('selectstart', () => { mode = (mode+1)%3; syncMode(); });
+function move(){
+  if (!renderer.xr.isPresenting) return;
+  const dt = Math.min(clock.getDelta(), .1);
+  const fwd = new THREE.Vector3(); camera.getWorldDirection(fwd);
+  const right = new THREE.Vector3().crossVectors(fwd, UP).normalize();
+  const upv = new THREE.Vector3().crossVectors(right, fwd).normalize();
+  const spd = 2.2*dt;
+  const g0 = c0.gamepad, g1 = c1.gamepad;
+  if (g0){ player.position.addScaledVector(fwd, -(g0.axes[1]||0)*spd); player.position.addScaledVector(right, (g0.axes[0]||0)*spd); }
+  if (g1){ player.rotation.y += (g1.axes[0]||0)*1.6*dt; player.position.addScaledVector(upv, (g1.axes[1]||0)*spd); }
+}
+
+// —— AI 大脑场景（移植自 ai-brain） ——
+const group = new THREE.Group(), layers = new THREE.Group(), flows = new THREE.Group();
+scene.add(group, layers, flows);
+const nodes = [];
+for (const side of [-1,1]) for (let i=0;i<5800;i++){
+  const u=Math.random()*Math.PI*2, v=Math.acos(2*Math.random()-1), r=0.78+Math.random()*0.24;
+  let x=side*(0.22+Math.abs(Math.sin(v)*Math.cos(u))*2.18*r), y=Math.cos(v)*1.75*r, z=Math.sin(v)*Math.sin(u)*1.55*r;
+  x+=Math.sin(y*3.6+z*2.1)*0.12*side; y+=Math.sin(x*3.2+z*2.7)*0.07;
+  if (Math.abs(x)<0.3) continue;
+  nodes.push(new THREE.Vector3(x,y,z));
+}
+const pos=new Float32Array(nodes.length*3), colors=new Float32Array(nodes.length*3);
+const c1=new THREE.Color(0x42f5b6), c2=new THREE.Color(0x5ca9ff);
+nodes.forEach((p,i)=>{ pos.set([p.x,p.y,p.z],i*3); const c=c1.clone().lerp(c2,(p.y+1.8)/3.6); colors.set([c.r,c.g,c.b],i*3); });
+const nodeGeo=new THREE.BufferGeometry();
+nodeGeo.setAttribute('position', new THREE.BufferAttribute(pos,3));
+nodeGeo.setAttribute('color', new THREE.BufferAttribute(colors,3));
+const cloud=new THREE.Points(nodeGeo, new THREE.PointsMaterial({size:0.019,vertexColors:true,transparent:true,opacity:0.92,depthWrite:false,blending:THREE.AdditiveBlending}));
+group.add(cloud);
+const linePos=[];
+for (let i=0;i<nodes.length;i++){ const a=nodes[i];
+  for (let k=0;k<2;k++){ let best=-1,dist=0.48;
+    for (let t=0;t<16;t++){ const j=Math.floor(Math.random()*nodes.length), d=a.distanceTo(nodes[j]);
+      if (Math.sign(a.x)===Math.sign(nodes[j].x) && d<dist && d>0.08){ best=j; dist=d; } }
+    if (best>=0) linePos.push(a.x,a.y,a.z,nodes[best].x,nodes[best].y,nodes[best].z); } }
+const lineGeo=new THREE.BufferGeometry();
+lineGeo.setAttribute('position', new THREE.Float32BufferAttribute(linePos,3));
+const network=new THREE.LineSegments(lineGeo, new THREE.LineBasicMaterial({color:0x3bc998,transparent:true,opacity:0.11,blending:THREE.AdditiveBlending}));
+group.add(network);
+const coreCount=720, coreGeo=new THREE.BufferGeometry();
+coreGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(coreCount*3),3));
+const pulses=new THREE.Points(coreGeo, new THREE.PointsMaterial({color:0xd9fff3,size:0.075,transparent:true,opacity:0.95,depthWrite:false,blending:THREE.AdditiveBlending}));
+group.add(pulses);
+const layerNodes=[], layerLines=[];
+for (let l=0;l<9;l++){ const x=(l-4)*0.62, count=864;
+  for (let i=0;i<count;i++){ const a=(i/count)*Math.PI*2, y=Math.sin(a)*1.8, z=Math.cos(a)*1.25;
+    layerNodes.push(x,y,z);
+    if (l<8 && i%2===0){ const j=(i*7+l*11)%count, a2=(j/count)*Math.PI*2;
+      layerLines.push(x,y,z,x+0.62,Math.sin(a2)*1.8,Math.cos(a2)*1.25); } } }
+const lg=new THREE.BufferGeometry(); lg.setAttribute('position', new THREE.Float32BufferAttribute(layerNodes,3));
+layers.add(new THREE.Points(lg, new THREE.PointsMaterial({color:0xcaf9ff,size:0.055,transparent:true,opacity:0.9,depthWrite:false,blending:THREE.AdditiveBlending})));
+const elastic=(src,parts)=>{ const out=[],weights=[];
+  for (let i=0;i<src.length;i+=6) for (let s=0;s<parts;s++) for (const u of [s/parts,(s+1)/parts]){
+    out.push(THREE.MathUtils.lerp(src[i],src[i+3],u), THREE.MathUtils.lerp(src[i+1],src[i+4],u), THREE.MathUtils.lerp(src[i+2],src[i+5],u));
+    weights.push(Math.sin(Math.PI*u)); }
+  return { base:new Float32Array(out), weights:new Float32Array(weights) }; };
+const layerElastic=elastic(layerLines,8), llg=new THREE.BufferGeometry();
+llg.setAttribute('position', new THREE.BufferAttribute(layerElastic.base.slice(),3));
+layers.add(new THREE.LineSegments(llg, new THREE.LineBasicMaterial({color:0x65bfff,transparent:true,opacity:0.2,blending:THREE.AdditiveBlending})));
+const flowNodes=[], flowLines=[], inputs=224, outputs=224;
+for (let i=0;i<inputs;i++){ const a=(i/inputs)*Math.PI*2;
+  flowNodes.push(-2.7,Math.sin(a)*1.85,Math.cos(a)*1.4, 2.7,Math.sin(a)*1.85,Math.cos(a)*1.4);
+  for (let k=0;k<24;k++){ const j=(i*13+k*9)%outputs, a2=(j/outputs)*Math.PI*2;
+    flowLines.push(-2.7,Math.sin(a)*1.85,Math.cos(a)*1.4, 2.7,Math.sin(a2)*1.85,Math.cos(a2)*1.4); } }
+const fg=new THREE.BufferGeometry(); fg.setAttribute('position', new THREE.Float32BufferAttribute(flowNodes,3));
+flows.add(new THREE.Points(fg, new THREE.PointsMaterial({color:0xffb45d,size:0.065,transparent:true,opacity:0.95,depthWrite:false,blending:THREE.AdditiveBlending})));
+const flowElastic=elastic(flowLines,10), flg=new THREE.BufferGeometry();
+flg.setAttribute('position', new THREE.BufferAttribute(flowElastic.base.slice(),3));
+flows.add(new THREE.LineSegments(flg, new THREE.LineBasicMaterial({color:0xff7b45,transparent:true,opacity:0.24,blending:THREE.AdditiveBlending})));
+const pulseEdges=Array.from({length:coreCount},()=>{ const e=Math.floor(Math.random()*(linePos.length/6));
+  return { e, speed:0.18+Math.random()*0.65, offset:Math.random() }; });
+
+function syncMode(){ document.querySelectorAll('#modes button').forEach(b=>b.classList.toggle('active', +b.dataset.m===mode)); }
+document.querySelectorAll('#modes button').forEach(b=>b.addEventListener('click',()=>{ mode=+b.dataset.m; syncMode(); }));
+
+const animClock = new THREE.Clock();
+renderer.setAnimationLoop(()=>{
+  move();
+  const t=animClock.getElapsedTime(), arr=coreGeo.attributes.position.array;
+  pulseEdges.forEach((p,i)=>{ const j=p.e*6, u=(t*p.speed+p.offset)%1;
+    arr[i*3]=THREE.MathUtils.lerp(linePos[j],linePos[j+3],u);
+    arr[i*3+1]=THREE.MathUtils.lerp(linePos[j+1],linePos[j+4],u);
+    arr[i*3+2]=THREE.MathUtils.lerp(linePos[j+2],linePos[j+5],u); });
+  coreGeo.attributes.position.needsUpdate=true;
+  const deform=(geo,data,time,amp,speed)=>{ const a=geo.attributes.position.array;
+    for (let i=0;i<data.weights.length;i++){ const j=i*3, x=data.base[j], z=data.base[j+2], w=data.weights[i];
+      a[j]=x; a[j+1]=data.base[j+1]+w*(Math.sin(time*speed+x*1.35+z*2.1)*amp+Math.sin(time*0.73+z*3.4)*amp*0.38);
+      a[j+2]=z+w*Math.sin(time*(speed*0.82)+x*2.3)*amp*0.32; }
+    geo.attributes.position.needsUpdate=true; };
+  group.visible=mode===0; layers.visible=mode===1; flows.visible=mode===2;
+  group.rotation.y=Math.sin(t*0.13)*0.18;
+  layers.rotation.set(0,Math.sin(t*0.12)*0.16,0);
+  flows.rotation.set(0,Math.sin(t*0.11)*0.12,0);
+  if (mode===1) deform(llg,layerElastic,t,0.13,2.05);
+  if (mode===2) deform(flg,flowElastic,t,0.18,1.72);
+  cloud.material.opacity=0.84+Math.sin(t*1.8)*0.08;
+  controls.update();
+  renderer.render(scene,camera);
+});
+window.addEventListener('resize',()=>{ camera.aspect=innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth,innerHeight); });
+</script>
+</body>
+</html>
