@@ -30,6 +30,9 @@
     .params { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 14px; background: #282826; }
     .params span { padding: 9px 7px; background: #080808; color: #777; font-size: 7px; line-height: 1.5; text-align: center; }
     .params b { display: block; color: #e7e7e1; font-size: 10px; font-weight: 400; }
+    .copy-command { width: 100%; margin-top: 12px; padding: 12px 14px; border: 1px solid #72726d; background: #ecece6; color: #080808; font: 600 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .13em; cursor: pointer; transition: background .18s ease, color .18s ease; }
+    .copy-command:hover, .copy-command:focus-visible { background: #111; color: #f0f0ea; outline: none; }
+    .copy-command[data-copied="true"] { background: #111; color: #f0f0ea; border-color: #f0f0ea; }
     @media (max-width: 760px) {
       main { padding: 20px; }
       header, footer { font-size: 8px; letter-spacing: .11em; }
@@ -62,6 +65,7 @@
     </ol>
     <div class="locks"><strong>IDENTITY LOCK</strong><br>上一镜头尾帧只能用于连续性，不能代替人物母版。未指定人物的脸、衣服、姿势、位置与光线全部冻结。</div>
     <div class="params"><span><b>4 + 4</b>采样步数</span><span><b>0.70–0.75</b>Turbo LoRA</span><span><b>0.20</b>二采 denoise</span></div>
+    <button class="copy-command" id="copy-h3-command" type="button">复制技能命令 / COPY COMMAND</button>
   </aside>
   <script>
     const canvas = document.querySelector('#field');
@@ -71,6 +75,8 @@
     const sctx = source.getContext('2d', { willReadFrequently: true });
     const image = new Image();
     const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const copyButton = document.querySelector('#copy-h3-command');
+    const skillCommand = '使用 $minimax-h3-four-step-dual-sampling，按 50.23 已验证的四步二采流程准备当前镜头。先向我展示并确认人物三边图与高清正脸、场景、对白、正负提示词和完整参数；我明确确认后才能提交生成。';
     let w = 1, h = 1, cell = 5, cols = 1, rows = 1, pixels = null;
     let portrait = { dx: 0, dy: 0, dw: 1, dh: 1 };
 
@@ -178,6 +184,22 @@
 
     image.onload = rebuild;
     image.src = 'assets/pixel-dither-404-boy.png';
+    copyButton.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(skillCommand);
+      } catch {
+        const fallback = document.createElement('textarea');
+        fallback.value = skillCommand;
+        fallback.style.position = 'fixed'; fallback.style.opacity = '0';
+        document.body.append(fallback); fallback.select(); document.execCommand('copy'); fallback.remove();
+      }
+      copyButton.dataset.copied = 'true';
+      copyButton.textContent = '已复制 / COPIED';
+      setTimeout(() => {
+        copyButton.dataset.copied = 'false';
+        copyButton.textContent = '复制技能命令 / COPY COMMAND';
+      }, 1800);
+    });
     addEventListener('resize', rebuild);
     rebuild(); requestAnimationFrame(draw);
   </script>
