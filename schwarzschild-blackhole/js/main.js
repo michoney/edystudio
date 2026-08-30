@@ -56,7 +56,7 @@
   ].forEach(function (n) { U[n] = gl.getUniformLocation(prog, n); });
 
   var DEFAULTS = {
-    yaw: 0.55, pitch: 0.16, dist: 16,
+    yaw: 0.55, pitch: 0.16, dist: 24,
     exposure: 1.15, diskGain: 1.0, star: 1.0,
     inner: 3.0, outer: 11.0, steps: 220, auto: true
   };
