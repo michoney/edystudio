@@ -14,10 +14,29 @@
     header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; letter-spacing: .18em; color: #aaa; }
     .dot { display: inline-block; width: 7px; height: 7px; margin-right: 9px; border-radius: 50%; background: #e9e9e3; box-shadow: 0 0 18px #fff; }
     footer { display: flex; gap: 28px; font-size: 10px; letter-spacing: .13em; color: #777; }
+    .skill-panel { position: fixed; z-index: 3; top: 50%; right: clamp(24px, 5vw, 72px); width: min(420px, 38vw); max-height: 72vh; transform: translateY(-50%); padding: 22px 24px; overflow: auto; pointer-events: auto; border: 1px solid rgba(240,240,234,.18); border-left-color: rgba(240,240,234,.68); background: linear-gradient(135deg, rgba(3,3,3,.90), rgba(3,3,3,.58)); box-shadow: 0 24px 80px rgba(0,0,0,.46); backdrop-filter: blur(12px); scrollbar-width: thin; }
+    .skill-panel::before { content: "04 × 02"; position: absolute; top: 17px; right: 20px; color: #5c5c58; font-size: 10px; letter-spacing: .16em; }
+    .eyebrow { margin: 0 0 10px; color: #8c8c87; font-size: 9px; letter-spacing: .19em; }
+    .skill-panel h1 { max-width: 310px; margin: 0; font-family: Georgia, 'Songti SC', serif; font-size: clamp(28px, 3vw, 46px); font-weight: 400; line-height: .98; letter-spacing: -.04em; }
+    .skill-panel h1 span { display: block; margin-top: 9px; color: #8d8d88; font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .13em; }
+    .route { margin: 22px 0 18px; padding: 13px 0; border-top: 1px solid #333; border-bottom: 1px solid #333; color: #e2e2dc; font-size: 10px; line-height: 1.75; letter-spacing: .04em; }
+    .steps { margin: 0; padding: 0; list-style: none; counter-reset: h3step; }
+    .steps li { position: relative; min-height: 43px; padding: 0 0 14px 39px; color: #aaa; font-size: 9px; line-height: 1.55; border-left: 1px solid #30302e; margin-left: 11px; }
+    .steps li:last-child { border-left-color: transparent; }
+    .steps li::before { counter-increment: h3step; content: counter(h3step, decimal-leading-zero); position: absolute; left: -12px; top: -2px; display: grid; place-items: center; width: 23px; height: 23px; border: 1px solid #666; border-radius: 50%; background: #090909; color: #ededE7; font-size: 7px; }
+    .steps b { display: block; margin-bottom: 2px; color: #efefe9; font-size: 10px; font-weight: 500; letter-spacing: .06em; }
+    .locks { margin-top: 4px; padding: 12px 14px; border-left: 2px solid #e5e5df; background: rgba(255,255,255,.045); color: #bcbcb6; font-size: 8px; line-height: 1.75; }
+    .locks strong { color: #fff; letter-spacing: .11em; }
+    .params { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 14px; background: #282826; }
+    .params span { padding: 9px 7px; background: #080808; color: #777; font-size: 7px; line-height: 1.5; text-align: center; }
+    .params b { display: block; color: #e7e7e1; font-size: 10px; font-weight: 400; }
     @media (max-width: 760px) {
       main { padding: 20px; }
       header, footer { font-size: 8px; letter-spacing: .11em; }
-      footer { gap: 14px; }
+      footer { display: none; }
+      .skill-panel { top: auto; right: 14px; bottom: 14px; left: 14px; width: auto; max-height: 55vh; transform: none; padding: 18px; }
+      .skill-panel h1 { font-size: 30px; }
+      .route { margin: 14px 0; }
     }
   </style>
 </head>
@@ -25,9 +44,25 @@
   <canvas id="field"></canvas>
   <div class="vignette"></div>
   <main>
-    <header><span><i class="dot"></i>SELECTED SKILL</span><span>EDGE PARTICLES / MONO</span></header>
+    <header><span><i class="dot"></i>SELECTED SKILL</span><span>MINIMAX H3 / VERIFIED ON 50.23</span></header>
     <footer><span>EDY.AI.STUDIO</span><span>MONOCHROME</span><span>NEURAL DISCHARGE</span></footer>
   </main>
+  <aside class="skill-panel" aria-label="MiniMax H3 四步二采工作流程">
+    <p class="eyebrow">LOCAL DRAMA QUALITY PIPELINE</p>
+    <h1>H3 四步二采<span>MINIMAX-H3-FOUR-STEP-DUAL-SAMPLING</span></h1>
+    <div class="route">FL2VA 第一采 → RTX VSR → Reference2VA 低降噪第二采 → SeedVR2 → Topaz 轻锐化</div>
+    <ol class="steps">
+      <li><b>镜头确认</b>人物、场景、对白、正负提示词与完整参数逐项确认。</li>
+      <li><b>重新注入人物</b>每个新镜头重新提交所有演员三边图与高清正脸，标明人物位置。</li>
+      <li><b>FL2VA 第一采</b>INT8 ConvRot + Turbo 4-Step v1.1；先锁动作、构图、眼神与运镜。</li>
+      <li><b>中间放大</b>864×480 经 RTX VSR 放大至稳定目标 1280×704，再编码回 latent。</li>
+      <li><b>Reference2VA 第二采</b>4 步、低 denoise 0.20；只恢复皮肤、眼睛、发丝与衣料微纹理。</li>
+      <li><b>逐帧质检</b>检查首、中、尾和等间隔帧；漂脸、错手、过曝或外国脸直接返工。</li>
+      <li><b>时序超分与收尾</b>SeedVR2 单次 2×；Topaz 只轻锐化、轻去压缩，不再重绘五官。</li>
+    </ol>
+    <div class="locks"><strong>IDENTITY LOCK</strong><br>上一镜头尾帧只能用于连续性，不能代替人物母版。未指定人物的脸、衣服、姿势、位置与光线全部冻结。</div>
+    <div class="params"><span><b>4 + 4</b>采样步数</span><span><b>0.70–0.75</b>Turbo LoRA</span><span><b>0.20</b>二采 denoise</span></div>
+  </aside>
   <script>
     const canvas = document.querySelector('#field');
     const ctx = canvas.getContext('2d', { alpha: false });
