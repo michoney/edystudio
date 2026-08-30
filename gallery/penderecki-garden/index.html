@@ -54,6 +54,7 @@
       import * as THREE from "three";
       import { PCDLoader } from "https://cdn.jsdelivr.net/npm/three@0.128.0/examples/jsm/loaders/PCDLoader.js";
       import { VERTEX_SHADER, FRAGMENT_SHADER } from "./shaders.js";
+      import { initVRLocomotion, createVRButton } from "../../assets/vr-controls.js";
 
       const status = document.querySelector("#status");
       const scene = new THREE.Scene();
@@ -72,7 +73,11 @@
       });
       renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
       renderer.setSize(innerWidth, innerHeight);
+      renderer.xr.enabled = true;
       document.body.prepend(renderer.domElement);
+      document.body.appendChild(createVRButton(renderer));
+
+      const vr = initVRLocomotion({ renderer, camera, scene });
 
       const dot = document.createElement("canvas");
       dot.width = dot.height = 64;
@@ -159,7 +164,7 @@
           scene.add(cloud);
           settleStart = performance.now();
           status.textContent = `CONVERGING / ${count.toLocaleString()} POINTS`;
-          requestAnimationFrame(render);
+          renderer.setAnimationLoop(render);
         },
         (progress) => {
           if (progress.total)
@@ -190,6 +195,7 @@
       );
       function render(now) {
         if (!cloud) return;
+        vr.update();
         const raw = Math.min(1, (now - settleStart) / 18000);
         const settled = raw * raw * (3 - 2 * raw);
         const easeOut = 1 - Math.pow(1 - raw, 3);
@@ -202,12 +208,14 @@
         uniforms.uSizeRandom.value = THREE.MathUtils.lerp(0.8, 0.18, easeOut);
         uniforms.uAlphaMin.value = THREE.MathUtils.lerp(0.18, 0.86, easeOut);
         uniforms.uAlphaMax.value = THREE.MathUtils.lerp(0.45, 1, easeOut);
-        shiftX += (targetX - shiftX) * 0.012;
-        shiftY += (targetY - shiftY) * 0.012;
-        camera.position.x = shiftX * 0.55;
-        camera.position.y = 8 - shiftY * 0.16;
-        camera.rotation.y = -shiftX * THREE.MathUtils.degToRad(1.2);
-        camera.rotation.x = shiftY * THREE.MathUtils.degToRad(0.5);
+        if (!renderer.xr.isPresenting) {
+          shiftX += (targetX - shiftX) * 0.012;
+          shiftY += (targetY - shiftY) * 0.012;
+          camera.position.x = shiftX * 0.55;
+          camera.position.y = 8 - shiftY * 0.16;
+          camera.rotation.y = -shiftX * THREE.MathUtils.degToRad(1.2);
+          camera.rotation.x = shiftY * THREE.MathUtils.degToRad(0.5);
+        }
         uniforms.uTime.value = now * 0.00022;
         const breath = 0.5 + 0.5 * Math.sin(now * 0.00018);
         uniforms.uAudioStrength.value =
@@ -221,7 +229,6 @@
           status.style.opacity = 0;
         }
         renderer.render(scene, camera);
-        requestAnimationFrame(render);
       }
       addEventListener("resize", () => {
         camera.aspect = innerWidth / innerHeight;

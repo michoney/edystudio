@@ -4,8 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Earth AI Command Center</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
 
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
@@ -89,6 +95,20 @@ hr{
 #status{
     color:#00ff88;
 }
+#vr-hint{
+    position:absolute;
+    z-index:10;
+    bottom:20px;
+    left:50%;
+    transform:translateX(-50%);
+    color:#00eaff;
+    font-size:12px;
+    letter-spacing:.08em;
+    text-align:center;
+    opacity:.85;
+    pointer-events:none;
+    text-shadow:0 0 10px rgba(0,234,255,.8);
+}
 </style>
 </head>
 <body>
@@ -106,8 +126,13 @@ hr{
 <span><span class="label">AI:</span> <span id="status">CONNECTED</span></span>
 </div>
 </div>
+<div id="vr-hint">扳机: 抓取拖动世界 · 握把: 向手柄方向飞行 · 左摇杆: 移动 · 右摇杆: 转向</div>
 
-<script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { initVRLocomotion, createVRButton } from '../assets/vr-controls.js';
+
 const isMobile = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent);
 const dpr = Math.min(window.devicePixelRatio, 2);
 
@@ -118,14 +143,18 @@ camera.position.z = isMobile ? 3.5 : 3;
 const renderer = new THREE.WebGLRenderer({ antialias: true });
 renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(dpr);
+renderer.xr.enabled = true;
 document.body.appendChild(renderer.domElement);
+document.body.appendChild(createVRButton(renderer));
 
-const controls = new THREE.OrbitControls(camera, renderer.domElement);
+const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableZoom = true;
 controls.enablePan = false;
 controls.minDistance = 1.5;
 controls.maxDistance = 8;
 controls.rotateSpeed = isMobile ? 0.5 : 0.8;
+
+const vr = initVRLocomotion({ renderer, camera, scene, controls });
 
 // Stars
 const starsGeometry = new THREE.BufferGeometry();
@@ -168,13 +197,12 @@ const light = new THREE.DirectionalLight(0xffffff, 2);
 light.position.set(5, 3, 5);
 scene.add(light);
 
-function animate() {
-    requestAnimationFrame(animate);
+renderer.setAnimationLoop(() => {
+    vr.update();
     earth.rotation.y += isMobile ? 0.003 : 0.002;
     clouds.rotation.y += isMobile ? 0.0015 : 0.001;
     renderer.render(scene, camera);
-}
-animate();
+});
 
 window.addEventListener("resize", () => {
     camera.aspect = window.innerWidth / window.innerHeight;

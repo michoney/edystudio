@@ -151,6 +151,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { initVRLocomotion, createVRButton } from '../assets/vr-controls.js';
 
 // ---------- 场景 ----------
 const app = document.getElementById('app');
@@ -166,7 +167,9 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.05;
+renderer.xr.enabled = true;
 app.appendChild(renderer.domElement);
+document.body.appendChild(createVRButton(renderer));
 
 const labelRenderer = new CSS2DRenderer();
 labelRenderer.setSize(innerWidth, innerHeight);
@@ -181,6 +184,8 @@ controls.enableDamping = true;
 controls.dampingFactor = 0.08;
 controls.minDistance = 900;
 controls.maxDistance = 9000;
+
+const vr = initVRLocomotion({ renderer, camera, scene, controls });
 
 scene.add(new THREE.HemisphereLight(0xcfd8e0, 0x1a2027, 0.8));
 const key = new THREE.DirectionalLight(0xffffff, 2.0);
@@ -533,17 +538,17 @@ btnLift.addEventListener('click', () => { lifted = !lifted; btnLift.classList.to
 const clock = new THREE.Clock();
 let bodyY = 0;
 function animate() {
-  requestAnimationFrame(animate);
   const dt = Math.min(clock.getDelta(), 0.05);
   const targetY = lifted ? 950 : 0;
   bodyY += (targetY - bodyY) * 0.08;
   bodyGroup.position.y = bodyY;
   if (selBox) selBox.update();
+  vr.update();
   controls.update();
   renderer.render(scene, camera);
-  labelRenderer.render(scene, camera);
+  if (!renderer.xr.isPresenting) labelRenderer.render(scene, camera);
 }
-animate();
+renderer.setAnimationLoop(animate);
 
 addEventListener('resize', () => {
   camera.aspect = innerWidth / innerHeight; camera.updateProjectionMatrix();
