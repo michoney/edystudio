@@ -122,6 +122,30 @@
     state.dist = Math.max(4, Math.min(45, state.dist));
   }, { passive: false });
 
+
+  // ---------- Xbox 手柄（Gamepad API）----------
+  function pollGamepad() {
+    if (!navigator.getGamepads) return;
+    var pads = navigator.getGamepads();
+    for (var i = 0; i < pads.length; i++) {
+      var p = pads[i];
+      if (!p || !p.connected || !p.axes || p.axes.length < 4) continue;
+      if (p.mapping !== 'standard') continue;
+      var dz = 0.15;
+      var ax = Math.abs(p.axes[0]) < dz ? 0 : p.axes[0];
+      var ay = Math.abs(p.axes[1]) < dz ? 0 : p.axes[1];
+      var ry = Math.abs(p.axes[3]) < dz ? 0 : p.axes[3];
+      state.yaw -= ax * 0.0045;
+      state.pitch += ay * 0.0045;
+      state.pitch = Math.max(-1.45, Math.min(1.45, state.pitch));
+      if (ry !== 0) {
+        state.dist *= Math.exp(ry * 0.02);
+        state.dist = Math.max(4, Math.min(45, state.dist));
+      }
+      return;
+    }
+  }
+
   canvas.addEventListener('dblclick', function () {
     var doc = document;
     var el = doc.documentElement;
@@ -240,6 +264,7 @@
 
   function frame(t) {
     if (!running || ctxLoss) return;
+    pollGamepad();
     var ivRaw = prev ? t - prev : 16.7;
     var iv = Math.min(Math.max(ivRaw, 1), 250);
     prev = t;

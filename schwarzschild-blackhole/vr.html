@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>施瓦西黑洞 · VR 模式 · Schwarzschild VR</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#000;color:#e8d8c8;font-family:ui-monospace,Menlo,monospace}
+  #hint{position:fixed;left:14px;bottom:12px;font-size:12px;opacity:.85;z-index:3;pointer-events:none;line-height:1.7}
+  #panel{position:fixed;left:14px;top:14px;z-index:3;background:rgba(10,6,2,.6);border:1px solid rgba(255,170,70,.35);border-radius:10px;padding:10px 12px;font-size:11px;display:flex;flex-direction:column;gap:6px;min-width:170px;backdrop-filter:blur(6px)}
+  #panel label{display:flex;justify-content:space-between;gap:10px;align-items:center;color:#d8b090}
+  #panel input[type=range]{width:110px;accent-color:#ff9a3c}
+  #back{position:fixed;right:14px;bottom:12px;z-index:3;color:#ffb070;text-decoration:none;font-size:12px;background:rgba(10,6,2,.6);padding:8px 12px;border-radius:8px;border:1px solid rgba(255,170,70,.35)}
+  canvas{display:block}
+</style>
+</head>
+<body>
+<div id="hint">🥽 右上角进入 VR · 扳机抓取 · 握把飞行 · 左摇杆移动 · 右摇杆转向 · Xbox 手柄同样可用</div>
+<div id="panel">
+  <label>曝光 <input id="ex" type="range" min="0.3" max="3" step="0.05" value="1.15"></label>
+  <label>吸积盘 <input id="dg" type="range" min="0" max="3" step="0.05" value="1"></label>
+  <label>星空 <input id="star" type="range" min="0" max="2" step="0.05" value="1"></label>
+  <label>画质 <select id="quality"><option value="120">低</option><option value="220" selected>中</option><option value="340">高</option></select></label>
+</div>
+<a id="back" href="./index.html">← 2D 版</a>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { initVRLocomotion, createVRButton } from './vr-controls.js';
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x000000);
+const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.01, 2000);
+camera.position.set(0, 2, 14);
+camera.rotation.order = 'YXZ';
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.xr.enabled = true;
+document.body.prepend(renderer.domElement);
+createVRButton(renderer);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 4;
+controls.maxDistance = 60;
+const vr = initVRLocomotion({ renderer, camera, scene, controls });
+
+const uniforms = {
+  uRes: { value: new THREE.Vector2(innerWidth, innerHeight) },
+  uTime: { value: 0 },
+  uCamPos: { value: new THREE.Vector3() },
+  uCamRight: { value: new THREE.Vector3(1,0,0) },
+  uCamUp: { value: new THREE.Vector3(0,1,0) },
+  uCamFwd: { value: new THREE.Vector3(0,0,-1) },
+  uFovTan: { value: 0.6 },
+  uMaxSteps: { value: 220 },
+  uExposure: { value: 1.15 },
+  uDiskGain: { value: 1.0 },
+  uDiskInner: { value: 3.0 },
+  uDiskOuter: { value: 11.0 },
+  uStarBright: { value: 1.0 },
+};
+
+const mat = new THREE.ShaderMaterial({
+  vertexShader: "varying vec3 vWorldPos;\nvoid main() {\n  vec4 wp = modelMatrix * vec4(position, 1.0);\n  vWorldPos = wp.xyz;\n  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);\n}\n",
+  fragmentShader: "varying vec3 vWorldPos;\n\nuniform vec2  uRes;\nuniform float uTime;\nuniform vec3  uCamPos;\nuniform vec3  uCamRight;\nuniform vec3  uCamUp;\nuniform vec3  uCamFwd;\nuniform float uFovTan;\nuniform int   uMaxSteps;\nuniform float uExposure;\nuniform float uDiskGain;\nuniform float uDiskInner;\nuniform float uDiskOuter;\nuniform float uStarBright;\n\n#define RS 1.0\n\nfloat hash12(vec2 p){\n  vec3 p3 = fract(vec3(p.xyx) * 0.1031);\n  p3 += dot(p3, p3.yzx + 33.33);\n  return fract((p3.x + p3.y) * p3.z);\n}\nfloat hash13(vec3 p){\n  p = fract(p * 0.1031);\n  p += dot(p, p.zyx + 31.32);\n  return fract((p.x + p.y) * p.z);\n}\nfloat noise2(vec2 p){\n  vec2 i = floor(p);\n  vec2 f = fract(p);\n  f = f * f * (3.0 - 2.0 * f);\n  float a = hash12(i);\n  float b = hash12(i + vec2(1.0, 0.0));\n  float c = hash12(i + vec2(0.0, 1.0));\n  float d = hash12(i + vec2(1.0, 1.0));\n  return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);\n}\nfloat fbm(vec2 p){\n  float v = 0.0;\n  float amp = 0.5;\n  for(int i = 0; i < 5; i++){\n    v += amp * noise2(p);\n    p = p * 2.07 + vec2(19.19, 7.33);\n    amp *= 0.55;\n  }\n  return v;\n}\n\nvec3 stars(vec3 rd){\n  vec3 col = vec3(0.0);\n  for(float layer = 0.0; layer < 3.0; layer += 1.0){\n    float scale = 170.0 + layer * 150.0;\n    vec3 q = rd * scale;\n    vec3 id = floor(q);\n    vec3 f = fract(q) - 0.5;\n    float h = hash13(id + vec3(layer * 23.7));\n    float thr = 0.9965 - layer * 0.0008;\n    if(h > thr){\n      float d = length(f);\n      float br = smoothstep(0.30, 0.0, d);\n      float tw = 0.7 + 0.3 * sin(uTime * (1.0 + fract(h * 91.7) * 4.0) + h * 61.0);\n      vec3 tint = mix(vec3(0.65, 0.78, 1.0), vec3(1.0, 0.86, 0.68), fract(h * 47.3));\n      col += br * tint * tw * (1.3 - layer * 0.3);\n    }\n  }\n  return col * uStarBright;\n}\n\nvec3 nebula(vec3 rd){\n  float band = abs(dot(rd, normalize(vec3(0.38, 0.82, 0.43))));\n  float mask = exp(-band * band * 16.0);\n  float n = fbm(rd.xy * 2.6 + vec2(fbm(rd.zy * 2.2) * 1.4));\n  n = pow(max(n, 0.0), 2.0);\n  return mask * (0.010 + 0.10 * n) * vec3(0.42, 0.40, 0.58) * uStarBright;\n}\n\nvec3 background(vec3 rd){\n  return stars(rd) + nebula(rd) + vec3(0.0025, 0.004, 0.007);\n}\n\nvec3 diskColor(float t){\n  vec3 hot  = vec3(1.35, 1.12, 0.98);\n  vec3 mid  = vec3(1.25, 0.58, 0.18);\n  vec3 cold = vec3(0.50, 0.11, 0.025);\n  vec3 c = mix(mid, cold, smoothstep(0.35, 1.0, t));\n  return mix(hot, c, smoothstep(0.0, 0.35, t));\n}\n\nmat2 rot2(float a){\n  float c = cos(a);\n  float s = sin(a);\n  return mat2(c, -s, s, c);\n}\n\nvec4 diskShade(vec3 pos, vec3 dir){\n  float r = length(pos.xz);\n\n  // Keplerian differential rotation\n  float ang = uTime * 0.55 * inversesqrt(r * r * r);\n  vec2 q = rot2(ang) * pos.xz;\n\n  float rings = fbm(vec2(r * 2.3 - uTime * 0.30, 0.0));\n  rings = pow(clamp(rings * 1.7, 0.0, 1.0), 1.7);\n\n  float swirl = fbm(q * 1.05);\n\n  float dens = mix(rings, rings * swirl * 2.1, 0.5);\n\n  float prof = smoothstep(uDiskInner, uDiskInner + 0.6, r)\n             * (1.0 - smoothstep(uDiskOuter - 3.5, uDiskOuter, r));\n  prof *= pow(uDiskInner / r, 2.0);\n  dens *= prof;\n\n  float alpha = clamp(dens * 2.4, 0.0, 1.0);\n\n  // Relativistic Doppler beaming + gravitational redshift\n  vec3 vel = normalize(vec3(pos.z, 0.0, -pos.x));\n  float beta = clamp(sqrt(0.5 / r), 0.0, 0.95);\n  float gam = inversesqrt(1.0 - beta * beta);\n  float dopp = 1.0 / (gam * (1.0 - beta * dot(vel, -dir)));\n  float grav = sqrt(clamp(1.0 - RS / r, 0.0, 1.0));\n  float shift = dopp * grav;\n\n  vec3 c = diskColor(clamp((r - uDiskInner) / (uDiskOuter - uDiskInner), 0.0, 1.0));\n  c *= vec3(pow(shift, 2.0), pow(shift, 1.35), pow(shift, 0.75));\n  vec3 emit = c * dens * uDiskGain * pow(shift, 3.0);\n\n  return vec4(emit, alpha);\n}\n\nvec3 acesTonemap(vec3 x){\n  return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0);\n}\n\nvoid main(){\n  vec2 uv = (gl_FragCoord.xy - 0.5 * uRes) / uRes.y;\n\n  vec3 rd = normalize(vWorldPos - uCamPos);\n\n  vec3 p = uCamPos;\n  vec3 v = rd;\n  vec3 hv = cross(p, v);\n  float h2 = dot(hv, hv);\n\n  vec3 col = vec3(0.0);\n  float T = 1.0;\n  bool escaped = false;\n\n  for(int i = 0; i < 600; i++){\n    if(i >= uMaxSteps) break;\n\n    float r2 = dot(p, p);\n    float r = sqrt(r2);\n\n    if(r < RS * 1.02) break;\n    if(r > 90.0 && dot(p, v) > 0.0){ escaped = true; break; }\n\n    float dt = clamp(0.15 * (r - RS) + 0.012, 0.012, 0.9);\n    if(abs(p.y) < 1.4 && r < uDiskOuter + 2.0){\n      dt = min(dt, max(0.05, abs(p.y) * 0.7));\n    }\n\n    vec3 a = (-1.5 * h2 / (r2 * r2 * r)) * p;\n    v += a * dt;\n    vec3 pn = p + v * dt;\n\n    if(p.y * pn.y < 0.0){\n      float f = p.y / (p.y - pn.y);\n      vec3 hit = mix(p, pn, f);\n      float hr = length(hit.xz);\n      if(hr > uDiskInner && hr < uDiskOuter){\n        vec4 d = diskShade(hit, normalize(v));\n        col += T * d.rgb;\n        T *= (1.0 - d.a);\n        if(T < 0.02) break;\n      }\n    }\n\n    p = pn;\n  }\n\n  if(escaped) col += T * background(normalize(v));\n\n  col *= uExposure;\n  col = acesTonemap(col);\n  col = pow(col, vec3(1.0 / 2.2));\n\n  float vig = smoothstep(1.6, 0.35, dot(uv, uv));\n  col *= 0.72 + 0.28 * vig;\n  col += vec3((hash12(gl_FragCoord.xy + fract(uTime) * 61.7) - 0.5) * 0.012);\n\n  gl_FragColor = vec4(col, 1.0);\n}\n",
+  uniforms,
+  side: THREE.BackSide,
+  depthWrite: false,
+  depthTest: true,
+  frustumCulled: false,
+});
+const sky = new THREE.Mesh(new THREE.SphereGeometry(900, 64, 64), mat);
+scene.add(sky);
+
+const clock = new THREE.Clock();
+const camPos = new THREE.Vector3();
+const camRight = new THREE.Vector3();
+const camUp = new THREE.Vector3();
+const camFwd = new THREE.Vector3();
+
+const ex = document.getElementById('ex'), dg = document.getElementById('dg'),
+  star = document.getElementById('star'), q = document.getElementById('quality');
+ex.addEventListener('input', () => uniforms.uExposure.value = parseFloat(ex.value));
+dg.addEventListener('input', () => uniforms.uDiskGain.value = parseFloat(dg.value));
+star.addEventListener('input', () => uniforms.uStarBright.value = parseFloat(star.value));
+q.addEventListener('change', () => uniforms.uMaxSteps.value = parseInt(q.value, 10));
+
+renderer.setAnimationLoop(() => {
+  vr.update();
+  const t = clock.getElapsedTime();
+  if (!renderer.xr.isPresenting) controls.update();
+  camera.getWorldPosition(camPos);
+  camera.getWorldDirection(camFwd);
+  camRight.set(camFwd.z, 0, -camFwd.x).normalize();
+  camUp.crossVectors(camRight, camFwd).normalize();
+  uniforms.uTime.value = t;
+  uniforms.uCamPos.value.copy(camPos);
+  uniforms.uCamRight.value.copy(camRight);
+  uniforms.uCamUp.value.copy(camUp);
+  uniforms.uCamFwd.value.copy(camFwd);
+  uniforms.uRes.value.set(renderer.domElement.width, renderer.domElement.height);
+  renderer.render(scene, camera);
+});
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  uniforms.uRes.value.set(renderer.domElement.width, renderer.domElement.height);
+});
+</script>
+</body>
+</html>
