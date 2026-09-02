@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>模型弹药库 · 大桶 19 包 · Edy.AI.Studio</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;line-height:1.8}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;border-bottom:1px solid #1a1a1a;background:#0d0d0d;position:sticky;top:0;z-index:100}
+.nav .brand{font-size:16px;font-weight:300;letter-spacing:4px;color:#f5f5f5;text-decoration:none}
+.nav .brand span{color:#ff3333;font-weight:700}
+.nav .links a{color:#888;text-decoration:none;font-size:13px;letter-spacing:1px;margin-left:24px;transition:color 0.2s}
+.nav .links a:hover{color:#f5f5f5}
+.nav .links a.active{color:#ff3333}
+.hero{text-align:center;padding:46px 20px 28px;border-bottom:1px solid #1f1f1f}
+.hero .eyebrow{font-size:12px;letter-spacing:4px;color:#ff4444;font-family:'Courier New',monospace;margin-bottom:14px}
+.hero h1{font-size:30px;font-weight:300;letter-spacing:4px;color:#f5f5f5;margin-bottom:10px}
+.hero .sub{color:#777;font-size:13px;letter-spacing:1px;max-width:860px;margin:0 auto}
+.container{max-width:1000px;margin:34px auto 60px;padding:0 20px}
+table{width:100%;border-collapse:collapse;background:#111;border:1px solid #1f1f1f;border-radius:8px;overflow:hidden;font-size:14px}
+th{background:#161616;color:#ff4444;font-weight:700;text-align:left;padding:12px 14px;letter-spacing:1px;font-size:12px}
+td{padding:12px 14px;border-top:1px solid #1a1a1a;vertical-align:top}
+tr:hover td{background:#151010}
+td .num{color:#ff3333;font-family:'Courier New',monospace;font-weight:700}
+td .name{color:#f5f5f5;font-weight:600}
+td .models{color:#888;font-size:12px;line-height:1.6}
+td a{color:#4fc3f7;text-decoration:none;font-size:13px;white-space:nowrap}
+td a:hover{text-decoration:underline}
+.status{display:inline-block;padding:2px 10px;border-radius:12px;font-size:12px;border:1px solid #555;color:#aaa;white-space:nowrap}
+.note{margin-top:18px;background:#111;border:1px solid #1f1f1f;border-radius:8px;padding:14px 18px;font-size:13px;color:#999;line-height:2}
+.note b{color:#ff4444}
+.note code{color:#ff4444;background:#1a1a1a;padding:1px 6px;border-radius:4px}
+.legend{display:flex;gap:14px;justify-content:center;margin:18px 0 26px;flex-wrap:wrap;font-size:12px;color:#888}
+@media(max-width:640px){.nav{padding:14px 16px}.nav .links a{margin-left:12px}.container{padding:0 12px}table{font-size:13px}td,th{padding:10px 8px}.hero h1{font-size:24px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html">EDY.<span>AI</span>.STUDIO</a>
+  <div class="links">
+    <a href="../index.html">首页</a>
+    <a href="../ai-video.html" class="active">AI Video</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">// MODEL LIBRARY</div>
+  <h1>模型弹药库 · 大桶 19 包</h1>
+  <div class="sub">来源「大桶的资料库」hub.datong-ai.cn/models · 批量下载 ComfyUI 视频/出图模型 · 部署到 228</div>
+</div>
+
+<div class="container">
+  <div class="legend">
+    <span style="color:#f0c75e;">⏳ 待下载</span>
+    <span style="color:#58a6ff;">⬇️ 下载中</span>
+    <span style="color:#3fb950;">✅ 已部署</span>
+    <span style="color:#888;">⚠️ 跳过/不需要</span>
+  </div>
+  <table>
+    <thead><tr><th>#</th><th>模型包</th><th>关键模型</th><th>下载</th><th>状态</th></tr></thead>
+    <tbody>
+      <tr><td><span class="num">01</span></td><td class="name">scail2 模型及工作流</td><td class="models">wan2.1_14B_SCAIL_2 fp8 · relighting/DPO lora · umt5 · clip_vision · sam3.1</td><td><a href="https://hub.datong-ai.cn/models/cms377hw600l41galq2jw9cjb" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">02</span></td><td class="name">bernini 视频模型和工作流</td><td class="models">wan2.2_bernini_r high/low_noise fp8 · LightX2V · 路径已排好</td><td><a href="https://hub.datong-ai.cn/models/cmrritysv00k71galj4bbygbj" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">03</span></td><td class="name">steadydancer+scail 动作迁移</td><td class="models">Wan21_SteadyDancer_fp8 · SCAIL-preview(KJ)</td><td><a href="https://hub.datong-ai.cn/models/cmn1sw00x001tthiov7lbsfyq" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">04</span></td><td class="name">kontext + 自制编辑 lora</td><td class="models">flux1-kontext-dev · 白膜渲染上色 · 老照片修复 · 变手办 · 变像素 · 图案提取 · 去线稿重打光</td><td><a href="https://hub.datong-ai.cn/models/cmn1sqlhz001sthio7k2jabmz" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">05</span></td><td class="name">flux 全套模型</td><td class="models">dev fp8/Q8(12G)/Q4(8G) · CN-Union-Pro2 · fill · redux · clip_l/t5xxl/siglip · 人像 lora</td><td><a href="https://hub.datong-ai.cn/models/cmn1skkkv001rthio3zk2viwy" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">06</span></td><td class="name">常用放大模型 upscale</td><td class="models">ITF-Skin · NomosUni · FFHQDAT · UltraSharp · NMKD · DAT x2/x3/x4 · ESRGAN_4x</td><td><a href="https://hub.datong-ai.cn/models/cmn1s6ihm001qthio83ysr572" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">07</span></td><td class="name">生图模型合集 2512 / z红潮</td><td class="models">qwen_image_2512 fp8 · Z-Image 系(Kook 真实幻想 · redcraft · TG300 · 情绪光影)</td><td><a href="https://hub.datong-ai.cn/models/cmn008iiw000uthioze6fhghp" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">08</span></td><td class="name">animate 动作迁移（跳舞）</td><td class="models">Wan2.2-Animate Q8/Q4/fp8 · vitpose/yolo onnx · 面部/动作 lora 全家</td><td><a href="https://hub.datong-ai.cn/models/cmmykcsbz0008thio0mgvlfwi" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">09</span></td><td class="name">controlnet 模型合集</td><td class="models">flux CN-Union-Pro2 · Qwen InstantX CN · 1.5/XL 常用 CN → models/controlnet</td><td><a href="https://hub.datong-ai.cn/models/cmmyk1qrg0007thioqnkikkdg" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">10</span></td><td class="name">qwen2511 编辑模型</td><td class="models">qwen_image_edit_2511 bf16/fp8 · Lightning 4/8step lora</td><td><a href="https://hub.datong-ai.cn/models/cmmyj75bj0005thiobo72evnj" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">11</span></td><td class="name">infinitetalk 对口型数字人</td><td class="models">Wan2.1 I2V gguf Q4(8G)/Q8(16G) · InfiniteTalk Single Q8</td><td><a href="https://hub.datong-ai.cn/models/cmmyj0kcw0004thio3q3igeqi" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">12</span></td><td class="name">LTX2.3 无字幕 lora</td><td class="models">ltx无字幕.safetensors · 权重 0.5-0.6（太高伤质量）</td><td><a href="https://hub.datong-ai.cn/models/cmmxkc9u20002thio0z2ifjvt" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">13</span></td><td class="name">wan2.1 基础生态包</td><td class="models">底膜 fp8 · VACE/T2V/I2V · lightx2v 蒸馏 lora · vae/clip（11/08 的底座）</td><td><a href="https://hub.datong-ai.cn/models/cmmx1215400088hrw6jl2kf9e" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">14</span></td><td class="name">SmoothMix 图生视频模型</td><td class="models">图生视频</td><td><a href="https://hub.datong-ai.cn/models/cmmx0jz8100078hrw5nol347e" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">15</span></td><td class="name">Z-image 超写实小体量文生图</td><td class="models">小显存可跑</td><td><a href="https://hub.datong-ai.cn/models/cmmvq82p600031xh9tx7fzent" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">16</span></td><td class="name">qwen2511 图像编辑模型</td><td class="models">与 #10 同代，先看详情页差异再定</td><td><a href="https://hub.datong-ai.cn/models/cmmvq171g00021xh99rn8bdxr" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">17</span></td><td class="name">Klein 低显存图像编辑</td><td class="models">低显存编辑模型</td><td><a href="https://hub.datong-ai.cn/models/cmmvpdpm500011xh9mtpnmnrp" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">18</span></td><td class="name">LTX2.3 音画同步视频模型</td><td class="models">音画同步</td><td><a href="https://hub.datong-ai.cn/models/cmmvp3lm200001xh9ebe93wfa" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+      <tr><td><span class="num">19</span></td><td class="name">FireRed（小红书图片编辑）</td><td class="models">小红书图片编辑模型</td><td><a href="https://hub.datong-ai.cn/models/cmmvmqmq00001a6ix9coxtkbn" target="_blank">打开 ↗</a></td><td><span class="status">⏳ 待下载</span></td></tr>
+    </tbody>
+  </table>
+
+  <div class="note">
+    <b>怎么用：</b>点每行「打开 ↗」进大桶站详情页取网盘分享链接（站右上登录/注册后可见）→ 转存 → 下载 → 按包内文件夹路径放进 228 ComfyUI 的
+    <code>models/diffusion_models · checkpoints · loras · vae · text_encoders · clip_vision · controlnet · upscale_models</code>。<br>
+    状态在 <b>ai-video/datong-models/SKILL.md</b> 同步更新，下完一个勾一个；每包下完在 228 跑通对应工作流才算完成。
+  </div>
+</div>
+
+<div class="nav" style="position:static;justify-content:center;border-top:1px solid #1f1f1f;border-bottom:none;padding:20px;color:#555;font-size:12px;letter-spacing:2px;">
+  EDY.AI.STUDIO · MODEL LIBRARY · <a href="https://github.com/michoney/edystudio/tree/main/ai-video/datong-models" style="color:#888;text-decoration:none;" target="_blank">SKILL.md</a>
+</div>
+</body>
+</html>
