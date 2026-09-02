@@ -26,6 +26,9 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: 'PingFang SC', 'Microso
 .skill-card .tag { font-size: 10px; color: #666; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Courier New', monospace; }
 .skill-card p { font-size: 12px; color: #888; line-height: 1.7; }
 .skill-card .link { display: inline-block; margin-top: 12px; color: #ff4444; font-size: 11px; letter-spacing: 2px; text-decoration: none; font-family: 'Courier New', monospace; }
+.skill-card .copy { display: inline-block; margin-top: 12px; margin-left: 10px; background: transparent; color: #ff4444; border: 1px solid #ff4444; border-radius: 4px; padding: 3px 10px; font-size: 12px; letter-spacing: 1px; font-family: 'Courier New', monospace; cursor: pointer; transition: all .15s; }
+.skill-card .copy:hover { background: #ff4444; color: #0a0a0a; }
+.skill-card .copy.copied { background: #4caf50; border-color: #4caf50; color: #0a0a0a; }
 .featured { margin-bottom: 38px; padding: 26px; border: 1px solid #5b5b58; border-radius: 10px; background: radial-gradient(circle at 85% 20%, #303237 0, #151618 34%, #0e0e0f 72%); position: relative; overflow: hidden; }
 .featured::after { content: '▦'; position: absolute; right: 24px; top: 0; color: rgba(255,255,255,.08); font: 120px/1 monospace; }
 .featured .badge { color: #d8d8d2; font: 11px 'Courier New', monospace; letter-spacing: .24em; margin-bottom: 12px; }
@@ -76,7 +79,8 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: 'PingFang SC', 'Microso
       <h3>仓颉 · 长文蒸馏</h3>
       <div class="tag">CANGJIE</div>
       <p>将书、视频、播客等长内容压缩为结构化知识条目，存入 Obsidian vault。支持中文长文 + 多模态输入。</p>
-      <a class="link" href="https://michoney.github.io/skill-library/" target="_blank">→ 综合技能库</a>
+      <button class="copy" data-cmd="rm -rf /tmp/hermes-skills-main && curl -fsSL https://codeload.github.com/michoney/hermes-skills/tar.gz/main | tar xz -C /tmp && mkdir -p ~/.hermes/skills && cp -r /tmp/hermes-skills-main/cangjie ~/.hermes/skills/cangjie-skill && rm -rf /tmp/hermes-skills-main && echo ✓ 仓颉已安装">⎘ 复制安装</button>
+      <a class="link" href="https://michoney.github.io/skill-library/" target="_blank">→ 技能库</a>
     </div>
 
     <div class="skill-card">
@@ -84,7 +88,8 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: 'PingFang SC', 'Microso
       <h3>女娲 · 人物蒸馏</h3>
       <div class="tag">NUWA</div>
       <p>构建人物档案、角色系统、关系网络。从访谈/小说/影视中提取结构化人物数据。</p>
-      <a class="link" href="https://michoney.github.io/skill-library/" target="_blank">→ 综合技能库</a>
+      <button class="copy" data-cmd="rm -rf /tmp/hermes-skills-main && curl -fsSL https://codeload.github.com/michoney/hermes-skills/tar.gz/main | tar xz -C /tmp && mkdir -p ~/.hermes/skills && cp -r /tmp/hermes-skills-main/nuwa ~/.hermes/skills/nuwa-skill && rm -rf /tmp/hermes-skills-main && echo ✓ 女娲已安装">⎘ 复制安装</button>
+      <a class="link" href="https://michoney.github.io/skill-library/" target="_blank">→ 技能库</a>
     </div>
 
     <div class="skill-card">
@@ -92,7 +97,8 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: 'PingFang SC', 'Microso
       <h3>达尔文 · 进化</h3>
       <div class="tag">DARWIN</div>
       <p>自动发现 Skill 缺陷并触发修复。持续改进知识库，让 Agent 越来越聪明。</p>
-      <a class="link" href="https://michoney.github.io/skill-library/" target="_blank">→ 综合技能库</a>
+      <button class="copy" data-cmd="rm -rf /tmp/hermes-skills-main && curl -fsSL https://codeload.github.com/michoney/hermes-skills/tar.gz/main | tar xz -C /tmp && mkdir -p ~/.hermes/skills && cp -r /tmp/hermes-skills-main/darwin ~/.hermes/skills/darwin-skill && rm -rf /tmp/hermes-skills-main && echo ✓ 达尔文已安装">⎘ 复制安装</button>
+      <a class="link" href="https://michoney.github.io/skill-library/" target="_blank">→ 技能库</a>
     </div>
 
     <div class="skill-card">
@@ -129,10 +135,11 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: 'PingFang SC', 'Microso
 
     <div class="skill-card">
       <div class="num">08</div>
-      <h3>自由视觉</h3>
+      <h3>自由视觉 · 自由摄像机</h3>
       <div class="tag">FREE-VISION · CAMERA</div>
       <p>把景别、机位、构图与镜头运动组合成可直接使用的电影化提示词。支持环绕、推拉、升降、俯仰、FPV 与动态跟拍等自由摄像机表达。</p>
-      <a class="link" href="https://michoney.github.io/skill-library/" target="_blank">→ 综合技能库</a>
+      <button class="copy" data-cmd="rm -rf /tmp/hermes-skills-main && curl -fsSL https://codeload.github.com/michoney/hermes-skills/tar.gz/main | tar xz -C /tmp && mkdir -p ~/.hermes/skills && cp -r /tmp/hermes-skills-main/free-vision ~/.hermes/skills/free-vision && rm -rf /tmp/hermes-skills-main && echo ✓ 自由视觉已安装">⎘ 复制安装</button>
+      <a class="link" href="https://github.com/michoney/hermes-skills" target="_blank">→ 技能仓库</a>
     </div>
 
     <div class="skill-card">
@@ -150,5 +157,18 @@ body { background: #0a0a0a; color: #e0e0e0; font-family: 'PingFang SC', 'Microso
   EDY.AI.STUDIO · SKILLS LIBRARY &nbsp;|&nbsp; <a href="https://michoney.github.io/skill-library/" style="color:#ff4444;text-decoration:none;">michoney/skill-library</a>
 </div>
 
+<script>
+document.querySelectorAll('.copy').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var cmd = btn.getAttribute('data-cmd');
+    var done = function(){ var old = btn.textContent; btn.classList.add('copied'); btn.textContent = '✓ 已复制 → 粘贴到终端运行'; setTimeout(function(){ btn.textContent = old; btn.classList.remove('copied'); }, 2000); };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(cmd).then(done).catch(function(){ window.prompt('复制安装命令（粘贴到终端回车即可）:', cmd); done(); });
+    } else {
+      window.prompt('复制安装命令（粘贴到终端回车即可）:', cmd); done();
+    }
+  });
+});
+</script>
 </body>
 </html>
