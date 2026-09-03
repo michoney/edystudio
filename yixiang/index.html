@@ -9,14 +9,6 @@
   html,body { width:100%; height:100%; overflow:hidden; background:#0a0e14; color:#e8e6e3; font-family:"PingFang SC","Microsoft YaHei",sans-serif; }
   #app { position:fixed; inset:0; }
   canvas { display:block; }
-  #backHome {
-    position:fixed; top:20px; left:22px; z-index:60;
-    padding:9px 14px; border:1px solid rgba(216,178,106,.36); border-radius:24px;
-    color:#d8b26a; background:rgba(10,14,20,.62); text-decoration:none;
-    font-size:13px; letter-spacing:1px; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
-    transition:border-color .2s, color .2s, background .2s;
-  }
-  #backHome:hover { color:#f0d9a0; border-color:rgba(216,178,106,.75); background:rgba(28,25,20,.82); }
   #title {
     position:fixed; top:20px; left:50%; transform:translateX(-50%);
     font-size:26px; letter-spacing:6px; color:#d8b26a; text-shadow:0 0 18px rgba(216,178,106,.35);
@@ -56,7 +48,7 @@
   #panel .p-name { font-size:32px; color:#d8b26a; letter-spacing:2px; }
   #panel .p-tag { font-size:15px; color:#9aa4b2; margin:4px 0 10px; }
   #panel .p-text { font-size:17px; line-height:1.75; color:#e8e6e3; }
-  #panel .p-bi { font-size:16px; line-height:1.7; color:#b8c4d4; margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,.08); }
+  #panel .p-bi { font-size:16px; line-height:1.7; color:#b8c4d4; margin-top:12px; padding-top:10px; border-top:1px solid rgba(255,255,255,.08); white-space:pre-line; }
   #panel .p-close {
     position:absolute; top:12px; right:14px; width:30px; height:30px; border:none; border-radius:50%;
     background:rgba(255,255,255,.08); color:#9aa4b2; font-size:16px; cursor:pointer;
@@ -90,12 +82,124 @@
     font-size:30px; color:#f0d9a0; letter-spacing:4px; z-index:40; pointer-events:none;
     text-shadow:0 0 24px rgba(216,178,106,.8); opacity:0; transition:opacity .3s;
   }
+  /* ============ 模式切换 ============ */
+  #modeTabs {
+    position:fixed; top:64px; left:50%; transform:translateX(-50%);
+    display:flex; gap:10px; z-index:35; background:rgba(12,16,24,.72);
+    padding:6px; border-radius:30px; border:1px solid rgba(216,178,106,.3);
+    backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  }
+  #modeTabs button {
+    border:none; background:transparent; color:#8b94a3; cursor:pointer;
+    font-size:14px; letter-spacing:1px; padding:8px 18px; border-radius:24px;
+    font-family:"PingFang SC","Microsoft YaHei",sans-serif; transition:all .2s;
+  }
+  #modeTabs button.active {
+    background:linear-gradient(135deg,#e8c87a,#d8a94e); color:#0a0e14; font-weight:600;
+  }
+  #modeTabs button:not(.active):hover { color:#e8c87a; }
+  #backHome {
+    position:fixed; top:20px; left:22px; z-index:60;
+    padding:9px 14px; border:1px solid rgba(216,178,106,.36); border-radius:24px;
+    color:#d8b26a; background:rgba(10,14,20,.62); text-decoration:none;
+    font-size:13px; letter-spacing:1px; backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    transition:border-color .2s, color .2s, background .2s;
+  }
+  #backHome:hover { color:#f0d9a0; border-color:rgba(216,178,106,.75); background:rgba(28,25,20,.82); }
+  /* ============ 梅花生辰表单 ============ */
+  #mhForm {
+    position:fixed; left:50%; top:128px; transform:translateX(-50%);
+    width:min(640px,92vw); max-height:46vh; overflow-y:auto;
+    background:rgba(16,21,30,.78); border:1px solid rgba(216,178,106,.3);
+    border-radius:14px; padding:16px 20px 12px; z-index:30;
+    backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+    display:none; box-shadow:0 8px 40px rgba(0,0,0,.5);
+  }
+  #mhForm .mf-title { font-size:17px; color:#d8b26a; letter-spacing:2px; margin-bottom:10px; text-align:center; }
+  #mhForm .mf-row { display:flex; align-items:center; gap:8px; margin-bottom:10px; flex-wrap:wrap; }
+  #mhForm label { font-size:14px; color:#9aa4b2; min-width:76px; letter-spacing:1px; }
+  #mhForm input, #mhForm select {
+    background:#0d1220; border:1px solid rgba(216,178,106,.35); color:#e8e6e3;
+    font-size:16px; padding:7px 10px; border-radius:8px; outline:none; font-family:inherit;
+  }
+  #mhForm input { width:84px; }
+  #mhForm select { width:auto; min-width:150px; }
+  #mhForm input:focus, #mhForm select:focus { border-color:#e8c87a; }
+  #mhCalcBtn {
+    margin:2px auto 8px; display:block; padding:11px 30px; font-size:17px; letter-spacing:2px;
+    color:#0a0e14; background:linear-gradient(135deg,#e8c87a,#d8a94e);
+    border:none; border-radius:26px; cursor:pointer; font-family:inherit; transition:transform .15s;
+  }
+  #mhCalcBtn:hover { transform:scale(1.05); }
+  #mhCalcBtn.disabled { opacity:.5; pointer-events:none; }
+  #mhError { text-align:center; color:#ff7a6a; font-size:13px; min-height:18px; margin:2px 0 6px; }
+  #mhForm .mf-note { font-size:11.5px; color:#66707e; line-height:1.7; text-align:left; }
+  #mhForm .mf-note b { color:#d8b26a; font-weight:600; }
+  /* ============ 梅花结果面板(右侧) ============ */
+  #mhPanel {
+    position:fixed; right:26px; top:50%; transform:translateY(-50%);
+    width:350px; max-height:82vh; overflow-y:auto; padding:20px 22px; border-radius:16px;
+    background:rgba(20,26,36,.7); backdrop-filter:blur(18px); -webkit-backdrop-filter:blur(18px);
+    border:1px solid rgba(216,178,106,.28); box-shadow:0 8px 40px rgba(0,0,0,.5);
+    display:none; z-index:20; line-height:1.75;
+  }
+  #mhPanel .p-close { position:absolute; top:12px; right:14px; width:30px; height:30px; border:none; border-radius:50%; background:rgba(255,255,255,.08); color:#9aa4b2; font-size:16px; cursor:pointer; }
+  #mhPanel .p-close:hover { background:rgba(255,255,255,.18); color:#fff; }
+  #mhPanel h4 { color:#d8b26a; font-size:16px; letter-spacing:2px; margin:14px 0 6px; }
+  #mhPanel h4:first-child { margin-top:0; }
+  #mhPanel .mh-big { font-size:30px; color:#f0d9a0; letter-spacing:2px; font-weight:700; }
+  #mhPanel .mh-sub { font-size:13px; color:#9aa4b2; }
+  #mhPanel .mh-item { font-size:13.5px; color:#c8d0dc; margin:3px 0; }
+  #mhPanel .mh-item b { color:#e8c87a; font-weight:600; }
+  #mhPanel .mh-guaci { font-size:15px; color:#e8e6e3; border-left:3px solid rgba(216,178,106,.5); padding-left:10px; margin:6px 0; }
+  #mhPanel .mh-baihua { background:rgba(216,178,106,.07); border:1px solid rgba(216,178,106,.2); border-radius:10px; padding:12px 14px; font-size:13.5px; color:#d5d9e0; }
+  #mhPanel .mh-baihua .b-title { color:#d8b26a; font-weight:600; letter-spacing:1px; margin-bottom:4px; }
+  #mhPanel .mh-baihua p { margin:5px 0; }
+  #mhPanel .mh-dcl { font-size:12px; color:#6b7686; margin-top:12px; border-top:1px solid rgba(255,255,255,.07); padding-top:8px; }
+  #mhPanel .mh-formula { font-family:'Courier New',monospace; font-size:12.5px; color:#9fb4d8; background:rgba(10,14,24,.6); border-radius:6px; padding:8px 10px; margin:6px 0; white-space:pre-wrap; }
+  #mhPanel .mh-dong { color:#ff9d66; font-weight:700; }
+  .yao-row.dong .y-sym { color:#ff9d66; text-shadow:0 0 12px rgba(255,157,102,.8); }
+  .yao-row.dong .y-lbl { color:#ffb27a; }
+  /* ============ 龟壳六爻标题行 ============ */
+  .ly-title.lg { font-size:17px; margin-top:10px; }
+  /* ============ 移动端:底部抽屉 ============ */
+  @media (max-width: 900px) {
+    #modeTabs { top:auto; bottom:auto; left:50%; top:60px; flex-wrap:nowrap; }
+    #modeTabs button { font-size:13px; padding:7px 12px; }
+    #title { font-size:20px; top:12px; letter-spacing:4px; }
+    #yaoBtn { bottom:118px; padding:13px 30px; font-size:19px; }
+    #resetBtn { bottom:66px; }
+    #yaoStep { bottom:182px; }
+    #hint { display:none; }
+    #mhForm { top:106px; width:94vw; }
+    /* 左侧六爻 → 顶部横条 */
+    #liuyao {
+      left:50%; top:12px; transform:translateX(-50%); bottom:auto;
+      max-height:34vh; overflow-y:auto; border-radius:12px; padding:10px 12px;
+    }
+    .dir { display:none; }
+    /* 右侧结果 → 底部抽屉 */
+    #panel, #mhPanel {
+      left:3vw; right:3vw; top:auto; bottom:0; transform:none;
+      width:auto; max-height:56vh; border-radius:16px 16px 0 0; padding:16px 16px 24px;
+    }
+  }
+  @media (max-width: 480px) {
+    #mhForm .mf-row { justify-content:center; }
+    #mhForm label { min-width:56px; font-size:13px; }
+    #mhForm input { width:70px; }
+    #modeTabs button { padding:6px 10px; font-size:12px; }
+  }
 </style>
 </head>
 <body>
 <div id="app"></div>
 <a id="backHome" href="../" aria-label="返回 EdyStudio 首页">← 返回 EdyStudio</a>
 <div id="title">八 卦 占 卜</div>
+<div id="modeTabs">
+  <button id="tabYao" class="active" type="button">🐢 龟壳六爻摇卦</button>
+  <button id="tabMh" type="button">📜 梅花生辰终身卦</button>
+</div>
 <div class="dir" id="dN">南 · 离</div>
 <div class="dir" id="dS">北 · 坎</div>
 <div class="dir" id="dE">东 · 震</div>
@@ -103,14 +207,44 @@
 <div id="hint">拖拽旋转 · 点卦看卦辞 · 摇龟壳起卦</div>
 <div id="flashMsg"></div>
 
+<div id="mhForm">
+  <div class="mf-title">📜 梅花生辰终身卦 · 一生只推演一次</div>
+  <div class="mf-row">
+    <label>公历生日</label>
+    <input id="mhYear" type="number" placeholder="年" min="1900" max="2100" inputmode="numeric"> 年
+    <input id="mhMonth" type="number" placeholder="月" min="1" max="12" inputmode="numeric"> 月
+    <input id="mhDay" type="number" placeholder="日" min="1" max="31" inputmode="numeric"> 日
+  </div>
+  <div class="mf-row">
+    <label>出生时辰</label>
+    <select id="mhHour"></select>
+  </div>
+  <button id="mhCalcBtn" type="button">✨ 计算终身卦</button>
+  <div id="mhError"></div>
+  <div class="mf-note">
+    规则说明：<br>
+    · 年支以<b>立春</b>为界(非春节/元旦)：生日早于当年立春日，采用上一公历年年支；立春当天按当年计(民用日期整天判断，默认时区 Asia/Shanghai)。<br>
+    · 换算仅凭<b>公历日期</b>(无出生时刻输入)：日期达到立春当日即按当年年支，界面不做分钟级判断。<br>
+    · <b>子时(23:00–00:59)跨日</b>：一律按你选择的公历日期计算，不把晚子时改成第二天。<br>
+    · 闰月按农历月序号起卦(如闰四月按 4)，结果中会显示"闰四月"。<br>
+    · 支持公历 1900-01-01 至 2100-12-31；未来日期可用于研究，会明确标注。<br>
+    · 本功能为<b>传统文化研究与娱乐体验</b>，不构成现实决策建议。所有计算在本地完成，生辰信息不会上传。
+  </div>
+</div>
+
 <button id="yaoBtn">🐢 摇龟壳起卦</button>
 <button id="resetBtn">↺ 重置卦象</button>
 <div id="yaoStep"></div>
 
 <div id="liuyao">
-  <div class="ly-title">六爻卦象</div>
+  <div class="ly-title" id="lyTitle">六爻卦象</div>
   <div id="lyRows"></div>
-  <div class="ly-title" id="lyResult" style="margin-top:8px;font-size:17px;"></div>
+  <div class="ly-title lg" id="lyResult" style="margin-top:8px;font-size:17px;"></div>
+</div>
+
+<div id="mhPanel">
+  <button class="p-close" onclick="document.getElementById('mhPanel').style.display='none'">✕</button>
+  <div id="mhBody"></div>
 </div>
 
 <div id="panel">
@@ -122,19 +256,22 @@
 </div>
 
 <script src="./three.min.js"></script>
+<script src="./lunar.js"></script>
+<script src="./lunar-calendar.js"></script>
+<script src="./yao-texts.js"></script>
+<script src="./divination-core.js"></script>
 <script>
 (function(){
-  // ================= 八卦定义（先天方位：上南乾 下北坤 左东离 右西坎） =================
-  const BA = {
-    qian:{ name:'乾', symbol:'☰', yang:[1,1,1] },
-    dui: { name:'兑', symbol:'☱', yang:[0,1,1] },
-    li:  { name:'离', symbol:'☲', yang:[1,0,1] },
-    zhen:{ name:'震', symbol:'☳', yang:[1,0,0] },
-    xun: { name:'巽', symbol:'☴', yang:[0,1,0] },
-    kan: { name:'坎', symbol:'☵', yang:[0,1,0] },
-    gen: { name:'艮', symbol:'☶', yang:[0,0,1] },
-    kun: { name:'坤', symbol:'☷', yang:[0,0,0] }
-  };
+  // ================= 数据与计算核心（来自 divination-core.js） =================
+  // 八卦三爻编码一律"自下而上"(数组0=初爻/下爻)。巽与坎编码已修正且唯一。
+  // 3D 画面爻线自上而下绘制，因此下面绘制处对 BA.yang 倒序取用；计算保持自下而上。
+  const CORE = window.DivCore;
+  const BA = CORE.BA;
+  const HEX = CORE.HEX;
+  const HEX_MAP = CORE.HEX_MAP;
+  const { triToKey, numToKey, KEY_TO_NUM, meihuaCalc, composeFromSix } = CORE;
+  const YAO_TEXTS = window.YAO_TEXTS || {};
+  const LunarCal = window.LunarCal;
   // 后天八卦方位（离南坎北震东兑西，乾西北坤西南艮东北巽东南）
   const GUA_POS = [
     { key:'li',   ang:0 },    // 南 上
@@ -150,77 +287,6 @@
   const KEY_ANG = {};
   GUA_POS.forEach(g => KEY_ANG[g.key] = g.ang);
 
-  // ================= 64 卦数据（文王卦序） =================
-  // 每卦: [卦名, 上卦key, 下卦key, 卦辞核心]
-  const HEX = [
-    ['乾', 'qian','qian','元亨利贞。'],
-    ['坤', 'kun','kun','元亨，利牝马之贞。'],
-    ['屯', 'kan','zhen','元亨利贞，勿用有攸往，利建侯。'],
-    ['蒙', 'gen','kan','亨。匪我求童蒙，童蒙求我。'],
-    ['需', 'kan','qian','有孚，光亨，贞吉，利涉大川。'],
-    ['讼', 'qian','kan','有孚窒惕，中吉，终凶。利见大人。'],
-    ['师', 'kun','kan','贞，丈人吉，无咎。'],
-    ['比', 'kan','kun','吉。原筮，元永贞，无咎。'],
-    ['小畜','xun','qian','亨。密云不雨，自我西郊。'],
-    ['履', 'qian','dui','履虎尾，不咥人，亨。'],
-    ['泰', 'kun','qian','小往大来，吉亨。'],
-    ['否', 'qian','kun','否之匪人，不利君子贞，大往小来。'],
-    ['同人','qian','li','同人于野，亨。利涉大川，利君子贞。'],
-    ['大有','li','qian','元亨。'],
-    ['谦', 'kun','gen','亨，君子有终。'],
-    ['豫', 'zhen','kun','利建侯行师。'],
-    ['随', 'dui','zhen','元亨利贞，无咎。'],
-    ['蛊', 'gen','xun','元亨，利涉大川。先甲三日，后甲三日。'],
-    ['临', 'kun','dui','元亨利贞。至于八月有凶。'],
-    ['观', 'xun','kun','盥而不荐，有孚颙若。'],
-    ['噬嗑','li','zhen','亨。利用狱。'],
-    ['贲', 'gen','li','亨。小利有攸往。'],
-    ['剥', 'gen','kun','不利有攸往。'],
-    ['复', 'kun','zhen','亨。出入无疾，朋来无咎。反复其道，七日来复。'],
-    ['无妄','qian','zhen','元亨利贞。其匪正有眚，不利有攸往。'],
-    ['大畜','gen','qian','利贞。不家食吉，利涉大川。'],
-    ['颐', 'gen','zhen','贞吉。观颐，自求口实。'],
-    ['大过','dui','xun','栋桡。利有攸往，亨。'],
-    ['坎', 'kan','kan','习坎，有孚，维心亨，行有尚。'],
-    ['离', 'li','li','利贞，亨。畜牝牛吉。'],
-    ['咸', 'dui','gen','亨，利贞。取女吉。'],
-    ['恒', 'zhen','xun','亨，无咎，利贞。利有攸往。'],
-    ['遁', 'qian','gen','亨，小利贞。'],
-    ['大壮','zhen','qian','利贞。'],
-    ['晋', 'li','kun','康侯用锡马蕃庶，昼日三接。'],
-    ['明夷','kun','li','利艰贞。'],
-    ['家人','xun','li','利女贞。'],
-    ['睽', 'li','dui','小事吉。'],
-    ['蹇', 'kan','gen','利西南，不利东北。利见大人，贞吉。'],
-    ['解', 'zhen','kan','利西南。无所往，其来复吉。有攸往，夙吉。'],
-    ['损', 'gen','dui','有孚，元吉，无咎，可贞，利有攸往。'],
-    ['益', 'xun','zhen','利有攸往，利涉大川。'],
-    ['夬', 'dui','qian','扬于王庭，孚号有厉。告自邑，不利即戎。'],
-    ['姤', 'qian','xun','女壮，勿用取女。'],
-    ['萃', 'dui','kun','亨。王假有庙。利见大人，亨利贞。'],
-    ['升', 'kun','xun','元亨。用见大人，勿恤，南征吉。'],
-    ['困', 'dui','kan','亨，贞，大人吉，无咎。有言不信。'],
-    ['井', 'kan','xun','改邑不改井，无丧无得，往来井井。'],
-    ['革', 'dui','li','巳日乃孚。元亨利贞，悔亡。'],
-    ['鼎', 'li','xun','元吉，亨。'],
-    ['震', 'zhen','zhen','亨。震来虩虩，笑言哑哑，震惊百里。'],
-    ['艮', 'gen','gen','艮其背，不获其身；行其庭，不见其人。'],
-    ['渐', 'xun','gen','女归吉，利贞。'],
-    ['归妹','zhen','dui','征凶，无攸利。'],
-    ['丰', 'zhen','li','亨，王假之。勿忧，宜日中。'],
-    ['旅', 'li','gen','小亨，旅贞吉。'],
-    ['巽', 'xun','xun','小亨。利有攸往，利见大人。'],
-    ['兑', 'dui','dui','亨，利贞。'],
-    ['涣', 'xun','kan','亨。王假有庙，利涉大川，利贞。'],
-    ['节', 'kan','dui','亨。苦节不可贞。'],
-    ['中孚','xun','dui','豚鱼吉。利涉大川，利贞。'],
-    ['小过','zhen','gen','亨，利贞。可小事，不可大事。'],
-    ['既济','kan','li','亨小，利贞。初吉终乱。'],
-    ['未济','li','kan','亨。小狐汔济，濡其尾，无攸利。'],
-  ];
-  // 上卦key+下卦key → 卦序索引
-  const HEX_MAP = {};
-  HEX.forEach((h, i) => { HEX_MAP[h[1]+h[2]] = i; });
 
   // ================= 场景 =================
   const app = document.getElementById('app');
@@ -280,7 +346,9 @@
     group.position.set(cx, Y_BASE, cz);
     group.rotation.y = -angle;
     const b = BA[g.key];
-    b.yang.forEach((isYang, k) => {
+    // BA.yang 自下而上(0=初爻);画面爻线自上而下绘制,故倒序取用:[2]上爻画最顶
+    [2, 1, 0].forEach(k => {
+      const isYang = b.yang[k] === 1;
       const rOff = 1.05 - k * gap;
       if (isYang) {
         const box = new THREE.Mesh(new THREE.BoxGeometry(yangW, thick, thick*0.9), matH);
@@ -412,7 +480,7 @@
   scene.children.slice().forEach(ch => spinGroup.add(ch));
   scene.add(spinGroup);
 
-  renderer.domElement.addEventListener('mousedown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; });
+  renderer.domElement.addEventListener('mousedown', e => { dragging = true; onDragStart(); lastX = e.clientX; lastY = e.clientY; });
   window.addEventListener('mousemove', e => {
     if (!dragging) return;
     rot.y += (e.clientX - lastX) * 0.005;
@@ -421,18 +489,19 @@
     lastX = e.clientX; lastY = e.clientY;
   });
   window.addEventListener('mouseup', () => dragging = false);
-  renderer.domElement.addEventListener('touchstart', e => { const t=e.touches[0]; dragging=true; lastX=t.clientX; lastY=t.clientY; }, {passive:true});
+  renderer.domElement.addEventListener('touchstart', e => { const t=e.touches[0]; dragging=true; onDragStart(); lastX=t.clientX; lastY=t.clientY; }, {passive:true});
   window.addEventListener('touchmove', e => { if(!dragging) return; const t=e.touches[0]; rot.y+=(t.clientX-lastX)*0.005; rot.x+=(t.clientY-lastY)*0.005; rot.x=Math.max(-0.8,Math.min(0.8,rot.x)); lastX=t.clientX; lastY=t.clientY; }, {passive:true});
   window.addEventListener('touchend', () => dragging = false);
 
-  // 点击选卦
+  // 点击选卦(实时取 canvas 实际尺寸,避免窗口变化后射线偏移)
   const raycaster = new THREE.Raycaster();
   const pointer = new THREE.Vector2();
   const panel = document.getElementById('panel');
   renderer.domElement.addEventListener('click', e => {
     if (shaking) return;
-    pointer.x = (e.clientX / W) * 2 - 1;
-    pointer.y = -(e.clientY / H) * 2 + 1;
+    const rect = renderer.domElement.getBoundingClientRect();
+    pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
+    pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1;
     raycaster.setFromCamera(pointer, camera);
     const hits = raycaster.intersectObjects(spinGroup.children, true);
     for (const h of hits) {
@@ -442,71 +511,133 @@
     }
   });
 
-  // ================= 摇卦逻辑 =================
+  // ================= 界面引用与全局状态 =================
   const yaoBtn = document.getElementById('yaoBtn');
+  const resetBtn = document.getElementById('resetBtn');
   const yaoStep = document.getElementById('yaoStep');
   const liuyao = document.getElementById('liuyao');
   const lyRows = document.getElementById('lyRows');
   const lyResult = document.getElementById('lyResult');
+  const lyTitle = document.getElementById('lyTitle');
   const flashMsg = document.getElementById('flashMsg');
+  const mhForm = document.getElementById('mhForm');
+  const mhCalcBtn = document.getElementById('mhCalcBtn');
+  const mhError = document.getElementById('mhError');
+  const mhPanel = document.getElementById('mhPanel');
+  const mhBody = document.getElementById('mhBody');
+  const tabYao = document.getElementById('tabYao');
+  const tabMh = document.getElementById('tabMh');
+  const hintEl = document.getElementById('hint');
+  const inY = document.getElementById('mhYear');
+  const inM = document.getElementById('mhMonth');
+  const inD = document.getElementById('mhDay');
+  const inH = document.getElementById('mhHour');
 
-  let yaoList = [];        // 6 爻：{yang:true/false, bian:true/false}
+  let mode = 'yao';            // 'yao' | 'meihua'
+  let yaoList = [];            // 6 爻:{yang:true/false, bian:true/false} 自下而上
   let shaking = false;
-  const yaoLabels = ['初爻','二爻','三爻','四爻','五爻','上爻'];
+  let t = 0;                   // 自动旋转时间(在 animate 中累加)
+  let holdAutoUntil = 0;       // rotateTo 完成后保持朝向的时间戳(不被自动旋转立刻覆盖)
+  let tweenRaf = null;         // 当前旋转补间
+  let tweenActive = false;
+
+  const yaoLabels = ['初爻', '二爻', '三爻', '四爻', '五爻', '上爻'];
+
+  // ================= 计时器统一管理(切模式/重置时清理,防旧模块污染) =================
+  const timerIds = new Set();
+  function later(fn, ms) {
+    const id = setTimeout(() => { timerIds.delete(id); fn(); }, ms);
+    timerIds.add(id);
+    return id;
+  }
+  function clearTimers() { timerIds.forEach(id => clearTimeout(id)); timerIds.clear(); }
 
   function flash(text) {
     flashMsg.textContent = text;
     flashMsg.style.opacity = 1;
-    setTimeout(() => flashMsg.style.opacity = 0, 900);
+    later(() => { flashMsg.style.opacity = 0; }, 900);
   }
 
+  // ================= 3D 高亮 =================
   function clearHighlight() {
     Object.values(guaObjects).forEach(g => {
       g.traverse(o => { if (o.isMesh && o.material) o.material = matH; });
     });
   }
   function highlightKeys(keys, mat) {
-    (keys||[]).forEach(k => {
+    (keys || []).forEach(k => {
       const g = guaObjects[k];
       if (g) g.traverse(o => { if (o.isMesh && o.material) o.material = mat || matHLit; });
     });
   }
-  // 盘面转到某方位朝前（angle 度 → 目标旋转）
-  function rotateTo(key, dur) {
-    const target = (KEY_ANG[key] / 180) * Math.PI + Math.PI/2;  // 该卦转到正前方
-    // 当前 spinGroup.rotation.y 取模对齐
-    let cur = spinGroup.rotation.y % (Math.PI*2);
-    let diff = target - cur;
-    while (diff > Math.PI) diff -= Math.PI*2;
-    while (diff < -Math.PI) diff += Math.PI*2;
+
+  // ================= 盘面旋转:补间 + 自动旋转协调 =================
+  function stopTween() {
+    if (tweenRaf) { cancelAnimationFrame(tweenRaf); tweenRaf = null; }
+    tweenActive = false;
+  }
+  // 用户拖拽:立即打断补间并恢复自动旋转基准
+  function onDragStart() { stopTween(); holdAutoUntil = 0; }
+  // 平滑转到绝对角度 targetY;结束后校准 rot.y 使自动旋转从该角度平滑续行,
+  // 并保持该朝向 holdMs 不被主动画覆盖
+  function tweenYTo(targetY, durMs, holdMs) {
+    stopTween();
+    let cur = spinGroup.rotation.y % (Math.PI * 2);
+    let diff = targetY - cur;
+    while (diff > Math.PI) diff -= Math.PI * 2;
+    while (diff < -Math.PI) diff += Math.PI * 2;
     const start = spinGroup.rotation.y;
     const t0 = performance.now();
-    const durMs = dur || 1200;
-    function anim(now) {
+    tweenActive = true;
+    function step(now) {
       const p = Math.min(1, (now - t0) / durMs);
-      const e = 1 - Math.pow(1-p, 3);
+      const e = 1 - Math.pow(1 - p, 3);
       spinGroup.rotation.y = start + diff * e;
-      if (p < 1) requestAnimationFrame(anim);
+      if (p < 1) { tweenRaf = requestAnimationFrame(step); }
+      else {
+        tweenActive = false; tweenRaf = null;
+        rot.y = spinGroup.rotation.y - t * 0.06;   // 校准,自动旋转从当前角度平滑继续
+        holdAutoUntil = performance.now() + (holdMs || 6000);
+      }
     }
-    requestAnimationFrame(anim);
+    tweenRaf = requestAnimationFrame(step);
+  }
+  function rotateTo(key, dur, holdMs) {
+    const target = (KEY_ANG[key] / 180) * Math.PI + Math.PI / 2;  // 该卦转到正前方
+    tweenYTo(target, dur || 1200, holdMs);
+  }
+  // 回到自动旋转基准(重置用)
+  function rotateHome() {
+    const base = t * 0.06;
+    let cur = spinGroup.rotation.y % (Math.PI * 2);
+    let diff = base - cur;
+    while (diff > Math.PI) diff -= Math.PI * 2;
+    while (diff < -Math.PI) diff += Math.PI * 2;
+    tweenYTo(spinGroup.rotation.y + diff, 1000, 0);
+    holdAutoUntil = 0;
   }
 
-  function makeYaoRow(idx, y) {
+  // ================= 爻名工具 =================
+  // 三爻/六爻自下而上;爻名:初九/六二/九三/…/上六
+  function yaoNameAt(pos, yang) { // pos 0..5(自下而上)
+    const pn = ['初', '二', '三', '四', '五', '上'][pos];
+    const y = yang ? '九' : '六';
+    return (pos === 0 || pos === 5) ? pn + y : y + pn;
+  }
+
+  function makeYaoRow(idx, y, isDong) {
     const row = document.createElement('div');
-    row.className = 'yao-row' + (y.bian ? ' bian' : '');
-    const lbl = document.createElement('span'); lbl.className='y-lbl'; lbl.textContent = yaoLabels[idx];
-    const sym = document.createElement('span'); sym.className='y-sym';
+    row.className = 'yao-row' + (isDong ? ' dong' : '') + (y.bian ? ' bian' : '');
+    const lbl = document.createElement('span'); lbl.className = 'y-lbl'; lbl.textContent = yaoLabels[idx];
+    const sym = document.createElement('span'); sym.className = 'y-sym';
     sym.textContent = y.yang ? '━━━' : '━ ━';
     row.appendChild(lbl); row.appendChild(sym);
     return row;
   }
-
   function renderLiuyao() {
     lyRows.innerHTML = '';
     for (let i = 5; i >= 0; i--) {   // 上爻在上
-      if (yaoList[i]) {
-        lyRows.appendChild(makeYaoRow(i, yaoList[i]));
-      }
+      if (yaoList[i]) lyRows.appendChild(makeYaoRow(i, yaoList[i], false));
     }
     liuyao.style.display = 'block';
   }
@@ -515,48 +646,42 @@
     document.getElementById('pName').textContent =
       keys.map(k => BA[k].name).join('+') + ' 卦';
     const syms = keys.map(k => BA[k].symbol).join('');
-    document.getElementById('pTag').textContent = syms + '  先天卦位';
+    document.getElementById('pTag').textContent = syms + '  后天卦位';
     document.getElementById('pText').textContent = '点击卦位：' + keys.map(k => BA[k].name + '（' + BA[k].symbol + '）').join('，');
     document.getElementById('pBian').textContent = bianKeys && bianKeys.length ? '变卦方位：' + bianKeys.map(k => BA[k].name + BA[k].symbol).join('、') : '';
     panel.style.display = 'block';
   }
 
-  // 摇一轮（一爻）：龟壳抖动 → 三枚铜钱飞出 → 判定
+  // ================= 龟壳摇卦(保留原流程) =================
   function yaoOneRound(roundIdx) {
     return new Promise(resolve => {
-      yaoStep.textContent = '正在第 ' + (roundIdx+1) + '/6 次摇卦…';
-      // 龟壳出现于盘中央上方
+      yaoStep.textContent = '正在第 ' + (roundIdx + 1) + '/6 次摇卦…';
       guiGroup.visible = true;
       guiGroup.position.set(0, 2.2, 0);
       guiGroup.rotation.set(0, 0, 0);
-      coins.forEach(c => { c.visible = true; c.position.set(0, 0.1, 0); c.rotation.x = Math.PI/2; });
-      // 抖动动画 0.55s
+      coins.forEach(c => { c.visible = true; c.position.set(0, 0.1, 0); c.rotation.x = Math.PI / 2; });
       const t0 = performance.now();
       function shake(now) {
         const p = Math.min(1, (now - t0) / 550);
-        guiGroup.rotation.z = Math.sin(p * 40) * 0.12 * (1 - p*0.7);
+        guiGroup.rotation.z = Math.sin(p * 40) * 0.12 * (1 - p * 0.7);
         guiGroup.position.y = 2.2 + Math.sin(p * 32) * 0.06;
-        if (p < 1) { requestAnimationFrame(shake); }
-        else { tossCoins(roundIdx, resolve); }
+        if (p < 1) requestAnimationFrame(shake);
+        else tossCoins(roundIdx, resolve);
       }
       requestAnimationFrame(shake);
     });
   }
 
-  // 铜钱抛出：随机正反 + 抛物线动画
   function tossCoins(roundIdx, resolve) {
-    // 随机结果：每枚 字(阴)/花(阳) 各 1/2
     const results = coins.map(() => Math.random() < 0.5 ? 0 : 1);  // 0=字(阴) 1=花(阳)
     const yangCount = results.filter(r => r === 1).length;
-    // 爻判定
     let isYang, isBian;
     if (yangCount === 3)      { isYang = true;  isBian = true; }   // 老阳 变
     else if (yangCount === 0) { isYang = false; isBian = true; }   // 老阴 变
     else if (yangCount === 2) { isYang = true;  isBian = false; }  // 少阳
     else                      { isYang = false; isBian = false; }  // 少阴
 
-    // 每枚铜钱动画：从壳口飞向桌面
-    const targets = [ [ -0.8, 0, 0.4 ], [ 0, 0, -0.3 ], [ 0.8, 0, 0.2 ] ];
+    const targets = [[-0.8, 0, 0.4], [0, 0, -0.3], [0.8, 0, 0.2]];
     const anims = coins.map((c, i) => {
       const start = { x: c.position.x, y: c.position.y, z: c.position.z };
       const end = targets[i];
@@ -565,7 +690,6 @@
       return new Promise(res => {
         function fly(now) {
           const p = Math.min(1, (now - t0) / dur);
-          // 抛物线
           c.position.x = start.x + (end.x - start.x) * p;
           c.position.z = start.z + (end.z - start.z) * p;
           c.position.y = start.y + (end.y - start.y) * p + Math.sin(p * Math.PI) * 1.1;
@@ -573,31 +697,29 @@
           c.rotation.z += 0.18;
           if (p < 1) requestAnimationFrame(fly);
           else {
-            // 落定：正面朝上显示结果
-            c.rotation.set(Math.PI/2, 0, 0);
-            // 换贴图：字面(阴) 或 花面(阳)
+            c.rotation.set(Math.PI / 2, 0, 0);
             const isZi = results[i] === 0;
             const cv = document.createElement('canvas');
             cv.width = 256; cv.height = 256;
             const ctx = cv.getContext('2d');
-            const grad = ctx.createRadialGradient(128,128,20,128,128,120);
-            grad.addColorStop(0,'#e8b84a'); grad.addColorStop(1,'#8a6420');
-            ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(128,128,118,0,Math.PI*2); ctx.fill();
+            const grad = ctx.createRadialGradient(128, 128, 20, 128, 128, 120);
+            grad.addColorStop(0, '#e8b84a'); grad.addColorStop(1, '#8a6420');
+            ctx.fillStyle = grad; ctx.beginPath(); ctx.arc(128, 128, 118, 0, Math.PI * 2); ctx.fill();
             ctx.strokeStyle = '#6b4a16'; ctx.lineWidth = 10;
-            ctx.beginPath(); ctx.arc(128,128,108,0,Math.PI*2); ctx.stroke();
-            ctx.fillStyle = '#4a3410'; ctx.fillRect(104,104,48,48);
-            ctx.strokeStyle = '#8a6420'; ctx.lineWidth = 3; ctx.strokeRect(104,104,48,48);
+            ctx.beginPath(); ctx.arc(128, 128, 108, 0, Math.PI * 2); ctx.stroke();
+            ctx.fillStyle = '#4a3410'; ctx.fillRect(104, 104, 48, 48);
+            ctx.strokeStyle = '#8a6420'; ctx.lineWidth = 3; ctx.strokeRect(104, 104, 48, 48);
             ctx.fillStyle = '#4a3410';
             if (isZi) {
               ctx.font = 'bold 52px "PingFang SC","STKaiti",serif';
-              ctx.textAlign='center'; ctx.textBaseline='middle';
+              ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
               ctx.fillText('通', 128, 70); ctx.fillText('寶', 128, 186);
             } else {
               ctx.strokeStyle = '#4a3410'; ctx.lineWidth = 5;
-              ctx.beginPath(); ctx.arc(128,128,70,0,Math.PI*2); ctx.stroke();
-              ctx.beginPath(); ctx.arc(128,128,44,0,Math.PI*2); ctx.stroke();
+              ctx.beginPath(); ctx.arc(128, 128, 70, 0, Math.PI * 2); ctx.stroke();
+              ctx.beginPath(); ctx.arc(128, 128, 44, 0, Math.PI * 2); ctx.stroke();
             }
-            c.material = new THREE.MeshStandardMaterial({ map:new THREE.CanvasTexture(cv), roughness:0.55, metalness:0.75 });
+            c.material = new THREE.MeshStandardMaterial({ map: new THREE.CanvasTexture(cv), roughness: 0.55, metalness: 0.75 });
             c.visible = true;
             res();
           }
@@ -607,80 +729,77 @@
     });
 
     Promise.all(anims).then(() => {
-      // 记录爻
       yaoList[roundIdx] = { yang: isYang, bian: isBian };
       renderLiuyao();
-      // 爻名提示
-      const names = ['老阳⚊⚊⚊(变)','老阴⚋⚋⚋(变)','少阳⚊⚊⚊','少阴⚋⚋⚋'];
+      const names = ['老阳⚊⚊⚊(变)', '老阴⚋⚋⚋(变)', '少阳⚊⚊⚊', '少阴⚋⚋⚋'];
       const idx = isBian ? (isYang ? 0 : 1) : (isYang ? 2 : 3);
-      flash('第' + (roundIdx+1) + '爻：' + names[idx]);
-      setTimeout(() => { guiGroup.visible = false; resolve(); }, 600);
+      flash('第' + (roundIdx + 1) + '爻：' + names[idx]);
+      later(() => { guiGroup.visible = false; resolve(); }, 600);
     });
   }
 
-  // 组卦
+  // ================= 龟壳组卦(核心算法在 divination-core.js) =================
   function composeHex() {
-    // 下卦 = 初二三爻，上卦 = 四五上爻
-    function triToKey(tri) {
-      const s = tri.map(y => y ? 1 : 0).join('');
-      for (const k in BA) { if (BA[k].yang.join('') === s) return k; }
-      return null;
-    }
-    const lower = triToKey([yaoList[0].yang, yaoList[1].yang, yaoList[2].yang]);
-    const upper = triToKey([yaoList[3].yang, yaoList[4].yang, yaoList[5].yang]);
-    const hi = HEX_MAP[upper + lower];
-    const hex = HEX[hi];
-    // 变卦（变爻翻转）
-    const bianList = yaoList.map(y => ({ yang: y.bian ? !y.yang : y.yang }));
-    const bLower = triToKey([bianList[0].yang, bianList[1].yang, bianList[2].yang]);
-    const bUpper = triToKey([bianList[3].yang, bianList[4].yang, bianList[5].yang]);
-    const hasBian = yaoList.some(y => y.bian);
-    const bHex = hasBian ? HEX[HEX_MAP[bUpper + bLower]] : null;
+    const r = composeFromSix(yaoList);
+    if (!r) { flash('卦象编码异常，请重置后重摇'); return; }
+    const hex = HEX[r.benIndex];
+    const hasBian = r.hasBian;
+    const bHex = hasBian ? HEX[r.bianIndex] : null;
 
-    // 结果
-    document.getElementById('pName').textContent = hex[0] + '卦 · ' + BA[upper].name + '上' + BA[lower].name + '下';
-    document.getElementById('pTag').textContent = '第' + (hi+1) + '卦 · ' + BA[upper].symbol + BA[lower].symbol;
+    // 动爻爻辞(384 爻辞库,卦序=HEX 序号)
+    let yaoTxt = '';
+    if (r.dongList.length) {
+      yaoTxt = r.dongList.map(n => {
+        const y = yaoList[n - 1];
+        const txt = (YAO_TEXTS[r.benIndex + 1] || [])[n - 1];
+        return yaoNameAt(n - 1, y.yang) + (txt ? ' ' + txt : ' （爻辞待补）');
+      }).join('\n');
+    }
+
+    document.getElementById('pName').textContent = hex[0] + '卦 · ' + BA[r.upper].name + '上' + BA[r.lower].name + '下';
+    document.getElementById('pTag').textContent = '第' + (r.benIndex + 1) + '卦 · ' + BA[r.upper].symbol + BA[r.lower].symbol;
     document.getElementById('pText').textContent = '「' + hex[3] + '」';
-    document.getElementById('pBian').textContent = hasBian
-      ? '变卦：' + bHex[0] + '卦（' + BA[bUpper].symbol + BA[bLower].symbol + '）'
-      : '六爻安静，无变爻';
+    document.getElementById('pBian').textContent =
+      (hasBian ? '动爻：' + r.dongList.map(n => yaoNameAt(n - 1, yaoList[n - 1].yang)).join('、') + '\n' : '') +
+      (hasBian ? '变卦：' + bHex[0] + '卦（' + BA[r.bUpper].symbol + BA[r.bLower].symbol + '）' : '六爻安静，无变爻') +
+      (yaoTxt ? '\n\n【动爻爻辞】\n' + yaoTxt : '');
     panel.style.display = 'block';
 
-    // 六爻结果标题
     lyResult.textContent = '本卦 ' + hex[0] + (hasBian ? ' → 之 ' + bHex[0] : '');
     lyResult.style.color = hasBian ? '#7aa8ff' : '#e8c87a';
 
-    // 高亮联动：本卦金色，变卦浅橙
     clearHighlight();
-    highlightKeys([lower, upper], matHLit);
-    if (hasBian) {
-      setTimeout(() => highlightKeys([bLower, bUpper], matHLit2), 400);
-    }
-    // 盘面转到上卦位置（视觉中心）
-    rotateTo(upper, 1200);
-    // 彩蛋：本卦含震 → 雷光闪动（超哥本卦）
-    if (lower === 'zhen' || upper === 'zhen') {
-      setTimeout(() => {
+    highlightKeys([r.lower, r.upper], matHLit);
+    if (hasBian) later(() => highlightKeys([r.bLower, r.bUpper], matHLit2), 400);
+    rotateTo(r.upper, 1200);
+    // 彩蛋:本卦含震 → 雷光闪动
+    if (r.lower === 'zhen' || r.upper === 'zhen') {
+      later(() => {
         flash('☳ 震！雷动之象');
         const f = document.createElement('div');
         f.style.cssText = 'position:fixed;inset:0;background:radial-gradient(circle,rgba(255,200,90,.35),transparent 70%);z-index:50;pointer-events:none;opacity:0;transition:opacity .12s';
         document.body.appendChild(f);
         requestAnimationFrame(() => f.style.opacity = 1);
-        setTimeout(() => { f.style.opacity = 0; setTimeout(() => f.remove(), 300); }, 520);
+        later(() => { f.style.opacity = 0; later(() => f.remove(), 300); }, 520);
       }, 500);
     }
   }
 
-  yaoBtn.addEventListener('click', () => {
-    if (shaking) return;
+  function startShake() {
+    if (shaking || mode !== 'yao') return;
     shaking = true;
+    clearTimers();
     yaoBtn.classList.add('disabled');
     yaoBtn.textContent = '摇卦中...';
     yaoList = [];
+    lyRows.innerHTML = ''; lyResult.textContent = '';
     liuyao.style.display = 'none';
     panel.style.display = 'none';
+    mhPanel.style.display = 'none';
+    mhError.textContent = '';
+    guiGroup.visible = false;
     clearHighlight();
-    const rounds = [0,1,2,3,4,5].reduce((p, i) => p.then(() => yaoOneRound(i)), Promise.resolve());
+    const rounds = [0, 1, 2, 3, 4, 5].reduce((p, i) => p.then(() => yaoOneRound(i)), Promise.resolve());
     rounds.then(() => {
       yaoStep.textContent = '';
       composeHex();
@@ -688,43 +807,192 @@
       yaoBtn.classList.remove('disabled');
       yaoBtn.textContent = '🐢 再摇一次';
     });
-  });
+  }
 
-  // 重置卦象
-  document.getElementById('resetBtn').addEventListener('click', () => {
-    if (shaking) return;
-    yaoList = [];
+  // ================= 梅花生辰终身卦 =================
+  const XIANG = {
+    qian: { t: '刚健开创', w: '目标感强、自强不息' },
+    dui:  { t: '亲和表达', w: '善于沟通、易得人缘' },
+    li:   { t: '光明热情', w: '行动热烈、追求精彩' },
+    zhen: { t: '果决行动', w: '反应迅速、敢想敢闯' },
+    xun:  { t: '柔韧渗透', w: '适应力强、以柔克刚' },
+    kan:  { t: '谨慎克难', w: '耐得住磨、智慧化解' },
+    gen:  { t: '笃定守成', w: '稳重坚持、界限分明' },
+    kun:  { t: '包容承载', w: '宽厚接纳、顾全大局' }
+  };
+  const DONG_THEME = [
+    '起步与根基——方向先于速度，先打好底子',
+    '积累与守成——稳住基本盘，善借助力',
+    '多事之秋——谨言慎行，避免冒进',
+    '进位与压力——量力而行，借势而不躁进',
+    '中正与主导——把握核心，敢于担责',
+    '极处与收尾——物极知返，见好即收'
+  ];
+
+  function baihua(r) {
+    const up = XIANG[r.upKey], lo = XIANG[r.loKey];
+    const upN = BA[r.upKey].name, loN = BA[r.loKey].name;
+    const hexName = HEX[r.benIndex][0];
+    const biName = r.bianIndex !== null ? HEX[r.bianIndex][0] : '';
+    const biGua = r.bianIndex !== null ? HEX[r.bianIndex][3] : '';
+    const yaoN = yaoNameAt(r.dong - 1, r.dong <= 3 ? r.lowerTri[r.dong - 1] === 1 : r.upperTri[r.dong - 4] === 1);
+    return [
+      { h: '性格底色', p: '本卦' + hexName + '，上卦为' + upN + '（' + up.t + '），下卦为' + loN + '（' + lo.t + '）。性格底色兼有' + upN + '的' + up.w + '，与' + loN + '的' + lo.w + '，外显气象与内在秉性互为补充。' },
+      { h: '优势倾向', p: '较易发挥的一面：承' + upN + '「' + up.t + '」之气，做事带' + up.w + '的色彩；得' + loN + '「' + lo.t + '」之养，遇事常能' + lo.w + '。扬此两面，人生多顺遂。' },
+      { h: '容易遇到的课题', p: '本卦动在第' + r.dong + '爻（' + yaoN + '），课题是「' + DONG_THEME[r.dong - 1] + '」。变卦为' + biName + '卦' + (biGua ? '，其卦辞提示「' + biGua + '」' : '') + '，提示局面会朝变卦所示的方向演化，宜顺势调整而非硬顶。' },
+      { h: '行动提醒', p: '常回看' + yaoN + '爻辞的提醒；处顺境留余地，处难境守本分。卦象只呈现趋势倾向，人生走向仍由你的选择与行动写成。重大决策请结合现实情况。' }
+    ];
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+  }
+
+  function meihuaSubmit() {
+    if (mode !== 'meihua') return;
+    mhError.textContent = '';
+    const y = parseInt(inY.value, 10), m = parseInt(inM.value, 10), d = parseInt(inD.value, 10);
+    const hSel = inH.value;
+    if (!(y >= 1900 && y <= 2100)) { mhError.textContent = '年份仅支持 1900-2100（超出历法库支持范围）'; return; }
+    if (!(m >= 1 && m <= 12)) { mhError.textContent = '月份须在 1-12 之间'; return; }
+    if (!(d >= 1 && d <= 31)) { mhError.textContent = '日期须在 1-31 之间'; return; }
+    if (!LunarCal.isValidDate(y, m, d)) { mhError.textContent = '该公历日期不存在（如 2 月没有 30 日），请检查后重试'; return; }
+    if (hSel === '') { mhError.textContent = '请选择出生时辰'; return; }
+    const H = parseInt(hSel, 10);
+    const info = LunarCal.lunarInfo(y, m, d);
+    if (info.error) { mhError.textContent = info.error; return; }
+    const r = meihuaCalc(info.yearBranchNum, info.lunarMonth, info.lunarDay, H);
+    if (!r) { mhError.textContent = '起卦参数异常，请检查输入'; return; }
+
+    // —— 展示:左侧六爻(本卦六爻,动爻高亮) ——
+    lyTitle.textContent = '本卦六爻 · 终身卦';
     lyRows.innerHTML = '';
-    lyResult.textContent = '';
+    const six = [];
+    for (let i = 0; i < 3; i++) six.push({ yang: r.lowerTri[i] === 1, bian: false });
+    for (let i = 0; i < 3; i++) six.push({ yang: r.upperTri[i] === 1, bian: false });
+    for (let i = 5; i >= 0; i--) lyRows.appendChild(makeYaoRow(i, six[i], (i + 1) === r.dong));
+    liuyao.style.display = 'block';
+    const benHex = HEX[r.benIndex];
+    lyResult.textContent = '本卦 ' + benHex[0] + (r.bianIndex !== null ? ' → 之 ' + HEX[r.bianIndex][0] : '');
+    lyResult.style.color = r.bianIndex !== null ? '#7aa8ff' : '#e8c87a';
+
+    // —— 3D:本卦金色高亮 + 变卦浅橙;盘面转向上卦;不播摇卦动画 ——
+    clearHighlight();
+    highlightKeys([r.loKey, r.upKey], matHLit);
+    if (r.bianIndex !== null) later(() => highlightKeys([r.bLoKey, r.bUpKey], matHLit2), 400);
+    rotateTo(r.upKey, 1200);
+
+    // —— 右侧详解 ——
+    const yaoTxt = (YAO_TEXTS[r.benIndex + 1] || [])[r.dong - 1];
+    const yaoDisplay = yaoTxt ? yaoTxt : '（该爻辞暂缺，未臆造，待补）';
+    const yaoNameStr = yaoNameAt(r.dong - 1, r.dong <= 3 ? r.lowerTri[r.dong - 1] === 1 : r.upperTri[r.dong - 4] === 1);
+    const upN = BA[r.upKey].name, loN = BA[r.loKey].name;
+    const leapNote = info.isLeap ? '（闰月按农历月序号起卦：' + info.monthCn + '月按 ' + info.lunarMonth + ' 计）' : '';
+    const formula =
+      '上卦 = (年支' + r.Y + ' + 农历月' + r.M + ' + 农历日' + r.D + ') mod 8\n' +
+      '     = (' + (r.Y + r.M + r.D) + ') mod 8 → ' + (r.upNum === 8 ? '余 0 取 8' : r.upNum) + ' → ' + upN + '(' + KEY_TO_NUM[r.upKey] + ')\n\n' +
+      '下卦 = (年支' + r.Y + ' + 月' + r.M + ' + 日' + r.D + ' + 时辰' + r.H + ') mod 8\n' +
+      '     = (' + (r.Y + r.M + r.D + r.H) + ') mod 8 → ' + (r.loNum === 8 ? '余 0 取 8' : r.loNum) + ' → ' + loN + '(' + KEY_TO_NUM[r.loKey] + ')\n\n' +
+      '动爻 = (' + (r.Y + r.M + r.D + r.H) + ') mod 6 → ' + (r.dong === 6 ? '余 0 取第 6 爻' : '第 ' + r.dong + ' 爻');
+
+    let html = '';
+    html += '<div class="mh-big">' + benHex[0] + '卦' + (r.bianIndex !== null ? ' → ' + HEX[r.bianIndex][0] : '') + '</div>';
+    html += '<div class="mh-sub">' + upN + '上 ' + loN + '下 · ' + BA[r.upKey].symbol + BA[r.loKey].symbol + ' · 第 ' + (r.benIndex + 1) + ' 卦' + (r.bianIndex !== null ? ' → 第 ' + (r.bianIndex + 1) + ' 卦' : '') + '</div>';
+
+    html += '<h4>出生信息</h4>';
+    html += '<div class="mh-item"><b>公历：</b>' + info.solarY + ' 年 ' + info.solarM + ' 月 ' + info.solarD + ' 日' + (info.isFuture ? '（<b style="color:#ff9d66">该日期位于未来</b>，仅供研究）' : '') + '</div>';
+    html += '<div class="mh-item"><b>农历：</b>' + info.monthCn + '月 ' + info.dayCn + leapNote + '</div>';
+    html += '<div class="mh-item"><b>立春分界：</b>' + (info.usedPrevYearBranch ? '生日早于当年立春（' + info.liChunDateStr + '）→ 采用上一公历年' : '生日达到当年立春（' + info.liChunDateStr + '）→ 采用当年') + '年支</div>';
+    html += '<div class="mh-item"><b>年支：</b>' + info.yearBranchName + '（' + info.yearBranchNum + '）　<b>时辰：</b>' + esc(inH.options[inH.selectedIndex].text.replace(/（地支数.*/, '')) + '（' + H + '）</div>';
+
+    html += '<h4>起卦公式展开</h4>';
+    html += '<div class="mh-formula">' + esc(formula) + '</div>';
+
+    html += '<h4>本卦 · 卦辞</h4>';
+    html += '<div class="mh-guaci">「' + esc(benHex[3]) + '」</div>';
+
+    html += '<h4>动爻 · ' + yaoNameStr + '</h4>';
+    html += '<div class="mh-item mh-dong">' + esc(yaoDisplay) + '</div>';
+
+    if (r.bianIndex !== null) {
+      html += '<h4>变卦 · ' + HEX[r.bianIndex][0] + '</h4>';
+      html += '<div class="mh-guaci">「' + esc(HEX[r.bianIndex][3]) + '」</div>';
+    }
+
+    html += '<h4>白话解读（传统文化参考）</h4>';
+    html += '<div class="mh-baihua">';
+    baihua(r).forEach(b => {
+      html += '<div class="b-title">· ' + b.h + '</div><p>' + b.p + '</p>';
+    });
+    html += '</div>';
+    html += '<div class="mh-dcl">本功能为传统文化研究与娱乐体验，不构成现实决策建议；解读基于卦象结构的确定性模板，不决定个人命运，亦不提供医疗、投资或法律结论。数据仅在本地计算，未上传。</div>';
+
+    mhBody.innerHTML = html;
+    mhPanel.style.display = 'block';
+    mhPanel.scrollTop = 0;
+  }
+
+  // ================= 模式切换 =================
+  function clearAllResults() {
+    clearTimers();
+    stopTween();
+    guiGroup.visible = false;
+    yaoStep.textContent = '';
+    lyRows.innerHTML = ''; lyResult.textContent = '';
     liuyao.style.display = 'none';
     panel.style.display = 'none';
-    yaoStep.textContent = '';
-    guiGroup.visible = false;
+    mhPanel.style.display = 'none';
+    mhError.textContent = '';
+    yaoList = [];
     clearHighlight();
-    // 盘面平滑归位（回到自动旋转基准）
-    const base = t * 0.06;
-    let cur = spinGroup.rotation.y % (Math.PI*2);
-    let diff = base - cur;
-    while (diff > Math.PI) diff -= Math.PI*2;
-    while (diff < -Math.PI) diff += Math.PI*2;
-    const start = spinGroup.rotation.y;
-    const t0 = performance.now();
-    function anim(now) {
-      const p = Math.min(1, (now - t0) / 1000);
-      const e = 1 - Math.pow(1-p, 3);
-      spinGroup.rotation.y = start + diff * e;
-      if (p < 1) requestAnimationFrame(anim);
+  }
+  function setMode(next) {
+    if (next === mode) return;
+    if (shaking) return;   // 摇卦进行中禁止切换
+    mode = next;
+    clearAllResults();
+    if (next === 'meihua') {
+      tabMh.classList.add('active'); tabYao.classList.remove('active');
+      yaoBtn.style.display = 'none'; resetBtn.style.display = 'none'; yaoStep.style.display = 'none';
+      mhForm.style.display = 'block';
+      hintEl.textContent = '拖拽旋转 · 点卦看卦辞 · 梅花生辰终身卦';
+    } else {
+      tabYao.classList.add('active'); tabMh.classList.remove('active');
+      mhForm.style.display = 'none';
+      yaoBtn.style.display = ''; resetBtn.style.display = ''; yaoStep.style.display = '';
+      yaoBtn.textContent = '🐢 摇龟壳起卦';
+      hintEl.textContent = '拖拽旋转 · 点卦看卦辞 · 摇龟壳起卦';
     }
-    requestAnimationFrame(anim);
+    if (guiGroup) guiGroup.visible = false;
+    holdAutoUntil = 0;
+  }
+  tabYao.addEventListener('click', () => setMode('yao'));
+  tabMh.addEventListener('click', () => setMode('meihua'));
+
+  // ================= 事件绑定 =================
+  yaoBtn.addEventListener('click', startShake);
+  resetBtn.addEventListener('click', () => {
+    if (shaking || mode !== 'yao') return;
+    clearAllResults();
+    rotateHome();
     yaoBtn.textContent = '🐢 摇龟壳起卦';
   });
+  mhCalcBtn.addEventListener('click', meihuaSubmit);
+  [inY, inM, inD, inH].forEach(el => el.addEventListener('change', () => { mhError.textContent = ''; }));
 
-  // ================= 动画 =================
-  let t = 0;
+  // 时辰下拉(默认"请选择",未选提交会提示)
+  inH.innerHTML = '<option value="" disabled selected>请选择出生时辰</option>';
+  (LunarCal.SHICHEN || []).forEach(sc => {
+    const o = document.createElement('option');
+    o.value = sc[3]; o.textContent = sc[2] + '（地支数 ' + sc[3] + '）';
+    inH.appendChild(o);
+  });
+
+  // ================= 主动画(自动旋转与 rotateTo 协调) =================
   function animate() {
     requestAnimationFrame(animate);
     t += 0.005;
-    if (!shaking) {
+    if (!shaking && !tweenActive && performance.now() > holdAutoUntil) {
       spinGroup.rotation.x = rot.x + Math.sin(t) * 0.03;
       spinGroup.rotation.y = rot.y + t * 0.06;
     }
@@ -738,6 +1006,7 @@
     camera.aspect = w / h; camera.updateProjectionMatrix();
     renderer.setSize(w, h);
   });
+
 })();
 </script>
 </body>
