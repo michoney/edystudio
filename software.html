@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edy.AI.Studio · Software</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { background: #0a0a0a; color: #e0e0e0; font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif; line-height: 1.8; }
+.nav { display: flex; justify-content: space-between; align-items: center; padding: 16px 32px; border-bottom: 1px solid #1a1a1a; background: #0d0d0d; position: sticky; top: 0; z-index: 100; }
+.nav .brand { font-size: 16px; font-weight: 300; letter-spacing: 4px; color: #f5f5f5; text-decoration: none; }
+.nav .brand span { color: #ff3333; font-weight: 700; }
+.nav .links a { color: #888; text-decoration: none; font-size: 13px; letter-spacing: 1px; margin-left: 24px; transition: color 0.2s; }
+.nav .links a:hover { color: #f5f5f5; }
+.nav .links a.active { color: #ff4444; }
+.hero { text-align: center; padding: 50px 20px 30px; border-bottom: 1px solid #1f1f1f; }
+.hero .eyebrow { font-size: 12px; letter-spacing: 4px; color: #ff4444; font-family: 'Courier New', monospace; margin-bottom: 16px; }
+.hero h1 { font-size: 32px; font-weight: 300; letter-spacing: 6px; color: #f5f5f5; margin-bottom: 12px; }
+.hero .sub { color: #666; font-size: 13px; letter-spacing: 2px; }
+.container { max-width: 980px; margin: 40px auto; padding: 0 20px; }
+.hub-banner { text-align: center; margin-bottom: 28px; padding: 18px 14px; border: 1px solid rgba(192,132,220,.45); border-radius: 10px; background: linear-gradient(135deg,rgba(192,132,220,.10),rgba(13,13,13,.5)); }
+.hub-banner a { color: #c084dc; text-decoration: none; font-weight: 700; letter-spacing: 2px; font-size: 14px; }
+.section-title { font-size: 18px; font-weight: 300; letter-spacing: 2px; margin-bottom: 20px; color: #ccc; }
+.soft-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.soft-card { background: #111; border: 1px solid #1f1f1f; border-radius: 8px; padding: 20px; display: flex; flex-direction: column; transition: border-color 0.2s; }
+.soft-card:hover { border-color: #ff3333; }
+.soft-card .num { font-size: 22px; font-weight: 700; color: #ff3333; font-family: 'Courier New', monospace; margin-bottom: 8px; }
+.soft-card h3 { font-size: 15px; font-weight: 700; color: #f5f5f5; margin-bottom: 4px; letter-spacing: 1px; line-height: 1.4; }
+.soft-card .tag { font-size: 10px; color: #666; letter-spacing: 2px; margin-bottom: 10px; font-family: 'Courier New', monospace; }
+.soft-card .tag .free { color: #4caf50; }
+.soft-card .tag .vip { color: #ffb300; }
+.soft-card p { font-size: 12px; color: #888; line-height: 1.7; flex: 1; }
+.soft-card .meta { margin-top: 12px; font-size: 10px; color: #555; letter-spacing: 1px; font-family: 'Courier New', monospace; }
+.soft-card .link { display: inline-block; margin-top: 10px; color: #ff4444; font-size: 11px; letter-spacing: 2px; text-decoration: none; font-family: 'Courier New', monospace; }
+.soft-card .link:hover { text-decoration: underline; }
+.footer { border-top: 1px solid #1f1f1f; padding: 24px 20px; text-align: center; color: #444; font-size: 12px; letter-spacing: 2px; }
+.footer a { color: #666; text-decoration: none; }
+@media (max-width: 768px) { .soft-grid { grid-template-columns: 1fr; } .nav { flex-direction: column; gap: 8px; } }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="index.html">EDY.<span>AI</span>.STUDIO</a>
+  <div class="links">
+    <a href="index.html">首页</a>
+    <a href="skills.html">Skills</a>
+    <a href="software.html" class="active">Software</a>
+    <a href="camp.html">实战训练营</a>
+    <a href="ai-video.html">AI Video</a>
+    <a href="ai-news.html">AI News</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">// SOFTWARE TOOLS</div>
+  <h1>软件工具库</h1>
+  <div class="sub">大桶资料库 · 实用 AI 工具与软件合集</div>
+</div>
+
+<div class="container">
+  <div class="hub-banner">
+    <a href="https://hub.datong-ai.cn/tools" target="_blank">▦ 全部工具的下载与详情，请访问「大桶资料库 · 工具资源」→</a>
+  </div>
+
+  <div class="section-title">全部软件 / 工具（14 项）</div>
+  <div class="soft-grid">
+
+    <div class="soft-card">
+      <div class="num">01</div>
+      <h3>项目知识库工具</h3>
+      <div class="tag">知识管理 · <span class="vip">学员专属</span></div>
+      <p>用来管理、归档、读取、复用自己做过的项目。</p>
+      <div class="meta">👁 193 · 2026.06</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">02</div>
+      <h3>虚拟试穿 App</h3>
+      <div class="tag">AI绘画 · <span class="free">登录可用</span></div>
+      <p>课程资料，包含源码和前端设计总结。</p>
+      <div class="meta">👁 313 · 2026.05</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">03</div>
+      <h3>自制本地画布工具</h3>
+      <div class="tag">画布工具 · <span class="free">登录可用</span></div>
+      <p>本地画布工具免费试用，自己调用 API。</p>
+      <div class="meta">👁 6,825 · 2026.04</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">04</div>
+      <h3>DT-ComfyUI 逻辑整合插件</h3>
+      <div class="tag">ComfyUI插件 · <span class="free">登录可用</span></div>
+      <p>常用逻辑节点整合到一起，自用并长期更新。</p>
+      <div class="meta">👁 491 · 2026.03</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">05</div>
+      <h3>一键 MV 工作流 + ComfyUI 批量视频插件</h3>
+      <div class="tag">工作流 · <span class="free">登录可用</span></div>
+      <p>配套抖音教程使用。</p>
+      <div class="meta">👁 1,036 · 2026.03</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">06</div>
+      <h3>小玥桌面智能数字人</h3>
+      <div class="tag">数字人 · <span class="vip">学员专属</span></div>
+      <p>能聊、能说、能看、能做的桌面智能陪伴助手。</p>
+      <div class="meta">👁 750 · 2026.03</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">07</div>
+      <h3>本地香蕉 API 出图工具（可批量）</h3>
+      <div class="tag">出图工具 · <span class="free">登录可用</span></div>
+      <p>配套课程手搓的源码版 + 便携包版，配合教程使用。</p>
+      <div class="meta">👁 651 · 2026.03</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">08</div>
+      <h3>桌面整理软件</h3>
+      <div class="tag">桌面工具 · <span class="vip">学员专属</span></div>
+      <p>手搓一个文件整理软件，配套课程使用，免费分享（源码+便携包）。</p>
+      <div class="meta">👁 232 · 2026.03</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">09</div>
+      <h3>Claude Code 一键安装及配置脚本</h3>
+      <div class="tag">开发工具 · <span class="free">登录可用</span></div>
+      <p>课程配套资料。</p>
+      <div class="meta">👁 315 · 2026.03</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">10</div>
+      <h3>RVC 声音克隆（声转声唱歌模型）</h3>
+      <div class="tag">声音克隆 · <span class="free">登录可用</span></div>
+      <p>用来唱歌：先训练自己的声音模型，再把别人的音色换成你的音色。</p>
+      <div class="meta">👁 209 · 2026.03</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">11</div>
+      <h3>Qwen3-TTS 声音克隆（多国语言）</h3>
+      <div class="tag">声音克隆 · <span class="free">登录可用</span></div>
+      <p>最佳开源声音克隆之一，支持多国语言。</p>
+      <div class="meta">👁 195 · 2026.03</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">12</div>
+      <h3>声音克隆 IndexTTS 2.0</h3>
+      <div class="tag">声音克隆 · <span class="free">登录可用</span></div>
+      <p>本地最好的 TTS 声音克隆之一，解压即用。</p>
+      <div class="meta">👁 179 · 2026.03</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">13</div>
+      <h3>高颜值桌面悬浮提示词工具</h3>
+      <div class="tag">提示词工具 · <span class="free">免费开放</span></div>
+      <p>调用 API 反推提示词，五大类场景，已生成提示词可随时查找复用，解压即用。</p>
+      <div class="meta">👁 3,453 · 2026.03</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+    <div class="soft-card">
+      <div class="num">14</div>
+      <h3>ComfyUI 整合包</h3>
+      <div class="tag">整合包 · <span class="free">免费开放</span></div>
+      <p>大桶的 ComfyUI 整合包，预设常用插件，本体模型分开放，每月更新一次。</p>
+      <div class="meta">👁 1,068 · 2026.03</div>
+      <a class="link" href="https://hub.datong-ai.cn/tools" target="_blank">获取 →</a>
+    </div>
+
+  </div>
+</div>
+
+<div class="footer">
+  数据来源：<a href="https://hub.datong-ai.cn/tools" target="_blank">大桶资料库 · 工具资源</a> · © 2026 Edy.AI.Studio
+</div>
+
+</body>
+</html>
