@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI Design — Edy.Ai.Studio</title>
+<style>
+:root{--ink:#17130d;--paper:#eee3c8;--red:#d63a29;--blue:#245a72;--gold:#d7a52c}
+*{box-sizing:border-box}html{background:#18140f}body{margin:0;color:var(--ink);font-family:"Songti SC","Noto Serif SC",serif;background:var(--paper);background-image:radial-gradient(#31291e22 .7px,transparent .7px);background-size:5px 5px;min-height:100vh}
+header{min-height:48vh;padding:28px clamp(22px,6vw,90px) 42px;display:flex;flex-direction:column;justify-content:space-between;border-bottom:8px solid var(--ink);position:relative;overflow:hidden}
+header:after{content:"DESIGN";position:absolute;right:-.03em;bottom:-.25em;font:900 clamp(100px,25vw,360px)/.8 Impact,sans-serif;color:#d63a2915;letter-spacing:-.06em;pointer-events:none}
+nav{display:flex;justify-content:space-between;align-items:center;font:700 12px/1 "Courier New",monospace;letter-spacing:.16em;position:relative;z-index:1}nav a{color:inherit;text-decoration:none;border-bottom:1px solid}
+.kicker{margin-top:70px;font:700 12px/1 "Courier New",monospace;letter-spacing:.3em;color:var(--red)}
+h1{font-size:clamp(66px,13vw,190px);line-height:.82;letter-spacing:-.08em;margin:16px 0 0;position:relative;z-index:1}.cn{font-size:.35em;letter-spacing:.08em;margin-left:.22em;color:var(--blue)}
+.intro{font-size:clamp(14px,1.6vw,20px);line-height:1.7;max-width:600px;margin:30px 0 0;border-left:5px solid var(--red);padding-left:18px;position:relative;z-index:1}
+main{padding:clamp(30px,6vw,90px);display:grid;grid-template-columns:repeat(12,1fr);gap:clamp(24px,4vw,60px)}
+.card{color:inherit;text-decoration:none;position:relative;display:block}.card:nth-child(1){grid-column:1/9}.card:nth-child(2){grid-column:7/13;margin-top:100px}.card:nth-child(3){grid-column:2/8;margin-top:-20px}
+.visual{aspect-ratio:4/3;overflow:hidden;background:#c8b991;border:2px solid var(--ink);box-shadow:10px 10px 0 var(--ink);transition:.35s transform,.35s box-shadow}.visual img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.9) contrast(1.05);transition:.6s transform}.card:hover .visual{transform:translate(-4px,-4px);box-shadow:18px 18px 0 var(--red)}.card:hover img{transform:scale(1.035)}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:18px;margin-top:22px}.num{font:900 46px/.8 Impact,sans-serif;color:var(--red)}h2{font-size:clamp(25px,3vw,43px);margin:0 0 7px;line-height:1}.en{font:700 11px/1.4 "Courier New",monospace;letter-spacing:.18em;color:#665b48;text-transform:uppercase}
+footer{padding:28px 6vw 50px;border-top:1px solid #6e624d;text-align:right;font:11px "Courier New",monospace;letter-spacing:.15em}
+@media(max-width:760px){header{min-height:42vh}.cn{display:block;margin:.35em 0 0}.card:nth-child(n){grid-column:1/-1;margin-top:20px}.visual{box-shadow:7px 7px 0 var(--ink)}main{padding-bottom:60px}}
+</style>
+</head>
+<body>
+<header>
+  <nav><a href="index.html">← EDY.AI.STUDIO</a><span>SELECTED WORKS / 001—003</span></nav>
+  <div><div class="kicker">ART DIRECTION · VISUAL SYSTEMS</div><h1>AI<span class="cn">设计</span></h1><p class="intro">用生成式工具重组怀旧印刷、动漫角色与收藏品档案。三组作品，三种观察方式。</p></div>
+</header>
+<main>
+  <a class="card" href="ai-design/showa/"><div class="visual"><img src="ai-design/showa/01-ai-router.png" alt="昭和系列"></div><div class="meta"><span class="num">01</span><div><h2>昭和系列</h2><div class="en">Showa Retro · Modern Infographic / 6 works</div></div></div></a>
+  <a class="card" href="ai-design/anime-blueprints/"><div class="visual"><img src="ai-design/anime-blueprints/01_阿童木_ASTRO_BOY_分解蓝图.png" alt="动漫主角分解蓝图"></div><div class="meta"><span class="num">02</span><div><h2>动漫主角分解蓝图</h2><div class="en">Anime Hero Anatomy / 4 works</div></div></div></a>
+  <a class="card" href="ai-design/labubu-rare/"><div class="visual"><img src="ai-design/labubu-rare/LABUBU_十大稀有特别版_分解蓝图.png" alt="拉布布十大稀有特别版"></div><div class="meta"><span class="num">03</span><div><h2>拉布布十大稀有特别版</h2><div class="en">Rare Editions Archive / 1 work</div></div></div></a>
+</main>
+<footer>EDY.AI.STUDIO · AI DESIGN ARCHIVE · 2026</footer>
+</body></html>
