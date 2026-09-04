@@ -13,7 +13,7 @@
 </style>
 </head>
 <body>
-<div id="hint">🥽 右上角进入 VR · 扳机切换造型 · 握把飞行 · 左摇杆移动 · 右摇杆转向</div>
+<div id="hint">🥽 VR：扳机切换造型 · 握把飞行 · 双摇杆移动/转向　🎮 Xbox：A 键切换造型 · 左摇杆移动 · 右摇杆观察 · 扳机飞行</div>
 <div id="modes"><button data-m="0" class="active">花朵</button><button data-m="1">爱心</button><button data-m="2">土星</button><button data-m="3">烟花</button><button data-m="4">地下花园</button></div>
 <script type="importmap">
 { "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
@@ -39,10 +39,17 @@ const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true; controls.minDistance = 2; controls.maxDistance = 14;
 
 // 手柄移动：飞行 / 摇杆（类似 Google Earth VR）；扳机用于切换造型，故关闭抓取
-const vr = initVRLocomotion({ renderer, camera, scene, controls, options: { grab: false } });
 let mode = 0;
+function nextMode(){ mode = (mode+1)%5; syncMode(); }
+const vr = initVRLocomotion({
+  renderer,
+  camera,
+  scene,
+  controls,
+  options: { grab: false, onPrimaryAction: nextMode },
+});
 const modeCtrl = renderer.xr.getController(0);
-modeCtrl.addEventListener('selectstart', () => { mode = (mode+1)%5; syncMode(); });
+modeCtrl.addEventListener('selectstart', nextMode);
 
 // 粒子花园：12000 粒子在多个造型间聚散
 const COUNT = 12000;

@@ -17,7 +17,7 @@
 
   var css = document.createElement('style');
   css.textContent = [
-    '#srcViewerBtn{position:fixed;top:12px;right:12px;z-index:99999;',
+    '#srcViewerBtn{position:fixed;left:12px;bottom:12px;z-index:99999;',
     'background:rgba(10,12,18,0.55);color:#e6dde8;border:1px solid rgba(234,221,229,0.18);',
     'backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);',
     'padding:8px 16px;border-radius:10px;font-size:14px;cursor:pointer;',

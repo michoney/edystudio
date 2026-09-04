@@ -27,10 +27,24 @@ const DEFAULTS = {
   grab: true,          // 是否允许扳机抓取移动（页面需要扳机做其他事时可关掉）
   deadzone: 0.18,       // 摇杆死区
   rayLength: 6,         // 手柄射线长度
+  onPrimaryAction: null, // Xbox A 键（上升沿）触发的页面主交互
 };
 
 function deadzone(v, dz) {
   return Math.abs(v) < dz ? 0 : (Math.abs(v) - dz) / (1 - dz) * Math.sign(v);
+}
+
+// SteamVR/OpenVR 常把 Vive 触控板放在 axes[2]/axes[3]；Quest 多为 0/1。
+// 选择当前实际有输入的一组，避免把 Vive 手柄误判为没有移动。
+function activeAxisPair(gamepad, dz) {
+  const axes = gamepad?.axes || [];
+  const pairs = [];
+  for (let i = 0; i + 1 < axes.length; i += 2) {
+    const x = deadzone(axes[i] || 0, dz);
+    const y = deadzone(axes[i + 1] || 0, dz);
+    pairs.push({ x, y, strength: Math.abs(x) + Math.abs(y) });
+  }
+  return pairs.sort((a, b) => b.strength - a.strength)[0] || { x: 0, y: 0 };
 }
 
 /* —— 进入 VR 按钮（自定义样式，兼容 r128/r160，无需引入 three 的 VRButton）—— */
@@ -162,6 +176,7 @@ export function initVRLocomotion({ renderer, camera, scene, controls = null, opt
   const v2 = new THREE.Vector3();
   const v3 = new THREE.Vector3();
   const q1 = new THREE.Quaternion();
+  let gamepadPrimaryPressed = false;
 
   function handFor(inputSource) {
     if (inputSource.handedness === 'left') {
@@ -284,8 +299,7 @@ export function initVRLocomotion({ renderer, camera, scene, controls = null, opt
     session.inputSources.forEach((inputSource) => {
       const gp = inputSource.gamepad;
       if (!gp || !gp.axes || gp.axes.length < 2) return;
-      const x = deadzone(gp.axes[0], opts.deadzone);
-      const y = deadzone(gp.axes[1], opts.deadzone);
+      const { x, y } = activeAxisPair(gp, opts.deadzone);
       if (inputSource.handedness === 'left') {
         state.moveInput.set(x, y);
       } else if (inputSource.handedness === 'right') {
@@ -317,7 +331,8 @@ export function initVRLocomotion({ renderer, camera, scene, controls = null, opt
     const pads = navigator.getGamepads ? navigator.getGamepads() : [];
     let pad = null;
     for (const p of pads) {
-      if (p && p.connected && p.axes && p.axes.length >= 4 && p.mapping === 'standard') {
+      if (p && p.connected && p.axes && p.axes.length >= 4 &&
+          (p.mapping === 'standard' || /xbox|xinput|gamepad/i.test(p.id || ''))) {
         pad = p;
         break;
       }
@@ -330,6 +345,11 @@ export function initVRLocomotion({ renderer, camera, scene, controls = null, opt
       ry = deadzone(pad.axes[3], dz);
     const lt = pad.buttons && pad.buttons[6] ? pad.buttons[6].value || 0 : 0;
     const rt = pad.buttons && pad.buttons[7] ? pad.buttons[7].value || 0 : 0;
+    const primaryPressed = !!(pad.buttons && pad.buttons[0] && pad.buttons[0].pressed);
+    if (primaryPressed && !gamepadPrimaryPressed && typeof opts.onPrimaryAction === 'function') {
+      opts.onPrimaryAction({ pad, presenting: state.presenting });
+    }
+    gamepadPrimaryPressed = primaryPressed;
 
     if (state.presenting) {
       // VR：左摇杆移动，右摇杆转向/升降，扳机飞行
@@ -372,6 +392,10 @@ export function initVRLocomotion({ renderer, camera, scene, controls = null, opt
 
   function update() {
     const dt = Math.min(clock.getDelta(), 0.1);
+    // 部分 SteamVR/OpenXR 桥不会稳定转发 Three.js 的 sessionstart 事件。
+    const liveSession = renderer.xr.getSession?.() || null;
+    if (liveSession && !state.presenting) onSessionStart();
+    if (!liveSession && state.presenting) onSessionEnd();
     applyGamepad(dt);
     if (!state.presenting) return;
     applyGrab();

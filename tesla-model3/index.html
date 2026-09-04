@@ -187,6 +187,20 @@ controls.maxDistance = 9000;
 
 const vr = initVRLocomotion({ renderer, camera, scene, controls });
 
+// 车模使用毫米，WebXR 使用米。进入头显时把世界缩为真实尺寸，
+// 并把玩家放到车前方；退出后恢复桌面展示比例。
+const vrWorld = new THREE.Group();
+vrWorld.name = 'tesla-vr-world';
+scene.add(vrWorld);
+renderer.xr.addEventListener('sessionstart', () => {
+  vrWorld.scale.setScalar(0.001);
+  vr.rig.position.set(0, 0, 6);
+  vr.rig.rotation.set(0, 0, 0);
+});
+renderer.xr.addEventListener('sessionend', () => {
+  vrWorld.scale.setScalar(1);
+});
+
 scene.add(new THREE.HemisphereLight(0xcfd8e0, 0x1a2027, 0.8));
 const key = new THREE.DirectionalLight(0xffffff, 2.0);
 key.position.set(2200, 3200, 1800);
@@ -202,8 +216,8 @@ scene.add(fill);
 
 const ground = new THREE.Mesh(new THREE.PlaneGeometry(9000, 9000),
   new THREE.MeshStandardMaterial({ color: 0x12161c, roughness: 0.95, metalness: 0.1 }));
-ground.rotation.x = -Math.PI / 2; ground.position.y = 0; ground.receiveShadow = true; scene.add(ground);
-const grid = new THREE.GridHelper(5000, 50, 0x2a3440, 0x1a222b); grid.position.y = 1; scene.add(grid);
+ground.rotation.x = -Math.PI / 2; ground.position.y = 0; ground.receiveShadow = true; vrWorld.add(ground);
+const grid = new THREE.GridHelper(5000, 50, 0x2a3440, 0x1a222b); grid.position.y = 1; vrWorld.add(grid);
 
 // ---------- 材质 ----------
 const matReg = [];
@@ -242,7 +256,7 @@ const meshToBranch = new Map();
 //  车身大壳（侧视轮廓挤出）
 // ============================================================
 const bodyGroup = new THREE.Group();
-scene.add(bodyGroup);
+vrWorld.add(bodyGroup);
 
 function profileShape(pts) {
   const curve = new THREE.CatmullRomCurve3(pts.map(([x, y]) => new THREE.Vector3(x, y, 0)));
@@ -407,7 +421,7 @@ function buildWheel(x, z) {
     g.add(spoke);
   }
   g.position.set(x, WHEEL_Y, z);
-  scene.add(g);
+  vrWorld.add(g);
   g.children.forEach(c => { pickMeshes.push(c); meshToBranch.set(c, byId.wheels); });
   return g;
 }
@@ -439,7 +453,7 @@ function region(branchId, size, pos, color) {
   const edge = new THREE.LineSegments(new THREE.EdgesGeometry(box.geometry), new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.6 }));
   g.add(edge);
   g.position.copy(pos);
-  scene.add(g);
+  vrWorld.add(g);
   pickMeshes.push(box); meshToBranch.set(box, b);
   label(g, `${b.name} ${b.en}`, color, new THREE.Vector3(0, size[1] / 2 + 30, 0), new THREE.Vector3(0, 60, 0));
   return g;
@@ -479,7 +493,7 @@ const infoEnter = document.getElementById('btnEnter');
 
 function selectBranch(id) {
   selected = id ? byId[id] : null;
-  if (selBox) { scene.remove(selBox); selBox = null; }
+  if (selBox) { vrWorld.remove(selBox); selBox = null; }
   document.querySelectorAll('#branchList .branch').forEach(r => r.classList.toggle('sel', selected && r.dataset.id === id));
   infoName.textContent = selected ? selected.name : '无';
   infoStatus.textContent = selected ? (selected.status === 'built' ? '已建模，可进入' : (selected.note || '待建模')) : '';
@@ -496,7 +510,7 @@ function selectBranch(id) {
       // 简化：直接用第一个网格的包围盒
       selBox = new THREE.BoxHelper(meshes[0], 0xff8a2a);
       selBox.material.depthTest = false;
-      scene.add(selBox);
+      vrWorld.add(selBox);
     }
   }
 }
