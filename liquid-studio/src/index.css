@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html, body { background: #000; color: #fff; font-family: 'Barlow', sans-serif; }
+html { scroll-behavior: smooth; }
+body { margin: 0; }
+::selection { background: #ffffff40; color: #fff; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible { outline: 2px solid white; outline-offset: 5px; }
+.liquid-glass, .liquid-glass-strong {
+  background: rgba(255,255,255,.01);
+  background-blend-mode: luminosity;
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  border: none;
+  box-shadow: inset 0 1px 1px rgba(255,255,255,.1);
+  position: relative;
+  overflow: hidden;
+}
+.liquid-glass-strong {
+  -webkit-backdrop-filter: blur(50px);
+  backdrop-filter: blur(50px);
+  box-shadow: 4px 4px 4px rgba(0,0,0,.05), inset 0 1px 1px rgba(255,255,255,.15);
+}
+.liquid-glass::before, .liquid-glass-strong::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1.4px;
+  background: linear-gradient(180deg, rgba(255,255,255,.45) 0%, rgba(255,255,255,.15) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,.15) 80%, rgba(255,255,255,.45) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+.liquid-glass-strong::before {
+  background: linear-gradient(180deg, rgba(255,255,255,.5) 0%, rgba(255,255,255,.2) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,.2) 80%, rgba(255,255,255,.5) 100%);
+}
+.hero { height: 100svh; }
+.glass-button { transition: background .25s ease, transform .25s ease; }
+.glass-button:hover { background-color: #ffffff12; transform: translateY(-2px); }
+.hero-shade { background: linear-gradient(180deg,#0002 0%,#0000 45%,#0008 100%); }
+.capabilities-shade { background: linear-gradient(180deg,#0004,#0000 40%,#0005); }
+dialog { margin: auto; width: min(620px, calc(100% - 32px)); max-height: calc(100svh - 48px); overflow-y: auto; padding: 32px; color: #fff; border: 1px solid #ffffff30; border-radius: 24px; background: #101010ed; backdrop-filter: blur(30px); }
+dialog::backdrop { background: #000b; backdrop-filter: blur(12px); }
+dialog.showreel { width: min(1100px, calc(100% - 32px)); }
+.dialog-field { width: 100%; background: #ffffff08; border: 1px solid #ffffff30; border-radius: 12px; padding: 12px; color: white; }
+/* Keep both hero content and trust marks inside shorter viewports. */
+@media (max-height: 850px) and (min-width: 768px) {
+  .hero-main { padding-top: 76px; }
+  .hero-headline { font-size: clamp(58px,6vw,78px); }
+  .hero-stats { margin-top: 20px; }
+  .stat-card { padding: 16px; }
+  .stat-number { margin-top: 10px; }
+  .trust-bar { padding-bottom: 20px; gap: 10px; }
+}
+@media (max-width: 767px) {
+  .hero-main { padding-top: 72px; }
+  .hero-headline { font-size: clamp(43px,11vw,60px); letter-spacing: -2px; }
+  .booking { font-size: 10px; }
+  .hero-copy { max-width: 360px; font-size: 13px; }
+  .hero-stats { gap: 12px; margin-top: 24px; }
+  .stat-card { width: min(42vw,220px); padding: 16px; }
+  .stat-number { margin-top: 12px; font-size: 34px; }
+  .trust-bar { gap: 14px; padding: 16px 16px 24px; }
+  .trust-label { font-size: 10px; text-align: center; }
+}
+@media (max-height: 740px) and (max-width: 767px) {
+  .hero-headline { font-size: 42px; margin-top: 16px; }
+  .hero-copy { font-size: 12px; margin-top: 12px; }
+  .hero-actions { margin-top: 16px; }
+  .hero-stats { margin-top: 16px; }
+  .stat-card { padding: 12px; }
+  .stat-number { font-size: 28px; margin-top: 8px; }
+  .trust-bar { padding-bottom: 12px; gap: 8px; }
+}
+@media (max-height: 570px) { .hero { height: auto; min-height: 100svh; } .hero-main { padding-top: 96px; padding-bottom: 24px; } }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } *, *::before, *::after { transition: none !important; } }
