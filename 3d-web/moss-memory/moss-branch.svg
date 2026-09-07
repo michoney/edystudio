@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 760">
+<defs>
+ <linearGradient id="wood" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#171a18"/><stop offset=".35" stop-color="#3d4038"/><stop offset=".7" stop-color="#201714"/><stop offset="1" stop-color="#090b0a"/></linearGradient>
+ <filter id="rough"><feTurbulence baseFrequency=".016 .11" numOctaves="4" seed="11" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="19"/></filter>
+ <filter id="moss"><feTurbulence type="fractalNoise" baseFrequency=".024 .16" numOctaves="5" seed="25" result="n"/><feColorMatrix in="n" values=".15 0 0 0 .08  0 .62 0 0 .14  0 0 .12 0 .02  0 0 0 .9 0" result="c"/><feComposite in="c" in2="SourceGraphic" operator="in" result="m"/><feBlend in="SourceGraphic" in2="m" mode="screen"/></filter>
+ <radialGradient id="bloom"><stop stop-color="#f8d8ee"/><stop offset=".35" stop-color="#d976aa"/><stop offset="1" stop-color="#6d214e"/></radialGradient>
+</defs>
+<g filter="url(#rough)" fill="none" stroke-linecap="round" stroke-linejoin="round">
+ <path d="M-100 622 C150 650 315 535 492 540 C670 545 720 406 892 420 C1077 435 1190 278 1700 248" stroke="#050706" stroke-width="236" opacity=".75"/>
+ <path d="M-100 610 C155 638 320 520 493 528 C676 536 722 395 894 410 C1072 426 1213 268 1700 239" stroke="url(#wood)" stroke-width="190"/>
+ <path d="M425 548 C525 456 533 350 615 256 C681 181 681 109 653 36" stroke="#252a21" stroke-width="78"/>
+ <path d="M780 444 C892 354 910 234 1020 143 C1080 95 1151 65 1230 46" stroke="#2b3027" stroke-width="67"/>
+ <path d="M1030 374 C1124 353 1192 354 1278 288 C1336 244 1371 178 1389 110" stroke="#252b22" stroke-width="45"/>
+ <path d="M212 584 C250 510 250 430 218 365" stroke="#293025" stroke-width="45"/>
+</g>
+<g filter="url(#moss)" fill="none" stroke-linecap="round" opacity=".95">
+ <path d="M-80 565 C165 600 335 486 500 494 C675 502 737 367 902 379 C1070 391 1232 244 1670 215" stroke="#75844b" stroke-width="64"/>
+ <path d="M436 510 C513 429 552 328 618 250" stroke="#718453" stroke-width="29"/>
+ <path d="M790 411 C884 326 922 222 1018 148" stroke="#627a47" stroke-width="24"/>
+</g>
+<g fill="url(#bloom)" opacity=".92">
+ <circle cx="319" cy="520" r="10"/><circle cx="335" cy="510" r="6"/><circle cx="585" cy="441" r="8"/><circle cx="606" cy="425" r="5"/><circle cx="807" cy="388" r="9"/><circle cx="840" cy="375" r="5"/><circle cx="1052" cy="347" r="8"/><circle cx="1080" cy="332" r="5"/><circle cx="1295" cy="246" r="9"/><circle cx="1320" cy="233" r="5"/>
+ </g>
+</svg>
