@@ -1,0 +1,15 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#11150f"><meta name="apple-mobile-web-app-capable" content="yes"><title>筑城之间 · 施工沙盘</title>  <script type="module" crossorigin src="./assets/index-Cmx_OuSK.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-CSFo32jm.css">
+</head>
+<body><div id="app">
+<canvas id="game"></canvas><div id="loading"><b>筑城之间</b><span>正在准备施工现场…</span></div>
+<header><div><small>LITTLE WORLD, BIG AMBITION</small><h1>筑城之间</h1></div><div id="mission">任务 01 · 配制第一罐混凝土</div></header>
+<button id="help">游玩流程 ?</button>
+<aside id="guide"><b>从沙堆到二层小楼</b><ol><li>W/S 前后、A/D 转向，E 降铲斗</li><li>沙堆旁按空格装沙，搅拌机旁按空格卸沙</li><li>加入水泥和水，推荐配比 200 / 100 / 50</li><li>搅拌后选择并放置地基、柱子或楼板</li><li>选择泵送浇筑，再点击模板灌入混凝土</li><li>等待构件变为灰白色，即已凝固</li></ol><p>放错了：右键点击构件拆除；混凝土不返还。</p></aside>
+<aside id="materials"></aside>
+<section id="toolbar"><button data-mode="drive" class="active">驾驶铲车</button><button data-mode="cement">加入水泥</button><button data-mode="water">打开水阀</button><button data-mode="mix">开始搅拌</button><button data-mode="foundation">放置地基</button><button data-mode="column">放置立柱</button><button data-mode="slab">放置楼板</button><button data-mode="pour">泵送浇筑</button></section>
+<div id="tip">W/S 前后 · A/D 转向 · Q/E 铲斗升降 · 空格装沙/卸沙 · 右键拆除</div><div id="toast"></div>
+<div id="touch-controls"><div id="joystick"><span></span></div><div id="touch-actions"><button data-touch="q">铲斗升</button><button data-touch="e">铲斗降</button><button data-touch="space" class="primary">装沙 / 卸沙</button></div></div>
+<div id="rotate"><b>请横屏游玩</b><span>旋转手机，进入完整施工现场</span></div>
+</div></body></html>
