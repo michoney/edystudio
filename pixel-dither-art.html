@@ -30,6 +30,12 @@
     .params { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 14px; background: #282826; }
     .params span { padding: 9px 7px; background: #080808; color: #777; font-size: 7px; line-height: 1.5; text-align: center; }
     .params b { display: block; color: #e7e7e1; font-size: 10px; font-weight: 400; }
+    .related { display: block; margin-top: 16px; padding: 14px 16px; border: 1px solid rgba(240,240,234,.18); border-left-color: rgba(240,240,234,.68); background: linear-gradient(135deg, rgba(255,255,255,.035), rgba(255,255,255,.008)); text-decoration: none; transition: border-color .2s, background .2s, transform .2s; }
+    .related:hover { border-color: rgba(240,240,234,.5); background: linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); transform: translateX(2px); }
+    .related .rel-label { display: block; color: #8d8d88; font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .16em; margin-bottom: 7px; }
+    .related strong { display: block; color: #f0f0ea; font-size: 14px; font-weight: 600; line-height: 1.35; margin-bottom: 7px; }
+    .related .rel-desc { display: block; color: #a8a8a2; font-size: 11.5px; line-height: 1.65; }
+    .related .rel-go { display: inline-block; margin-top: 9px; color: #f0f0ea; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid rgba(240,240,234,.35); padding-bottom: 1px; }
     .copy-command { width: 100%; margin-top: 12px; padding: 12px 14px; border: 1px solid #72726d; background: #ecece6; color: #080808; font: 600 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .13em; cursor: pointer; transition: background .18s ease, color .18s ease; }
     .copy-command:hover, .copy-command:focus-visible { background: #111; color: #f0f0ea; outline: none; }
     .copy-command[data-copied="true"] { background: #111; color: #f0f0ea; border-color: #f0f0ea; }
@@ -66,6 +72,12 @@
     <div class="locks"><strong>IDENTITY LOCK</strong><br>上一镜头尾帧只能用于连续性，不能代替人物母版。未指定人物的脸、衣服、姿势、位置与光线全部冻结。</div>
     <div class="params"><span><b>4 + 4</b>采样步数</span><span><b>0.70–0.75</b>Turbo LoRA</span><span><b>0.20</b>二采 denoise</span></div>
     <button class="copy-command" id="copy-h3-command" type="button">复制技能命令 / COPY COMMAND</button>
+    <a class="related" href="ai-video/ai-manju/">
+      <span class="rel-label">RELATED / 延伸阅读</span>
+      <strong>AI 人物一致性控制 · 角色卡制作 Skill</strong>
+      <span class="rel-desc">出图前先把角色锁死：脸、身材、发型、表情、服装与视角一次性固定下来，含可直接复制的角色设定板提示词。</span>
+      <span class="rel-go">打开文章 →</span>
+    </a>
   </aside>
   <script>
     const canvas = document.querySelector('#field');
