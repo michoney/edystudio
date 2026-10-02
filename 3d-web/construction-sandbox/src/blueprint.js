@@ -5,11 +5,12 @@ const canvas = document.querySelector('#blueprint-canvas');
 const ctx = canvas.getContext('2d');
 const cols = 20, rows = 12, cell = 40;
 const storeKey = 'edy-construction-blueprint-v1';
-let tool = 'wall', drawing = false, start = null, items = [];
+let tool = 'wall', drawing = false, start = null, items = [], blueprintLevels = 1;
 
 const presets = {
-  courtyard: [{type:'room',x:3,y:2,w:8,h:6},{type:'room',x:12,y:3,w:5,h:4},{type:'door',x:7,y:8},{type:'door',x:12,y:5}],
-  studio: [{type:'room',x:3,y:3,w:13,h:5},{type:'wall',x:3,y:9,w:13,h:0},{type:'door',x:9,y:8}]
+  courtyard: {levels:1,items:[{type:'room',x:3,y:2,w:8,h:6},{type:'room',x:12,y:3,w:5,h:4},{type:'door',x:7,y:8},{type:'door',x:12,y:5}]},
+  studio: {levels:1,items:[{type:'room',x:3,y:3,w:13,h:5},{type:'wall',x:3,y:9,w:13,h:0},{type:'door',x:9,y:8}]},
+  mall: {levels:4,items:[{type:'room',x:2,y:2,w:12,h:8},{type:'room',x:14,y:3,w:4,h:6},{type:'door',x:8,y:9},{type:'door',x:14,y:6}]}
 };
 const color = {room:'#40c6b4',wall:'#7bd5ff',door:'#e3aa43'};
 const clamp = (n,min,max) => Math.max(min,Math.min(max,n));
@@ -28,8 +29,8 @@ function updateStats(){
   document.querySelector('#bp-area').textContent=rooms.reduce((n,v)=>n+v.w*v.h,0)*4+'㎡';document.querySelector('#bp-walls').textContent=walls.length+rooms.length*4;document.querySelector('#bp-doors').textContent=doors.length;
 }
 function status(text){document.querySelector('#bp-status').textContent=text}
-function preset(name){items=structuredClone(presets[name]);draw();status('已载入 '+(name==='courtyard'?'一层小院':'临街工作室'));}
-function save(){localStorage.setItem(storeKey,JSON.stringify(items));status('蓝图已保存');}
+function preset(name){const data=presets[name];items=structuredClone(data.items);blueprintLevels=data.levels;draw();status(`已载入 ${name==='courtyard'?'一层小院':name==='studio'?'临街工作室':'四层商场'} · ${blueprintLevels}层`);}
+function save(){localStorage.setItem(storeKey,JSON.stringify({items,levels:blueprintLevels}));status('蓝图已保存');}
 function eraseAt(p){items=items.filter(v=>v.type==='room'?!(p.x>=v.x&&p.x<v.x+v.w&&p.y>=v.y&&p.y<v.y+v.h):!(p.x===v.x&&p.y===v.y));}
 function finish(p){
   if(!start)return;
@@ -42,7 +43,7 @@ document.querySelectorAll('.bp-tool').forEach(btn=>btn.addEventListener('click',
 document.querySelectorAll('.bp-preset').forEach(btn=>btn.addEventListener('click',()=>preset(btn.dataset.preset)));
 document.querySelector('#blueprint-clear').addEventListener('click',()=>{items=[];draw();status('画布已清空')});
 document.querySelector('#bp-save').addEventListener('click',save);
-document.querySelector('#bp-build').addEventListener('click',()=>{save();const rooms=items.filter(v=>v.type==='room');document.querySelector('#bp-plan').innerHTML=`<b>自动施工序列已生成</b><br>01 放置 ${rooms.length||1} 组地基<br>02 浇筑墙体与门洞<br>03 检查结构边界<br>04 可执行自动放置地基`;status('施工序列就绪');if(typeof window.__EDY_BUILD_BLUEPRINT==='function')window.__EDY_BUILD_BLUEPRINT(items)});
+document.querySelector('#bp-build').addEventListener('click',()=>{save();const rooms=items.filter(v=>v.type==='room');document.querySelector('#bp-plan').innerHTML=`<b>${blueprintLevels}层自动施工序列已生成</b><br>01 放置商场地基<br>02 逐层安装立柱<br>03 浇筑第 1—${blueprintLevels} 层楼板<br>04 检查结构边界`;status('施工序列就绪');if(typeof window.__EDY_BUILD_BLUEPRINT==='function')window.__EDY_BUILD_BLUEPRINT(items,blueprintLevels)});
 document.querySelector('#blueprint-open').addEventListener('click',()=>{panel.classList.add('open');panel.setAttribute('aria-hidden','false');draw()});
 document.querySelector('#blueprint-close').addEventListener('click',()=>{panel.classList.remove('open');panel.setAttribute('aria-hidden','true')});
-const saved=localStorage.getItem(storeKey);if(saved){try{items=JSON.parse(saved)}catch{preset('courtyard')}}else preset('courtyard');draw();
+const saved=localStorage.getItem(storeKey);if(saved){try{const data=JSON.parse(saved);items=Array.isArray(data)?data:data.items;blueprintLevels=Array.isArray(data)?1:(data.levels||1)}catch{preset('courtyard')}}else preset('courtyard');draw();
