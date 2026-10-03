@@ -7,79 +7,272 @@
   <style>
     * { box-sizing: border-box; }
     html, body { margin: 0; min-height: 100%; background: #030303; color: #f0f0ea; }
-    body { min-height: 100vh; overflow: hidden; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
-    canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; image-rendering: pixelated; }
-    .vignette { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(circle at 38% 45%, transparent 8%, rgba(0,0,0,.08) 45%, rgba(0,0,0,.88) 100%); }
-    main { position: relative; z-index: 1; min-height: 100vh; display: grid; align-content: space-between; padding: clamp(24px, 5vw, 72px); pointer-events: none; }
-    header { display: flex; justify-content: space-between; align-items: center; font-size: 11px; letter-spacing: .18em; color: #aaa; }
+    body { overflow-x: hidden; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+    canvas { position: fixed; inset: 0; width: 100vw; height: 100vh; image-rendering: pixelated; z-index: 0; }
+    .vignette { position: fixed; inset: 0; z-index: 1; pointer-events: none; background: radial-gradient(circle at 38% 45%, transparent 8%, rgba(0,0,0,.08) 45%, rgba(0,0,0,.88) 100%); }
+    .topbar { position: fixed; z-index: 4; top: 0; left: 0; right: 0; display: flex; justify-content: space-between; align-items: center; padding: clamp(18px, 3vw, 34px) clamp(24px, 5vw, 72px); font-size: 11px; letter-spacing: .18em; color: #aaa; background: linear-gradient(180deg, rgba(3,3,3,.92), rgba(3,3,3,0)); pointer-events: none; }
     .dot { display: inline-block; width: 7px; height: 7px; margin-right: 9px; border-radius: 50%; background: #e9e9e3; box-shadow: 0 0 18px #fff; }
-    footer { display: flex; gap: 28px; font-size: 10px; letter-spacing: .13em; color: #777; }
-    .skill-panel { position: fixed; z-index: 3; top: 50%; right: clamp(24px, 5vw, 72px); width: min(420px, 38vw); max-height: 72vh; transform: translateY(-50%); padding: 22px 24px; overflow: auto; pointer-events: auto; border: 1px solid rgba(240,240,234,.18); border-left-color: rgba(240,240,234,.68); background: linear-gradient(135deg, rgba(3,3,3,.90), rgba(3,3,3,.58)); box-shadow: 0 24px 80px rgba(0,0,0,.46); backdrop-filter: blur(12px); scrollbar-width: thin; }
-    .skill-panel::before { content: "04 × 02"; position: absolute; top: 17px; right: 20px; color: #5c5c58; font-size: 10px; letter-spacing: .16em; }
+    .footer { position: relative; z-index: 3; display: flex; gap: 28px; padding: 40px clamp(24px, 5vw, 72px) 56px; font-size: 10px; letter-spacing: .13em; color: #777; }
+    .skills { position: relative; z-index: 2; display: grid; justify-items: end; gap: clamp(26px, 4vw, 54px); padding: clamp(96px, 12vh, 150px) clamp(18px, 3.4vw, 56px) 20px; }
+    .skill-panel { position: relative; width: min(620px, 92vw); padding: 30px 34px 34px; border: 1px solid rgba(240,240,234,.18); border-left-color: rgba(240,240,234,.68); background: linear-gradient(135deg, rgba(3,3,3,.94), rgba(3,3,3,.72)); box-shadow: 0 24px 80px rgba(0,0,0,.46); backdrop-filter: blur(12px); }
+    .skill-panel::before { content: attr(data-badge); position: absolute; top: 24px; right: 26px; color: #5c5c58; font-size: 10px; letter-spacing: .16em; }
+    .skill-panel::after { content: attr(data-index); position: absolute; left: -1px; top: 30px; padding: 3px 7px 3px 0; color: #4a4a47; font-size: 9px; letter-spacing: .2em; }
     .eyebrow { margin: 0 0 10px; color: #8c8c87; font-size: 9px; letter-spacing: .19em; }
-    .skill-panel h1 { max-width: 310px; margin: 0; font-family: Georgia, 'Songti SC', serif; font-size: clamp(28px, 3vw, 46px); font-weight: 400; line-height: .98; letter-spacing: -.04em; }
+    .skill-panel h1 { max-width: 560px; margin: 0; font-family: Georgia, 'Songti SC', serif; font-size: clamp(26px, 3.4vw, 44px); font-weight: 400; line-height: .98; letter-spacing: -.04em; }
     .skill-panel h1 span { display: block; margin-top: 9px; color: #8d8d88; font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .13em; }
     .route { margin: 22px 0 18px; padding: 13px 0; border-top: 1px solid #333; border-bottom: 1px solid #333; color: #e2e2dc; font-size: 10px; line-height: 1.75; letter-spacing: .04em; }
     .steps { margin: 0; padding: 0; list-style: none; counter-reset: h3step; }
-    .steps li { position: relative; min-height: 43px; padding: 0 0 14px 39px; color: #aaa; font-size: 9px; line-height: 1.55; border-left: 1px solid #30302e; margin-left: 11px; }
+    .steps li { position: relative; min-height: 43px; padding: 0 0 14px 39px; color: #aaa; font-size: 9.5px; line-height: 1.6; border-left: 1px solid #30302e; margin-left: 11px; }
     .steps li:last-child { border-left-color: transparent; }
     .steps li::before { counter-increment: h3step; content: counter(h3step, decimal-leading-zero); position: absolute; left: -12px; top: -2px; display: grid; place-items: center; width: 23px; height: 23px; border: 1px solid #666; border-radius: 50%; background: #090909; color: #ededE7; font-size: 7px; }
-    .steps b { display: block; margin-bottom: 2px; color: #efefe9; font-size: 10px; font-weight: 500; letter-spacing: .06em; }
-    .locks { margin-top: 4px; padding: 12px 14px; border-left: 2px solid #e5e5df; background: rgba(255,255,255,.045); color: #bcbcb6; font-size: 8px; line-height: 1.75; }
+    .steps b { display: block; margin-bottom: 2px; color: #efefe9; font-size: 10.5px; font-weight: 500; letter-spacing: .06em; }
+    .locks { margin-top: 4px; padding: 12px 14px; border-left: 2px solid #e5e5df; background: rgba(255,255,255,.045); color: #bcbcb6; font-size: 8.5px; line-height: 1.8; }
     .locks strong { color: #fff; letter-spacing: .11em; }
     .params { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; margin-top: 14px; background: #282826; }
-    .params span { padding: 9px 7px; background: #080808; color: #777; font-size: 7px; line-height: 1.5; text-align: center; }
-    .params b { display: block; color: #e7e7e1; font-size: 10px; font-weight: 400; }
+    .params span { padding: 10px 7px; background: #080808; color: #777; font-size: 7.5px; line-height: 1.5; text-align: center; }
+    .params b { display: block; color: #e7e7e1; font-size: 11px; font-weight: 400; }
+    .copy-command { width: 100%; margin-top: 12px; padding: 12px 14px; border: 1px solid #72726d; background: #ecece6; color: #080808; font: 600 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .13em; cursor: pointer; transition: background .18s ease, color .18s ease; }
+    .copy-command:hover, .copy-command:focus-visible { background: #111; color: #f0f0ea; outline: none; }
+    .copy-command[data-copied="true"] { background: #111; color: #f0f0ea; border-color: #f0f0ea; }
     .related { display: block; margin-top: 16px; padding: 14px 16px; border: 1px solid rgba(240,240,234,.18); border-left-color: rgba(240,240,234,.68); background: linear-gradient(135deg, rgba(255,255,255,.035), rgba(255,255,255,.008)); text-decoration: none; transition: border-color .2s, background .2s, transform .2s; }
     .related:hover { border-color: rgba(240,240,234,.5); background: linear-gradient(135deg, rgba(255,255,255,.07), rgba(255,255,255,.02)); transform: translateX(2px); }
     .related .rel-label { display: block; color: #8d8d88; font: 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .16em; margin-bottom: 7px; }
     .related strong { display: block; color: #f0f0ea; font-size: 14px; font-weight: 600; line-height: 1.35; margin-bottom: 7px; }
     .related .rel-desc { display: block; color: #a8a8a2; font-size: 11.5px; line-height: 1.65; }
     .related .rel-go { display: inline-block; margin-top: 9px; color: #f0f0ea; font-size: 11px; letter-spacing: .08em; border-bottom: 1px solid rgba(240,240,234,.35); padding-bottom: 1px; }
-    .copy-command { width: 100%; margin-top: 12px; padding: 12px 14px; border: 1px solid #72726d; background: #ecece6; color: #080808; font: 600 9px ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .13em; cursor: pointer; transition: background .18s ease, color .18s ease; }
-    .copy-command:hover, .copy-command:focus-visible { background: #111; color: #f0f0ea; outline: none; }
-    .copy-command[data-copied="true"] { background: #111; color: #f0f0ea; border-color: #f0f0ea; }
+    .src { margin-top: 12px; color: #6a6a66; font-size: 7.5px; letter-spacing: .1em; word-break: break-all; }
+    .src b { color: #8d8d88; font-weight: 400; }
     @media (max-width: 760px) {
-      main { padding: 20px; }
-      header, footer { font-size: 8px; letter-spacing: .11em; }
-      footer { display: none; }
-      .skill-panel { top: auto; right: 14px; bottom: 14px; left: 14px; width: auto; max-height: 55vh; transform: none; padding: 18px; }
-      .skill-panel h1 { font-size: 30px; }
+      .topbar { font-size: 8px; letter-spacing: .11em; padding: 16px 20px; }
+      .skills { padding: 84px 12px 16px; gap: 20px; }
+      .skill-panel { width: 100%; padding: 22px 18px 26px; }
+      .skill-panel h1 { font-size: 27px; }
       .route { margin: 14px 0; }
+      .footer { display: none; }
     }
   </style>
 </head>
 <body>
   <canvas id="field"></canvas>
   <div class="vignette"></div>
-  <main>
-    <header><span><i class="dot"></i>SELECTED SKILL</span><span>MINIMAX H3 / VERIFIED ON 50.23</span></header>
-    <footer><span>EDY.AI.STUDIO</span><span>MONOCHROME</span><span>NEURAL DISCHARGE</span></footer>
-  </main>
-  <aside class="skill-panel" aria-label="MiniMax H3 四步二采工作流程">
-    <p class="eyebrow">LOCAL DRAMA QUALITY PIPELINE</p>
-    <h1>H3 四步二采<span>MINIMAX-H3-FOUR-STEP-DUAL-SAMPLING</span></h1>
-    <div class="route">FL2VA 第一采 → RTX VSR → Reference2VA 低降噪第二采 → SeedVR2 → Topaz 轻锐化</div>
-    <ol class="steps">
-      <li><b>镜头确认</b>人物、场景、对白、正负提示词与完整参数逐项确认。</li>
-      <li><b>重新注入人物</b>每个新镜头重新提交所有演员三边图与高清正脸，标明人物位置。</li>
-      <li><b>FL2VA 第一采</b>INT8 ConvRot + Turbo 4-Step v1.1；先锁动作、构图、眼神与运镜。</li>
-      <li><b>中间放大</b>864×480 经 RTX VSR 放大至稳定目标 1280×704，再编码回 latent。</li>
-      <li><b>Reference2VA 第二采</b>4 步、低 denoise 0.20；只恢复皮肤、眼睛、发丝与衣料微纹理。</li>
-      <li><b>逐帧质检</b>检查首、中、尾和等间隔帧；漂脸、错手、过曝或外国脸直接返工。</li>
-      <li><b>时序超分与收尾</b>SeedVR2 单次 2×；Topaz 只轻锐化、轻去压缩，不再重绘五官。</li>
-    </ol>
-    <div class="locks"><strong>IDENTITY LOCK</strong><br>上一镜头尾帧只能用于连续性，不能代替人物母版。未指定人物的脸、衣服、姿势、位置与光线全部冻结。</div>
-    <div class="params"><span><b>4 + 4</b>采样步数</span><span><b>0.70–0.75</b>Turbo LoRA</span><span><b>0.20</b>二采 denoise</span></div>
-    <button class="copy-command" id="copy-h3-command" type="button">复制技能命令 / COPY COMMAND</button>
-    <a class="related" href="ai-video/ai-manju/">
-      <span class="rel-label">RELATED / 延伸阅读</span>
-      <strong>AI 人物一致性控制 · 角色卡制作 Skill</strong>
-      <span class="rel-desc">出图前先把角色锁死：脸、身材、发型、表情、服装与视角一次性固定下来，含可直接复制的角色设定板提示词。</span>
-      <span class="rel-go">打开文章 →</span>
-    </a>
-  </aside>
+  <div class="topbar"><span><i class="dot"></i>SELECTED SKILL</span><span>MINIMAX H3 / VERIFIED ON 50.23</span></div>
+  <div class="skills" id="skills"></div>
+  <div class="footer"><span>EDY.AI.STUDIO</span><span>MONOCHROME</span><span>NEURAL DISCHARGE</span></div>
+
   <script>
+    const SKILLS = [
+      {
+        badge: '04 × 02',
+        src: '50.23 自研流程 · 本页原始技能',
+        eyebrow: 'LOCAL DRAMA QUALITY PIPELINE',
+        title: 'H3 四步二采',
+        code: 'MINIMAX-H3-FOUR-STEP-DUAL-SAMPLING',
+        route: 'FL2VA 第一采 → RTX VSR → Reference2VA 低降噪第二采 → SeedVR2 → Topaz 轻锐化',
+        steps: [
+          ['镜头确认', '人物、场景、对白、正负提示词与完整参数逐项确认。'],
+          ['重新注入人物', '每个新镜头重新提交所有演员三边图与高清正脸，标明人物位置。'],
+          ['FL2VA 第一采', 'INT8 ConvRot + Turbo 4-Step v1.1；先锁动作、构图、眼神与运镜。'],
+          ['中间放大', '864×480 经 RTX VSR 放大至稳定目标 1280×704，再编码回 latent。'],
+          ['Reference2VA 第二采', '4 步、低 denoise 0.20；只恢复皮肤、眼睛、发丝与衣料微纹理。'],
+          ['逐帧质检', '检查首、中、尾和等间隔帧；漂脸、错手、过曝或外国脸直接返工。'],
+          ['时序超分与收尾', 'SeedVR2 单次 2×；Topaz 只轻锐化、轻去压缩，不再重绘五官。']
+        ],
+        locks: '上一镜头尾帧只能用于连续性，不能代替人物母版。未指定人物的脸、衣服、姿势、位置与光线全部冻结。',
+        lockLabel: 'IDENTITY LOCK',
+        params: [['4 + 4', '采样步数'], ['0.70–0.75', 'Turbo LoRA'], ['0.20', '二采 denoise']],
+        command: '使用 $minimax-h3-four-step-dual-sampling，按 50.23 已验证的四步二采流程准备当前镜头。先向我展示并确认人物三边图与高清正脸、场景、对白、正负提示词和完整参数；我明确确认后才能提交生成。'
+      },
+      {
+        badge: 'ALL × 01',
+        src: '237 I 盘 · minimax h3 多合一工作流+提示词优化.json',
+        eyebrow: 'MULTI-MODE WORKSPACE + PROMPT OPTIMIZER',
+        title: 'H3 多合一 · 提示词优化',
+        code: 'MINIMAX-H3-MULTI-ONE-PROMPT',
+        route: '文生 / 图生 / 全能参考 三模式并行 → AI 提示词优化 → 4 / 8 步出片',
+        steps: [
+          ['选模式', '同一工作流里按需切换文生视频、图生视频、全能参考三组支线。'],
+          ['AI 提示词优化', '内置提示词导演节点，把口语需求扩写成 H3 官方模板格式。'],
+          ['提示词人工检查', 'AI 生成的提示词必须人工过一遍 —— 模型会自作主张加内容。'],
+          ['素材接入', '切到对应模式后再连线素材；输入节点 Media 拖线可快捷插入。'],
+          ['选步数与调度', '4 步 beta 出草稿、8 步 beta 出正式；两档参数都预置好。'],
+          ['出片与合片', '同一条链里含视频 + 音频解码与合成，一次跑完。'],
+          ['抽帧验收', '多模式并行时更要逐帧核对：确认跑的是你选的那条支线。']
+        ],
+        locks: '这是工作台不是成品模板：一次只启用一条支线，其余旁路；提示词优化省的是打字，不是审核。',
+        lockLabel: 'LOCK / 纪律',
+        params: [['3', '并行模式'], ['4 / 8', '步数档'], ['AI + 人工', '提示词']],
+        command: '使用 $minimax-h3-multi-one-prompt，用 50.23 的多合一工作台处理当前镜头（含 AI 提示词优化）。先向我展示并确认选用哪条支线、素材、提示词与参数，我明确确认后才提交。'
+      },
+      {
+        badge: '04 STEP',
+        src: '237 I 盘 · MINIMAX H3  4步加速／工作流／minimax_h3+4steps加速.json',
+        eyebrow: 'FAST DRAFT PASS',
+        title: 'H3 四步加速',
+        code: 'MINIMAX-H3-FOUR-STEP',
+        route: '首帧 → FL2VA INT8 ConvRot → LightX2V Turbo 4-Step → 视频 / 音频双 VAE → mp4',
+        steps: [
+          ['首帧确认', '提交首帧图，逐项确认正负提示词、画幅与时长后再提交。'],
+          ['加载主模型', 'minimax_h3_fl2va_pruned_int8_convrot + H3 视频 VAE / 音频 VAE。'],
+          ['挂 Turbo LoRA', 'minimax_h3_fl2v_lightx2v_turbo_4step_v0.1，强度 1.0。'],
+          ['4 步采样', 'BasicScheduler simple / 4 步，KSamplerSelect res_multistep。'],
+          ['双 VAE 解码', '视频与音频 latent 分别解码，保留模型原生立体声。'],
+          ['合片出片', 'VHS_VideoCombine 合成 mp4（含音轨），输出到项目目录。'],
+          ['抽帧验收', '抽首、中、尾三帧对照动作与构图；崩脸、错手直接返工。']
+        ],
+        locks: '四步只适合出构图与动作草稿 —— 12 步以下远景中景的人脸必然发虚，正式成片必须再走二采。',
+        lockLabel: 'LOCK / 纪律',
+        params: [['4', '采样步数'], ['1.0', 'Turbo LoRA'], ['864×480', '常用画幅']],
+        command: '使用 $minimax-h3-four-step，用 50.23 的四步加速流程快速出当前镜头的动作与构图草稿。先向我展示并确认首帧、正负提示词、画幅和时长，我明确确认后才提交。'
+      },
+      {
+        badge: 'I2V × 08',
+        src: '237 I 盘 · MINIMAX H3  8步加速／工作流／minimax_图生视频8步加速.json',
+        eyebrow: 'IMAGE TO VIDEO',
+        title: 'H3 图生视频 · 8步加速',
+        code: 'MINIMAX-H3-I2V-EIGHT-STEP',
+        route: '首帧图 → FL2VA INT8 → Turbo 8-Step → 原生立体声 → mp4',
+        steps: [
+          ['首帧准备', '选定首帧；确认人物、动作、景别、光线，一图一镜。'],
+          ['加载主模型', 'minimax_h3_fl2va_pruned_int8_convrot（FL2VA，图生视频专用）。'],
+          ['挂 8 步 LoRA', 'minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16。'],
+          ['8 步采样', 'BasicScheduler simple / 8 步 —— 比 4 步更稳，脸和手不易崩。'],
+          ['画幅对齐', '宽高取 32 的倍数；0.4MP≈864×480、0.9MP≈1280×736。'],
+          ['双 VAE 解码合片', '视频 + 音频解码后合成 mp4，保留原生对白与环境声。'],
+          ['抽帧验收', '首、中、尾三帧逐项核对；不合格不交付。']
+        ],
+        locks: '首帧决定一切：一旦首帧里人物/构图不对，8 步也救不回来。先确认首帧再采样。',
+        lockLabel: 'LOCK / 纪律',
+        params: [['8', '采样步数'], ['1.0', 'Turbo LoRA'], ['0.4–0.9', 'megapixels']],
+        command: '使用 $minimax-h3-i2v-eight-step，用 50.23 的图生视频 8 步加速流程处理当前镜头。先向我展示并确认首帧、正负提示词、画幅与时长，我明确确认后才提交。'
+      },
+      {
+        badge: 'T2V × 08',
+        src: '237 I 盘 · MINIMAX H3  8步加速／工作流／Minimax_文生视频_8步加速.json',
+        eyebrow: 'TEXT TO VIDEO',
+        title: 'H3 文生视频 · 8步加速',
+        code: 'MINIMAX-H3-T2V-EIGHT-STEP',
+        route: '纯文本提示词 → FL2VA INT8 → Turbo 8-Step → 原生立体声 → mp4',
+        steps: [
+          ['写提示词', '按分时段写法（[0s–3s] …）描述动作链、镜头与声音，不用首帧。'],
+          ['参数确认', '画幅 megapixels、时长、正负提示词逐项确认后再提交。'],
+          ['加载主模型', 'minimax_h3_fl2va_pruned_int8_convrot + 视频 / 音频 VAE。'],
+          ['挂 8 步 LoRA', 'minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16。'],
+          ['8 步采样', 'BasicScheduler simple / 8 步；多段动作建议 10 秒档。'],
+          ['双 VAE 解码合片', '视频 + 音频合成 mp4，保留原生立体声。'],
+          ['抽帧验收', '检查动作是否按分时段走完、有无崩坏，再决定是否入片。']
+        ],
+        locks: '文生视频没有首帧兜底，人物身份不稳 —— 剧情镜头请走「图生视频 + 人物母版」，这里只做空镜/概念探索。',
+        lockLabel: 'LOCK / 纪律',
+        params: [['8', '采样步数'], ['10s', '推荐时长'], ['原生', '立体声']],
+        command: '使用 $minimax-h3-t2v-eight-step，用 50.23 的文生视频 8 步加速流程生成当前空镜/概念片段。先向我展示并确认完整提示词、画幅与时长，我明确确认后才提交。'
+      },
+      {
+        badge: 'R2V × 08',
+        src: '237 I 盘 · MINIMAX H3  8步加速／工作流／minimax全能参考 8步加速.json',
+        eyebrow: 'REFERENCE TO VIDEO',
+        title: 'H3 全能参考 · 8步加速',
+        code: 'MINIMAX-H3-R2V-EIGHT-STEP',
+        route: '参考图 / 参考视频 / 参考音频 → Reference2VA → Turbo 8-Step → mp4',
+        steps: [
+          ['整理参考素材', '把人物母版（三边图 + 高清正脸）、场景、参考音频按顺序摆好。'],
+          ['写明对应关系', '提示词里用 <Picture 1>/<Picture 2> 明确每张参考图对应谁、做什么。'],
+          ['加载参考模型', 'minimax_h3_ref2va_pruned_int8_convrot（全参考模式）。'],
+          ['挂 8 步 LoRA', 'minimax_h3_fl2v_turbo_8step_v1.0_comfyui_bf16。'],
+          ['8 步采样', 'BasicScheduler simple / 8 步；多人镜头务必一次提交全部人物母版。'],
+          ['双 VAE 解码合片', '视频 + 音频合成 mp4；对白用 <d>[Chinese] …</d> 标注。'],
+          ['逐帧质检', '重点查身份是否漂移、有没有换脸/换装/加人，出问题整镜判废。']
+        ],
+        locks: '参考素材是身份来源：跨镜头也必须重新提交全部人物母版，上一镜尾帧不能代替母版。',
+        lockLabel: 'LOCK / 纪律',
+        params: [['8', '采样步数'], ['10 张', '参考图上限'], ['1 次', '多人同镜提交']],
+        command: '使用 $minimax-h3-r2v-eight-step，用 50.23 的全能参考 8 步加速流程准备当前多人/多参考镜头。先向我展示并确认全部参考素材对应关系、提示词与参数，我明确确认后才提交。'
+      },
+      {
+        badge: '04 + VSR',
+        src: '237 I 盘 · MiniMax-H3-超级加速工作流／MiniMax H3 Easy 4Step Turbo RTX VSR 本地分享版.json',
+        eyebrow: 'SUPER ACCELERATED OUTPUT',
+        title: 'H3 超级加速 · 4Step Turbo + RTX VSR',
+        code: 'MINIMAX-H3-EASY-4STEP-RTX-VSR',
+        route: 'Easy 一体化加载 → 4 步 Turbo → RTX VSR 超分 → mp4（自动卸载显存）',
+        steps: [
+          ['一体化加载', 'MiniMaxH3EasyLoader 一次挂齐主模型、文本编码器、视频 / 音频 VAE。'],
+          ['模式选择', '在输入节点上切换文生 / 图生 / 多参模式，再连接素材。'],
+          ['4 步 Turbo 采样', 'Easy 节点内置调度，4 步出片（英文对白更稳，其他语言建议 6 步）。'],
+          ['RTX VSR 超分', 'RTXVideoSuperResolutionPreset 做中间放大，SD 素材升到目标分辨率。'],
+          ['显存守护', 'MiniMaxH3AutoUnload 采样后自动卸载，低显存机器防爆显存。'],
+          ['合片出片', 'VHS_VideoCombine 合成 mp4；一条 20 秒不如两条 10 秒稳。'],
+          ['抽帧验收', '抽首、中、尾帧检查；12 步以下远景人脸必崩，近景压脸才算可用。']
+        ],
+        locks: '低显存提醒：8G 显存 16G 内存的设备请把虚拟内存设为初始 8G / 最大 16G，且不要同时开太多软件。',
+        lockLabel: 'LOCK / 纪律',
+        params: [['4 步', '采样（可提 6）'], ['RTX VSR', '中间放大'], ['自动', '显存卸载']],
+        command: '使用 $minimax-h3-easy-4step-rtx-vsr，用 50.23 的一体化超级加速流程出当前镜头（4 步 Turbo + RTX VSR 超分 + 自动卸载）。先向我展示并确认首帧、模式、提示词与画幅，我明确确认后才提交。'
+      },
+      {
+        badge: 'V1.05',
+        src: '237 I 盘 · MiniMax-H3-超级加速工作流／MiniMax-H3-工作流分享-v1.05／MiniMax_H3_Mgouliang_v1.05.json',
+        eyebrow: 'REALISM PEOPLE + SIGMA REFINE',
+        title: 'H3 真实人物 · Mgouliang v1.05',
+        code: 'MINIMAX-H3-MGOULIANG-V1.05',
+        route: 'Easy 一体化 → 真实人物 LoRA → 4 步 Turbo → Sigma 精修 → RTX VSR → mp4',
+        steps: [
+          ['模式选择', 'Easy 输入节点上切换文生 / 图生 / 多参模式，再连素材（多参可直接 @素材）。'],
+          ['挂真实人物 LoRA', 'h3-realism-people-t2v-i2v-r2v；会让动作轻微偏移，按情况调强度。'],
+          ['AI 提示词', '内置提示词节点可产出官方模板格式，对"视频里乱说话"很有效。'],
+          ['提示词人工检查', 'AI 生成的提示词必须人工过一遍再提交（deepseek-v4-flash 一次不到一分钱）。'],
+          ['4 步 Turbo 采样', 'turbo_4step_v1.1_768p LoRA + simple 调度，4 步出片。'],
+          ['Sigma 精修 + VSR + 卸载', 'H3SigmaShift 调视频/音频 sigma；RTX VSR 放大；采样后自动卸载显存。'],
+          ['抽帧验收', '逐帧查动作与身份；真实人物 LoRA 带来的动作偏移按情况接受或调强度。']
+        ],
+        locks: '真实人物 LoRA 会轻微改变人物动作 —— 按情况调强度或忽略；AI 生成的提示词一律人工检查后再提交。',
+        lockLabel: 'LOCK / 纪律',
+        params: [['4 步', '采样步数'], ['真实人物', 'LoRA'], ['< 1 分', 'AI 提示词/次']],
+        command: '使用 $minimax-h3-mgouliang-v1-05，用 50.23 的 v1.05 真实人物流程处理当前镜头（真实人物 LoRA + 4 步 Turbo + Sigma 精修）。先向我展示并确认素材、提示词与参数，我明确确认后才提交。'
+      }
+    ];
+
+    const root = document.querySelector('#skills');
+    const skillCommands = [];
+    SKILLS.forEach((s, i) => {
+      skillCommands.push(s.command);
+      const sec = document.createElement('section');
+      sec.className = 'skill-panel';
+      sec.dataset.badge = s.badge;
+      sec.dataset.index = String(i + 1).padStart(2, '0');
+      sec.setAttribute('aria-label', 'MiniMax H3 ' + s.title + ' 工作流程');
+      sec.innerHTML =
+        '<p class="eyebrow">' + s.eyebrow + '</p>' +
+        '<h1>' + s.title + '<span>' + s.code + '</span></h1>' +
+        '<div class="route">' + s.route + '</div>' +
+        '<ol class="steps">' + s.steps.map(([b, d]) => '<li><b>' + b + '</b>' + d + '</li>').join('') + '</ol>' +
+        '<div class="locks"><strong>' + s.lockLabel + '</strong><br>' + s.locks + '</div>' +
+        '<div class="params">' + s.params.map(([v, k]) => '<span><b>' + v + '</b>' + k + '</span>').join('') + '</div>' +
+        '<button class="copy-command" type="button" data-idx="' + i + '">复制技能命令 / COPY COMMAND</button>' +
+        (i === 0 ? '<a class="related" href="ai-video/ai-manju/"><span class="rel-label">RELATED / 延伸阅读</span><strong>AI 人物一致性控制 · 角色卡制作 Skill</strong><span class="rel-desc">出图前先把角色锁死：脸、身材、发型、表情、服装与视角一次性固定下来，含可直接复制的角色设定板提示词。</span><span class="rel-go">打开文章 →</span></a>' : '') +
+        '<div class="src"><b>来源</b> ' + s.src + '</div>';
+      root.append(sec);
+    });
+
+    root.addEventListener('click', async (ev) => {
+      const btn = ev.target.closest('.copy-command');
+      if (!btn) return;
+      const text = skillCommands[Number(btn.dataset.idx)];
+      try {
+        await navigator.clipboard.writeText(text);
+      } catch {
+        const fallback = document.createElement('textarea');
+        fallback.value = text;
+        fallback.style.position = 'fixed'; fallback.style.opacity = '0';
+        document.body.append(fallback); fallback.select(); document.execCommand('copy'); fallback.remove();
+      }
+      btn.dataset.copied = 'true';
+      btn.textContent = '已复制 / COPIED';
+      setTimeout(() => {
+        btn.dataset.copied = 'false';
+        btn.textContent = '复制技能命令 / COPY COMMAND';
+      }, 1800);
+    });
+
     const canvas = document.querySelector('#field');
     const ctx = canvas.getContext('2d', { alpha: false });
     const BAYER = [0,8,2,10, 12,4,14,6, 3,11,1,9, 15,7,13,5].map(v => (v + .5) / 16);
@@ -87,8 +280,6 @@
     const sctx = source.getContext('2d', { willReadFrequently: true });
     const image = new Image();
     const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const copyButton = document.querySelector('#copy-h3-command');
-    const skillCommand = '使用 $minimax-h3-four-step-dual-sampling，按 50.23 已验证的四步二采流程准备当前镜头。先向我展示并确认人物三边图与高清正脸、场景、对白、正负提示词和完整参数；我明确确认后才能提交生成。';
     let w = 1, h = 1, cell = 5, cols = 1, rows = 1, pixels = null;
     let portrait = { dx: 0, dy: 0, dw: 1, dh: 1 };
 
@@ -115,16 +306,16 @@
       // 保留 404 小子、双金币和推车，排除外围机房。
       const sx = image.naturalWidth * .10;
       const sy = image.naturalHeight * .22;
-      const sw = image.naturalWidth * .59;
+      const sw2 = image.naturalWidth * .59;
       const sh = image.naturalHeight * .68;
-      const ratio = sw / sh;
+      const ratio = sw2 / sh;
       const mobile = w < 760;
       const dw = mobile ? cols * .94 : rows * .92 * ratio;
       const dh = mobile ? dw / ratio : rows * .92;
       const dx = mobile ? (cols - dw) / 2 : (cols - dw) * .30;
       const dy = mobile ? (rows - dh) * .46 : (rows - dh) / 2;
       portrait = { dx, dy, dw, dh };
-      sctx.drawImage(image, sx, sy, sw, sh, dx, dy, dw, dh);
+      sctx.drawImage(image, sx, sy, sw2, sh, dx, dy, dw, dh);
       pixels = sctx.getImageData(0, 0, cols, rows).data;
     }
 
@@ -196,22 +387,6 @@
 
     image.onload = rebuild;
     image.src = 'assets/pixel-dither-404-boy.png';
-    copyButton.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(skillCommand);
-      } catch {
-        const fallback = document.createElement('textarea');
-        fallback.value = skillCommand;
-        fallback.style.position = 'fixed'; fallback.style.opacity = '0';
-        document.body.append(fallback); fallback.select(); document.execCommand('copy'); fallback.remove();
-      }
-      copyButton.dataset.copied = 'true';
-      copyButton.textContent = '已复制 / COPIED';
-      setTimeout(() => {
-        copyButton.dataset.copied = 'false';
-        copyButton.textContent = '复制技能命令 / COPY COMMAND';
-      }, 1800);
-    });
     addEventListener('resize', rebuild);
     rebuild(); requestAnimationFrame(draw);
   </script>
