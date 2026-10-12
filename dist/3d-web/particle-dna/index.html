@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="EdyStudio Particle DNA — 实时 Three.js 粒子双螺旋与背光扫描实验。">
+  <title>Particle DNA — EdyStudio</title>
+  <link rel="stylesheet" href="./style.css?v=8">
+  <link rel="stylesheet" href="./oskm.css?v=8">
+  <link rel="stylesheet" href="./study.css?v=8">
+</head>
+<body>
+  <main id="stage" aria-label="粒子 DNA 实时三维场景">
+    <canvas id="scene"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <div class="oskm" aria-label="OSKM 重编程因子">
+      <span>INDUCIBLE OSKM · PARTIAL REPROGRAMMING</span>
+      <b data-factor="O">OCT4</b><b data-factor="S">SOX2</b><b data-factor="K">KLF4</b><b data-factor="M">c-MYC</b>
+      <small>SHORT PULSES · AVOID FULL PLURIPOTENCY</small>
+    </div>
+    <section class="study" aria-label="Cell 论文实验机制">
+      <p class="journal">CELL 167 · 1719–1733 · 2016</p>
+      <h1>部分重编程，<br><em>不是永久返老还童。</em></h1>
+      <ol>
+        <li><b>01</b><span>衰老 / 早衰细胞与小鼠模型</span></li>
+        <li><b>02</b><span>预先导入可诱导 OSKM 系统</span></li>
+        <li><b>03</b><span>多西环素开启短周期表达</span></li>
+        <li><b>04</b><span>部分衰老标志与修复能力改善</span></li>
+      </ol>
+      <button id="induction" type="button" aria-pressed="false"><i></i><span>DOXYCYCLINE SWITCH</span><strong>OFF</strong></button>
+      <p class="caution">研究证据来自细胞与小鼠模型；持续表达可能丢失细胞身份并增加畸胎瘤/肿瘤风险，不能解读为已获批的人体延寿疗法。</p>
+    </section>
+    <nav class="links"><a href="../telomere-lifespan/">端粒长度</a><a href="https://doi.org/10.1016/j.cell.2016.11.052" target="_blank" rel="noreferrer">原论文 DOI</a></nav>
+  </main>
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"}}
+  </script>
+  <script type="module" src="./main.js?v=15"></script>
+</body>
+</html>

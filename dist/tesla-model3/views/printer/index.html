@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>3D 打印机 · 原理图 / 爆炸视图</title>
+<style>
+  :root {
+    --bg: #0e1216;
+    --panel: rgba(20, 26, 32, 0.72);
+    --line: rgba(255, 255, 255, 0.08);
+    --text: #dfe7ee;
+    --muted: #7f9aa8;
+    --accent: #ff8a2a;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: var(--bg); }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--text); }
+  #app { position: fixed; inset: 0; }
+  canvas { display: block; }
+  #labels { position: fixed; inset: 0; z-index: 5; pointer-events: none; overflow: hidden; }
+
+  .hud { position: fixed; z-index: 10; pointer-events: none; }
+  .hud > * { pointer-events: auto; }
+
+  .title { top: 22px; left: 24px; }
+  .title h1 { font-size: 20px; font-weight: 700; letter-spacing: 0.5px; }
+  .title h1 span { color: var(--accent); }
+  .title p { margin-top: 5px; font-size: 12px; color: var(--muted); max-width: 340px; line-height: 1.5; }
+
+  .panel {
+    top: 22px; right: 24px; width: 180px;
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .panel .slider-row {
+    border: 1px solid var(--line); border-radius: 10px;
+    background: var(--panel); padding: 10px 12px; backdrop-filter: blur(8px);
+  }
+  .slider-row .row { display: flex; align-items: center; justify-content: space-between; font-size: 12px; color: var(--muted); margin-bottom: 6px; }
+  .slider-row .row b { color: var(--text); font-weight: 600; font-size: 13px; }
+  .slider-row input[type=range] { width: 100%; accent-color: var(--accent); cursor: pointer; }
+
+  .panel button {
+    appearance: none; border: 1px solid var(--line);
+    background: var(--panel); color: var(--text);
+    padding: 9px 14px; border-radius: 10px; font-size: 13px;
+    cursor: pointer; transition: all .15s ease; backdrop-filter: blur(8px);
+    min-width: 120px; text-align: left;
+  }
+  .panel button:hover { border-color: rgba(255,255,255,.22); background: rgba(30,38,46,.8); }
+  .panel button.active { border-color: var(--accent); color: #fff; background: rgba(255,138,42,.16); }
+  .panel button .dot {
+    display: inline-block; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--muted); margin-right: 8px; vertical-align: 1px;
+    transition: background .15s ease;
+  }
+  .panel button.active .dot { background: var(--accent); box-shadow: 0 0 8px var(--accent); }
+
+  .hint { bottom: 20px; left: 50%; transform: translateX(-50%); font-size: 12px; color: var(--muted); white-space: nowrap; }
+  .hint b { color: var(--text); font-weight: 600; }
+
+  .lbl {
+    font-size: 11px; color: var(--text);
+    background: rgba(11, 15, 19, 0.78);
+    border: 1px solid rgba(255,255,255,.14);
+    padding: 3px 9px 3px 6px; border-radius: 999px;
+    display: flex; align-items: center; gap: 6px;
+    white-space: nowrap; backdrop-filter: blur(4px);
+    letter-spacing: .3px;
+  }
+  .lbl::before {
+    content: ''; width: 8px; height: 8px; border-radius: 50%;
+    background: var(--c, #9fc0d0); flex: none;
+  }
+
+  .hud.back { top: 78px; left: 24px; }
+  .hud.back a {
+    display: inline-block; color: var(--muted); text-decoration: none;
+    font-size: 12px; border: 1px solid var(--line); background: var(--panel);
+    padding: 6px 12px; border-radius: 8px; backdrop-filter: blur(8px);
+  }
+  .hud.back a:hover { color: var(--text); border-color: rgba(255,255,255,.22); }
+</style>
+</head>
+<body>
+  <div id="app"></div>
+  <div id="labels"></div>
+
+  <div class="hud title">
+    <h1>3D 打印机 · <span>原理图</span></h1>
+    <p>FDM 床式打印机 · 半透明结构 · 可分解爆炸视图 · 打印动画</p>
+  </div>
+
+  <div class="hud back">
+    <a href="../..">← 返回整车拓扑</a>
+  </div>
+
+  <div class="hud panel">
+    <div class="slider-row">
+      <div class="row"><b>分解</b><span id="explodeVal">0%</span></div>
+      <input type="range" id="explode" min="0" max="100" value="0" />
+    </div>
+    <button id="btnSplit"><span class="dot"></span>一键拆分 / 合并</button>
+    <button id="btnXray"><span class="dot"></span>全透视 X-Ray</button>
+    <button id="btnLabel" class="active"><span class="dot"></span>部件标注</button>
+    <button id="btnRotate" class="active"><span class="dot"></span>自动旋转</button>
+    <button id="btnPause"><span class="dot"></span>暂停打印</button>
+  </div>
+
+  <div class="hud hint"><b>拖拽</b> 旋转 · <b>滚轮</b> 缩放 · <b>右键</b> 平移 · <b>滑块</b> 分解</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+/* ================= 常量（单位 mm，Y 轴向上） ================= */
+const BED_W = 220, BED_D = 220;
+const BED_TOP_Y = 48;
+const FRAME = 140;                 // 机架半宽/半深
+const FRAME_BASE_Y = 30;
+const FRAME_TOP_Y = 400;
+const PRINT_H = 60, PRINT_R = 30, LAYERS = 48;
+const PRINT_DURATION = 24;         // 单次打印周期（秒）
+
+/* ================= 渲染器 ================= */
+const app = document.getElementById('app');
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+app.appendChild(renderer.domElement);
+
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(window.innerWidth, window.innerHeight);
+labelRenderer.domElement.id = 'labels';
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.top = '0';
+labelRenderer.domElement.style.pointerEvents = 'none';
+app.appendChild(labelRenderer.domElement);
+
+/* ================= 场景 / 相机 ================= */
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0e1216);
+scene.fog = new THREE.Fog(0x0e1216, 1000, 2800);
+
+const camera = new THREE.PerspectiveCamera(46, window.innerWidth / window.innerHeight, 0.1, 5000);
+camera.position.set(440, 320, 560);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 160, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 180;
+controls.maxDistance = 2200;
+controls.maxPolarAngle = Math.PI * 0.92;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.6;
+
+/* ================= 灯光 ================= */
+scene.add(new THREE.HemisphereLight(0xe6eefb, 0x2a2f35, 0.75));
+const key = new THREE.DirectionalLight(0xffffff, 1.7);
+key.position.set(220, 320, 180);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+key.shadow.camera.near = 50; key.shadow.camera.far = 1400;
+key.shadow.camera.left = -500; key.shadow.camera.right = 500;
+key.shadow.camera.top = 500; key.shadow.camera.bottom = -500;
+key.shadow.bias = -0.0003;
+scene.add(key);
+const fill = new THREE.DirectionalLight(0x9fc4ff, 0.45);
+fill.position.set(-260, 140, -220);
+scene.add(fill);
+
+/* ================= 地面 ================= */
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(4000, 4000),
+  new THREE.MeshStandardMaterial({ color: 0x11151a, roughness: 0.95 })
+);
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+const grid = new THREE.GridHelper(1400, 56, 0x31414f, 0x1c262f);
+grid.position.y = 0.5;
+scene.add(grid);
+
+/* ================= 材质 ================= */
+const matRegistry = [];
+function reg(mat, base) { matRegistry.push({ mat, base }); return mat; }
+const edgeMat = reg(new THREE.LineBasicMaterial({ color: 0x35515f, transparent: true, opacity: 0.85 }), 0.85);
+const frameMat = reg(new THREE.MeshStandardMaterial({ color: 0x9fb4c0, metalness: 0.55, roughness: 0.35, transparent: true, opacity: 0.42 }), 0.42);
+const rodMat   = reg(new THREE.MeshStandardMaterial({ color: 0xd7dee4, metalness: 0.95, roughness: 0.18 }), 1);
+const darkMat  = reg(new THREE.MeshStandardMaterial({ color: 0x1a1e22, metalness: 0.4, roughness: 0.6 }), 1);
+const baseMat  = reg(new THREE.MeshStandardMaterial({ color: 0x242a30, metalness: 0.3, roughness: 0.7 }), 1);
+const bedMat   = reg(new THREE.MeshStandardMaterial({ color: 0x15181c, metalness: 0.5, roughness: 0.6 }), 1);
+const printMat = reg(new THREE.MeshStandardMaterial({ color: 0xff8a2a, metalness: 0.08, roughness: 0.42, transparent: true, opacity: 0.92 }), 0.92);
+const spoolMat = reg(new THREE.MeshStandardMaterial({ color: 0x2a2f35, metalness: 0.4, roughness: 0.6 }), 1);
+const filamentMat = reg(new THREE.MeshStandardMaterial({ color: 0xff8a2a, metalness: 0.05, roughness: 0.45 }), 1);
+
+/* ================= 工具 ================= */
+function box(w, h, d, mat, { x = 0, y = 0, z = 0, edges = true, shadow = true } = {}) {
+  const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+  m.position.set(x, y, z);
+  m.castShadow = shadow; m.receiveShadow = shadow;
+  if (edges) m.add(new THREE.LineSegments(new THREE.EdgesGeometry(m.geometry), edgeMat));
+  return m;
+}
+function cyl(rT, rB, h, mat, seg = 32, { x = 0, y = 0, z = 0, rotX = 0, shadow = true } = {}) {
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(rT, rB, h, seg), mat);
+  m.position.set(x, y, z); m.rotation.x = rotX;
+  m.castShadow = shadow; m.receiveShadow = shadow;
+  return m;
+}
+
+/* ================= 分解（爆炸）登记 ================= */
+const parts = [];
+function addPart(group, base, explode) {
+  const rec = { group, base: base.clone(), explode: explode.clone() };
+  parts.push(rec);
+  return rec;
+}
+
+const printer = new THREE.Group();
+scene.add(printer);
+
+/* ---------- 底箱（电控箱） ---------- */
+const baseG = new THREE.Group();
+baseG.add(box(300, 30, 300, baseMat, { y: 0 }));
+baseG.add(box(300, 2, 300, darkMat, { y: 15, edges: false }));
+printer.add(baseG);
+const baseRec = addPart(baseG, new THREE.Vector3(0, 15, 0), new THREE.Vector3(0, 0, 0));
+
+/* ---------- 机架立柱 ---------- */
+const columnsG = new THREE.Group();
+const colH = FRAME_TOP_Y - FRAME_BASE_Y, colCY = FRAME_BASE_Y + colH / 2;
+for (const sx of [-1, 1]) for (const sz of [-1, 1])
+  columnsG.add(box(20, colH, 20, frameMat, { x: sx * FRAME, y: colCY, z: sz * FRAME }));
+printer.add(columnsG);
+addPart(columnsG, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0));
+
+/* ---------- Z 轴丝杆 + 光轴 ---------- */
+const zRodsG = new THREE.Group();
+const zLen = FRAME_TOP_Y - 10 - FRAME_BASE_Y, zCY = FRAME_BASE_Y + zLen / 2;
+for (const sx of [-1, 1]) {
+  zRodsG.add(cyl(5, 5, zLen, rodMat, 24, { x: sx * 105, y: zCY, z: -FRAME }));
+  zRodsG.add(cyl(4, 4, zLen, rodMat, 20, { x: sx * 105, y: zCY, z: -FRAME + 12 }));
+  zRodsG.add(box(34, 30, 34, darkMat, { x: sx * 105, y: FRAME_BASE_Y + 15, z: -FRAME }));
+}
+printer.add(zRodsG);
+addPart(zRodsG, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 0));
+
+/* ---------- 顶部机架 ---------- */
+const topG = new THREE.Group();
+topG.add(box(FRAME * 2, 20, 20, frameMat, { z: FRAME }));
+topG.add(box(FRAME * 2, 20, 20, frameMat, { z: -FRAME }));
+topG.add(box(20, 20, FRAME * 2, frameMat, { x: FRAME }));
+topG.add(box(20, 20, FRAME * 2, frameMat, { x: -FRAME }));
+printer.add(topG);
+addPart(topG, new THREE.Vector3(0, FRAME_TOP_Y, 0), new THREE.Vector3(0, 330, 0));
+
+/* ---------- 打印平台（热床） ---------- */
+const bedG = new THREE.Group();
+bedG.add(box(BED_W, 8, BED_D, bedMat, { y: 0 }));
+bedG.add(box(BED_W - 12, 2, BED_D - 12, baseMat, { y: 5 }));
+const bedGrid = new THREE.GridHelper(BED_W, 22, 0x3a4a56, 0x232b33);
+bedGrid.position.y = 6.1;
+bedG.add(bedGrid);
+printer.add(box(BED_W, 14, 60, darkMat, { y: BED_TOP_Y - 11, z: 0 })); // 床下滑台（随床体）
+bedG.add(box(BED_W, 14, 60, darkMat, { y: -11, z: 0 }));
+printer.add(bedG);
+const bedRec = addPart(bedG, new THREE.Vector3(0, BED_TOP_Y, 0), new THREE.Vector3(0, 80, 0));
+
+/* ---------- X 轴龙门（含打印头，随打印升降） ---------- */
+const gantryG = new THREE.Group();
+gantryG.add(box(240, 20, 20, frameMat, { z: -120 }));
+for (const sx of [-1, 1]) gantryG.add(box(22, 22, 40, darkMat, { x: sx * 112, z: -126 }));
+
+const headG = new THREE.Group();
+headG.add(box(36, 22, 34, darkMat, { z: -120 }));
+headG.add(box(14, 8, 120, baseMat, { y: -2, z: -60 }));
+headG.add(box(30, 24, 30, darkMat, { y: 14, z: -120 }));
+const hotend = new THREE.Group();
+hotend.add(cyl(7, 7, 26, rodMat, 24, { y: -18 }));
+hotend.add(box(16, 12, 16, darkMat, { y: -36 }));
+const nozzle = cyl(3.5, 3.5, 14, rodMat, 20, { y: -49 });
+nozzle.rotation.x = Math.PI;
+hotend.add(nozzle);
+hotend.add(box(13, 2, 13, new THREE.MeshStandardMaterial({ color: 0xb87333, metalness: 0.6, roughness: 0.4 }), { y: -33, edges: false }));
+headG.add(hotend);
+gantryG.add(headG);
+printer.add(gantryG);
+
+const gantryRec = addPart(gantryG, new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 230, 0));
+const headRec  = addPart(headG,  new THREE.Vector3(0, 0, 0), new THREE.Vector3(0, 0, 160));
+
+/* ---------- 料盘（顶部） ---------- */
+const spoolY = FRAME_TOP_Y + 70;
+const spoolG = new THREE.Group();
+spoolG.add(box(20, 40, 20, darkMat, { y: 0 }));
+spoolG.add(cyl(72, 72, 6, spoolMat, 40, { y: -22 }));
+spoolG.add(cyl(72, 72, 6, spoolMat, 40, { y: 22 }));
+const filamentRing = new THREE.Mesh(new THREE.TorusGeometry(50, 22, 20, 72), filamentMat);
+filamentRing.rotation.x = Math.PI / 2;
+filamentRing.castShadow = true;
+spoolG.add(filamentRing);
+printer.add(spoolG);
+addPart(spoolG, new THREE.Vector3(0, spoolY, 0), new THREE.Vector3(0, 450, 0));
+
+/* ---------- 料线（仅合并态显示） ---------- */
+const filamentCurve = new THREE.CatmullRomCurve3([
+  new THREE.Vector3(0, spoolY - 20, 0),
+  new THREE.Vector3(0, spoolY - 80, 60),
+  new THREE.Vector3(0, FRAME_TOP_Y + 10, 110),
+]);
+const filamentLine = new THREE.Mesh(new THREE.TubeGeometry(filamentCurve, 32, 1.6, 8, false), filamentMat);
+filamentLine.castShadow = true;
+printer.add(filamentLine);
+
+/* ---------- LCD 屏幕（挂在底箱上） ---------- */
+const screenCanvas = document.createElement('canvas');
+screenCanvas.width = 256; screenCanvas.height = 128;
+const sctx = screenCanvas.getContext('2d');
+const screenTex = new THREE.CanvasTexture(screenCanvas);
+screenTex.colorSpace = THREE.SRGBColorSpace;
+const screen = new THREE.Mesh(new THREE.PlaneGeometry(70, 40), new THREE.MeshBasicMaterial({ map: screenTex }));
+screen.position.set(70, 37, 152);
+baseG.add(screen);
+baseG.add(box(78, 48, 10, darkMat, { x: 70, y: 37, z: 148 }));
+
+/* ---------- 打印件（分层堆叠生长） ---------- */
+const printG = new THREE.Group();
+const layerH = PRINT_H / LAYERS, layers = [];
+for (let i = 0; i < LAYERS; i++) {
+  const r = PRINT_R - 3 * (i / (LAYERS - 1));
+  const m = new THREE.Mesh(new THREE.CylinderGeometry(r, r, layerH, 64), printMat);
+  m.position.y = i * layerH + layerH / 2;
+  m.castShadow = true; m.receiveShadow = true; m.visible = false;
+  printG.add(m); layers.push(m);
+}
+const skirt = new THREE.Mesh(new THREE.CylinderGeometry(PRINT_R + 4, PRINT_R + 4, 1.5, 64), printMat);
+skirt.position.y = -0.8; skirt.visible = false; printG.add(skirt);
+printer.add(printG);
+addPart(printG, new THREE.Vector3(0, BED_TOP_Y + 8, 0), new THREE.Vector3(0, 170, 0));
+
+/* ================= 标注（引线 + CSS2D 标签） ================= */
+const leaderMat = new THREE.LineBasicMaterial({ color: 0x6f8fa0, transparent: true, opacity: 0.45, depthTest: false });
+const labelItems = [];
+function label(parent, text, anchor, offset, color) {
+  const a = anchor.clone(), b = anchor.clone().add(offset);
+  const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([a, b]), leaderMat);
+  parent.add(line);
+  const div = document.createElement('div');
+  div.className = 'lbl'; div.style.setProperty('--c', color); div.textContent = text;
+  const obj = new CSS2DObject(div);
+  obj.position.copy(b);
+  parent.add(obj);
+  labelItems.push(line, obj);
+  return obj;
+}
+const C_BLUE = '#7fb3d5', C_ORANGE = '#ff8a2a', C_TEAL = '#37f0c0';
+
+label(spoolG,   '料盘',      new THREE.Vector3(0, -22, 0),   new THREE.Vector3(95, 55, 0),   C_ORANGE);
+label(topG,     '顶部机架',  new THREE.Vector3(0, 0, 150),   new THREE.Vector3(0, 45, 200),  C_BLUE);
+label(zRodsG,   'Z轴丝杆',   new THREE.Vector3(-105, zCY, -140), new THREE.Vector3(-175, 60, 0), C_BLUE);
+label(gantryG,  'X轴龙门',   new THREE.Vector3(0, 0, -120),  new THREE.Vector3(-170, 35, 0), C_ORANGE);
+label(headG,    '打印头',    new THREE.Vector3(0, -22, 0),   new THREE.Vector3(80, 25, 0),   C_ORANGE);
+label(bedG,     '热床',      new THREE.Vector3(0, 0, 0),     new THREE.Vector3(0, 18, 160),  C_TEAL);
+label(printG,   '打印件',    new THREE.Vector3(0, 30, 0),    new THREE.Vector3(90, 55, 0),   C_ORANGE);
+label(baseG,    '电控底箱',  new THREE.Vector3(0, 0, 150),   new THREE.Vector3(0, 12, 190),  C_TEAL);
+label(columnsG, '机架立柱',  new THREE.Vector3(140, colCY, 140), new THREE.Vector3(40, 20, 40), C_BLUE);
+label(baseG,    'LCD屏幕',   new THREE.Vector3(70, 37, 152), new THREE.Vector3(65, 42, 0),   C_TEAL);
+
+/* ================= 状态 ================= */
+let explodeTarget = 0, explodeFactor = 0;
+let paused = false;
+let labelsVisible = true;
+
+function setXray(on) {
+  for (const { mat, base } of matRegistry) {
+    mat.transparent = true;
+    mat.depthWrite = !on;
+    mat.opacity = on ? base * 0.34 : base;
+    mat.needsUpdate = true;
+  }
+}
+
+/* ================= UI 绑定 ================= */
+const $ = (id) => document.getElementById(id);
+const btnSplit = $('btnSplit'), btnXray = $('btnXray'), btnLabel = $('btnLabel'),
+      btnRotate = $('btnRotate'), btnPause = $('btnPause'), slider = $('explode'), val = $('explodeVal');
+
+slider.addEventListener('input', () => {
+  explodeTarget = slider.value / 100;
+  val.textContent = slider.value + '%';
+});
+btnSplit.addEventListener('click', () => {
+  const on = btnSplit.classList.toggle('active');
+  explodeTarget = on ? 1 : 0;
+  slider.value = on ? 100 : 0;
+  val.textContent = on ? '100%' : '0%';
+});
+btnXray.addEventListener('click', () => setXray(btnXray.classList.toggle('active')));
+btnRotate.addEventListener('click', () => { controls.autoRotate = btnRotate.classList.toggle('active'); });
+btnPause.addEventListener('click', () => { paused = btnPause.classList.toggle('active'); });
+btnLabel.addEventListener('click', () => {
+  labelsVisible = btnLabel.classList.toggle('active');
+  labelItems.forEach(o => o.visible = labelsVisible);
+});
+
+/* ================= 龙门 / 打印头 动态位置 ================= */
+function gantryY(p) { return BED_TOP_Y + 8 + p * PRINT_H + 55; }
+
+/* ================= LCD 文字 ================= */
+function updateScreen(progress) {
+  sctx.fillStyle = '#0a0f14'; sctx.fillRect(0, 0, 256, 128);
+  sctx.fillStyle = '#37f0c0'; sctx.font = 'bold 30px monospace';
+  sctx.fillText('3D PRINTER', 20, 42);
+  sctx.fillStyle = '#7f9aa8'; sctx.font = '17px monospace';
+  sctx.fillText(`Z  ${(BED_TOP_Y + 8 + progress * PRINT_H).toFixed(1)} mm`, 20, 76);
+  sctx.fillText(`${Math.round(progress * 100)}%`, 20, 104);
+  sctx.fillStyle = '#1d2a33'; sctx.fillRect(160, 92, 80, 14);
+  sctx.fillStyle = '#ff8a2a'; sctx.fillRect(160, 92, 160 * progress, 14);
+  screenTex.needsUpdate = true;
+}
+
+/* ================= 动画循环 ================= */
+const clock = new THREE.Clock();
+let elapsed = 0;
+
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = clock.getDelta();
+  if (!paused) elapsed += dt;
+
+  const p = (elapsed % PRINT_DURATION) / PRINT_DURATION;
+
+  // 打印件分层生长
+  const visible = Math.floor(p * LAYERS);
+  for (let i = 0; i < LAYERS; i++) layers[i].visible = i < visible;
+  skirt.visible = p > 0.02;
+
+  // 打印头 / 龙门运动
+  const headX = Math.sin(elapsed * 1.35) * 26;
+  const headZ = Math.sin(elapsed * 0.7) * 8;
+  gantryRec.base.set(0, gantryY(p), 0);
+  headRec.base.set(headX, 0, headZ);
+
+  // 分解因子平滑过渡
+  explodeFactor += (explodeTarget - explodeFactor) * 0.08;
+  const e = explodeFactor;
+  for (const rec of parts)
+    rec.group.position.copy(rec.base).addScaledVector(rec.explode, e);
+
+  filamentLine.visible = e < 0.05;
+
+  // 相机目标随分解上移，保持取景
+  controls.target.lerp(new THREE.Vector3(0, 160 + e * 300, 0), 0.06);
+
+  updateScreen(p);
+  controls.update();
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+}
+
+/* ================= 自适应 ================= */
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  labelRenderer.setSize(window.innerWidth, window.innerHeight);
+});
+
+animate();
+</script>
+</body>
+</html>

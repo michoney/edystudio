@@ -10,7 +10,11 @@
   * { box-sizing:border-box; }
   html,body { margin:0; min-height:100%; background:#050806; color:#edf5f0; font-family:Inter,"PingFang SC","Microsoft YaHei",sans-serif; }
   body::before { content:""; position:fixed; inset:0; pointer-events:none; background:radial-gradient(circle at 72% 20%,rgba(44,125,75,.18),transparent 34%),linear-gradient(rgba(145,247,185,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(145,247,185,.025) 1px,transparent 1px); background-size:auto,40px 40px,40px 40px; }
-  .shell { position:relative; width:min(1120px,calc(100% - 36px)); margin:auto; padding:28px 0 64px; }
+  .shell { position:relative; width:min(1120px,calc(100% - 36px)); margin:auto; padding:28px 0 64px; z-index:1; }
+  /* kusakari particle background — fixed panel right of the title, does not scroll */
+  #bg-band { position:fixed; top:110px; right:0; width:min(620px,50vw); height:44vh; min-height:260px; z-index:0; pointer-events:none; overflow:hidden; }
+  #bg-band canvas { display:block; width:100%; height:100%; }
+  @media (max-width:900px){ #bg-band { position:static; width:100%; margin-top:26px; } }
   nav { display:flex; justify-content:space-between; align-items:center; font-family:"Courier New",monospace; font-size:12px; letter-spacing:.12em; }
   nav a { color:#a9b2ae; text-decoration:none; }
   .eyebrow { margin-top:96px; color:var(--green); font:12px/1.4 "Courier New",monospace; letter-spacing:.22em; text-transform:uppercase; }
@@ -28,6 +32,16 @@
   .tesla { position:absolute; width:260px; height:118px; left:50%; top:42%; transform:translate(-50%,-50%); border:1px solid rgba(145,247,185,.48); border-radius:38px 38px 18px 18px; background:linear-gradient(150deg,rgba(31,58,40,.92),rgba(5,9,6,.97)); box-shadow:inset 0 0 34px rgba(93,236,145,.10),0 0 30px rgba(77,231,134,.14); }
   .tesla::before { content:""; position:absolute; left:50%; top:-33px; transform:translateX(-50%); width:98px; height:47px; border:1px solid rgba(145,247,185,.42); border-radius:30px 30px 9px 9px; background:rgba(13,24,16,.94); }
   .tesla::after { content:""; position:absolute; left:32px; right:32px; bottom:-13px; height:13px; background:radial-gradient(circle at 14% 50%,rgba(145,247,185,.85) 0 6px,transparent 7px),radial-gradient(circle at 86% 50%,rgba(145,247,185,.85) 0 6px,transparent 7px); }
+  .earth { position:absolute; width:250px; height:250px; left:50%; top:42%; transform:translate(-50%,-50%); border-radius:50%; border:1px solid rgba(120,200,255,.5); background:radial-gradient(circle at 32% 30%,rgba(120,200,255,.9) 0 3px,transparent 4px),radial-gradient(circle at 68% 55%,rgba(96,225,150,.85) 0 3px,transparent 4px),radial-gradient(circle at 42% 70%,rgba(70,180,255,.8) 0 3px,transparent 4px),radial-gradient(circle at 55% 25%,rgba(140,255,190,.8) 0 2px,transparent 3px); background-size:34px 34px,42px 42px,30px 30px,26px 26px; box-shadow:inset 0 0 40px rgba(80,180,255,.25),0 0 34px rgba(90,200,255,.18); }
+  .earth::before { content:""; position:absolute; inset:0; border-radius:50%; background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.28),transparent 34%); }
+  .earth::after { content:""; position:absolute; left:0; right:0; top:50%; height:1px; background:linear-gradient(90deg,transparent,rgba(120,200,255,.6),transparent); transform:rotate(-18deg); box-shadow:0 52px rgba(120,200,255,.35),0 -52px rgba(120,200,255,.3); }
+  .blackhole { position:absolute; width:240px; height:240px; left:50%; top:42%; transform:translate(-50%,-50%); border-radius:50%; background:radial-gradient(circle at 50% 50%,#000 0 40%,#10161b 55%,transparent 66%); box-shadow:0 0 50px rgba(255,150,40,.22); }
+  .blackhole::before { content:""; position:absolute; inset:-16px; border-radius:50%; border:3px solid transparent; border-top-color:rgba(255,170,70,.9); border-right-color:rgba(255,210,140,.55); transform:rotate(30deg); filter:drop-shadow(0 0 10px rgba(255,160,50,.5)); }
+  .blackhole::after { content:""; position:absolute; inset:6px; border-radius:50%; background:radial-gradient(circle, rgba(255,200,120,.16) 0 22%, transparent 26%); }
+  .visual-live { opacity:1; }
+  .visual-live iframe { width:100%; height:100%; border:0; pointer-events:none; transform:scale(1.02); }
+  .science-card { background:#02070b; border-color:rgba(133,213,240,.24); }
+  .science-card:hover { border-color:rgba(164,231,255,.65); }
   .meta { position:relative; z-index:2; }
   .number { color:var(--green); font:11px "Courier New",monospace; letter-spacing:.16em; }
   h2 { margin:9px 0 8px; font-size:25px; font-weight:550; letter-spacing:-.025em; }
@@ -56,8 +70,27 @@
       <div class="visual"><div class="tesla"></div></div>
       <div class="meta"><span class="number">MODEL / 02</span><h2>Tesla Model Y 3D 产品展示</h2><p class="desc">整车 3D 模型 + 后桥电驱 + 电池包爆炸视图，手机自适应横屏，面向汽修门店的客户演示。</p><span class="open">OPEN PRODUCT ↗</span></div>
     </a>
+    <a class="card" href="https://michoney.github.io/earth-ai-dashboard/" target="_blank" rel="noopener">
+      <div class="visual"><div class="earth"></div></div>
+      <div class="meta"><span class="number">MODEL / 03</span><h2>Earth AI 控制中心</h2><p class="desc">3D 地球气象监控仪表盘 · 卫星云图、实时数据大屏与交互视界。</p><span class="open">OPEN PRODUCT ↗</span></div>
+    </a>
+    <a class="card" href="https://michoney.github.io/schwarzschild-blackhole/" target="_blank" rel="noopener">
+      <div class="visual"><div class="blackhole"></div></div>
+      <div class="meta"><span class="number">MODEL / 04</span><h2>施瓦西黑洞 · Schwarzschild</h2><p class="desc">WebGL 黑洞实时渲染：引力透镜、吸积盘与时空扭曲视效。</p><span class="open">OPEN DEMO ↗</span></div>
+    </a>
+    <a class="card science-card" href="3d-web/particle-dna/">
+      <div class="visual visual-live"><iframe src="3d-web/particle-dna/" title="OSKM 粒子 DNA 实时预览" loading="lazy" tabindex="-1" aria-hidden="true"></iframe></div>
+      <div class="meta"><span class="number">MODEL / 05</span><h2>Particle DNA · OSKM</h2><p class="desc">双螺旋、碱基链与沿链粒子流，作为细胞部分重编程叙事的第一幕。</p><span class="open">OPEN EXPERIENCE ↗</span></div>
+    </a>
+    <a class="card science-card" href="3d-web/saline-ice-energy/">
+      <div class="visual visual-live"><iframe src="3d-web/saline-ice-energy/" title="盐冰挠曲流电实时预览" loading="lazy" tabindex="-1" aria-hidden="true"></iframe></div>
+      <div class="meta"><span class="number">MODEL / 06</span><h2>Saline Ice Energy</h2><p class="desc">弯曲盐冰、晶界盐水输运、电荷迁移和电容储能的交互原理示意。</p><span class="open">OPEN EXPERIMENT ↗</span></div>
+    </a>
   </section>
+  <div id="bg-band" aria-hidden="true"></div>
   <footer>© EDY AI STUDIO · SHENZHEN</footer>
 </main>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+<script src="assets/kusakari-bg.js"></script>
 </body>
 </html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Tesla Model Y 电驱总成 · 爆炸图</title>
+<style>
+  :root {
+    --bg: #0e1116;
+    --panel: rgba(20, 26, 34, 0.82);
+    --line: rgba(255, 255, 255, 0.09);
+    --txt: #dbe4ec;
+    --txt-dim: #8b98a5;
+    --accent: #ff8a2a;
+    --accent2: #37f0c0;
+    --blue: #7fb3d5;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg); }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; color: var(--txt); }
+  #app { position: fixed; inset: 0; }
+  canvas { display: block; }
+
+  .panel {
+    position: fixed; z-index: 10; background: var(--panel);
+    border: 1px solid var(--line); border-radius: 12px;
+    backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    padding: 14px 16px; box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  }
+  .panel h2 { margin: 0 0 4px; font-size: 15px; font-weight: 600; letter-spacing: .5px; }
+  .panel .sub { margin: 0 0 10px; font-size: 11px; color: var(--txt-dim); }
+
+  #title { top: 16px; left: 16px; max-width: 300px; }
+  #title .tag { display: inline-block; font-size: 10px; padding: 2px 8px; border-radius: 20px;
+    background: rgba(255,138,42,.15); color: var(--accent); border: 1px solid rgba(255,138,42,.3); margin-bottom: 6px; }
+  #related { position: fixed; top: 16px; left: 50%; transform: translateX(-50%); z-index: 12; display: flex; gap: 8px; }
+  #related button { padding: 7px 14px; border-radius: 20px; cursor: pointer; font-size: 12.5px; font-family: inherit;
+    background: var(--panel); color: var(--accent2); border: 1px solid rgba(55,240,192,.4); backdrop-filter: blur(8px); }
+  #related button.rel { color: var(--accent); border-color: rgba(255,138,42,.4); }
+  #related button:hover { background: rgba(55,240,192,.12); }
+
+  #controls { top: 16px; right: 16px; width: 264px; }
+  #parts { bottom: 16px; left: 16px; width: 300px; max-height: 46vh; display: flex; flex-direction: column; }
+  #parts .list { overflow-y: auto; margin-top: 6px; padding-right: 4px; }
+  #parts .list::-webkit-scrollbar { width: 6px; }
+  #parts .list::-webkit-scrollbar-thumb { background: rgba(255,255,255,.14); border-radius: 3px; }
+
+  .row { display: flex; align-items: center; gap: 8px; padding: 5px 6px; border-radius: 8px; cursor: pointer;
+    border: 1px solid transparent; transition: background .15s, border .15s; }
+  .row:hover { background: rgba(255,255,255,.05); }
+  .row.sel { background: rgba(255,138,42,.12); border-color: rgba(255,138,42,.4); }
+  .row .dot { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; }
+  .row .nm { flex: 0 0 108px; font-size: 12.5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .row input[type=range] { flex: 1 1 auto; min-width: 0; accent-color: var(--accent); }
+  .row .pct { flex: 0 0 30px; font-size: 10px; color: var(--txt-dim); text-align: right; font-variant-numeric: tabular-nums; }
+
+  .ctl { margin-bottom: 12px; }
+  .ctl:last-child { margin-bottom: 0; }
+  .ctl label { display: block; font-size: 11px; color: var(--txt-dim); margin-bottom: 4px; letter-spacing: .3px; }
+  .ctl .big { display: flex; align-items: center; gap: 8px; }
+  .ctl input[type=range] { flex: 1; accent-color: var(--accent2); }
+  .ctl .val { font-size: 11px; color: var(--txt); min-width: 34px; text-align: right; font-variant-numeric: tabular-nums; }
+
+  .btnrow { display: flex; gap: 8px; flex-wrap: wrap; }
+  button {
+    flex: 1; min-width: 64px; padding: 8px 10px; border-radius: 9px; cursor: pointer;
+    background: rgba(255,255,255,.06); color: var(--txt); border: 1px solid var(--line);
+    font-size: 12.5px; font-family: inherit; transition: background .15s, border .15s, transform .05s;
+  }
+  button:hover { background: rgba(255,255,255,.12); }
+  button:active { transform: scale(.96); }
+  button.on { background: rgba(55,240,192,.16); border-color: rgba(55,240,192,.5); color: var(--accent2); }
+  button.warn.on { background: rgba(255,138,42,.16); border-color: rgba(255,138,42,.5); color: var(--accent); }
+
+  #selinfo { position: fixed; left: 50%; bottom: 16px; transform: translateX(-50%); z-index: 10;
+    font-size: 12px; color: var(--txt-dim); padding: 6px 14px; border-radius: 20px;
+    background: var(--panel); border: 1px solid var(--line); backdrop-filter: blur(8px); }
+  #selinfo b { color: var(--accent); }
+
+  #hint { position: fixed; bottom: 16px; right: 16px; z-index: 9; font-size: 11px; color: var(--txt-dim);
+    text-align: right; line-height: 1.7; opacity: .8; }
+
+  /* —— 手机窄屏适配 —— */
+  @media (max-width: 820px) {
+    #hint, #selinfo, #parts { display: none; }
+    #title { max-width: 46vw; padding: 10px 12px; }
+    #title h2 { font-size: 13px; }
+    #title .sub { font-size: 10px; }
+    #related { top: 10px; right: 8px; left: auto; transform: none; gap: 5px; }
+    #related button { padding: 6px 10px; font-size: 11px; }
+    #controls { top: auto; bottom: 10px; right: 8px; left: 8px; width: auto; padding: 10px 12px; }
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<div id="title" class="panel">
+  <span class="tag">TESLA · 官方 EPC 目录</span>
+  <h2>Model Y 后置电驱总成</h2>
+  <p class="sub">驱动电机 + 单速减速齿轮箱 + 差速器 · 爆炸示意（几何示意建模，非精确尺寸）</p>
+</div>
+
+<div id="related">
+  <button onclick="location.href='../../index.html'">↑ 整车拓扑</button>
+  <button class="rel" onclick="location.href='../battery/'">← 电池包（供电）</button>
+</div>
+
+<div id="controls" class="panel">
+  <div class="ctl">
+    <label>电机转速</label>
+    <div class="big"><input type="range" id="speed" min="0" max="100" value="22"><span class="val" id="speedval">22%</span></div>
+  </div>
+  <div class="ctl">
+    <label>总分解</label>
+    <div class="big"><input type="range" id="master" min="0" max="100" value="0"><span class="val" id="masterval">0%</span></div>
+  </div>
+  <div class="btnrow ctl">
+    <button id="btnRun" class="on">⏸ 暂停转动</button>
+    <button id="btnExplode">一键拆分</button>
+    <button id="btnMerge">一键合并</button>
+  </div>
+  <div class="btnrow">
+    <button id="btnXray">全透视 X-Ray</button>
+    <button id="btnLabel">部件标注</button>
+    <button id="btnSpin">自动旋转</button>
+  </div>
+</div>
+
+<div id="parts" class="panel">
+  <h2>零部件 · 单独开合</h2>
+  <p class="sub">拖滑块或点击选中（点击 3D 部件也可选中）</p>
+  <div class="list" id="partList"></div>
+</div>
+
+<div id="selinfo">当前选中：<b id="selname">无</b></div>
+<div id="hint">🖱 左键旋转 · 滚轮缩放 · 右键平移<br>点击部件高亮选中</div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js",
+    "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.160.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+
+// ---------- 基础场景 ----------
+const app = document.getElementById('app');
+const scene = new THREE.Scene();
+scene.fog = new THREE.Fog(0x0e1116, 900, 2600);
+
+const camera = new THREE.PerspectiveCamera(46, innerWidth / innerHeight, 1, 5000);
+camera.position.set(560, 300, 640);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.setSize(innerWidth, innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+app.appendChild(renderer.domElement);
+
+const labelRenderer = new CSS2DRenderer();
+labelRenderer.setSize(innerWidth, innerHeight);
+labelRenderer.domElement.style.position = 'absolute';
+labelRenderer.domElement.style.top = '0';
+labelRenderer.domElement.style.pointerEvents = 'none';
+app.appendChild(labelRenderer.domElement);
+
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, -30, 0);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.minDistance = 220;
+controls.maxDistance = 2200;
+
+// 灯光
+scene.add(new THREE.HemisphereLight(0xcfd8e0, 0x1a2027, 0.75));
+const key = new THREE.DirectionalLight(0xffffff, 2.1);
+key.position.set(500, 800, 400);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+key.shadow.camera.left = -900; key.shadow.camera.right = 900;
+key.shadow.camera.top = 900; key.shadow.camera.bottom = -900;
+key.shadow.camera.far = 3000;
+scene.add(key);
+const fill = new THREE.DirectionalLight(0x7fb3d5, 0.7);
+fill.position.set(-400, 200, -500);
+scene.add(fill);
+
+// 地面
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(4000, 4000),
+  new THREE.MeshStandardMaterial({ color: 0x12161c, roughness: 0.95, metalness: 0.1 })
+);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -240;
+ground.receiveShadow = true;
+scene.add(ground);
+const grid = new THREE.GridHelper(2000, 40, 0x2a3440, 0x1a222b);
+grid.position.y = -239;
+scene.add(grid);
+
+// ---------- 材质（注册进 X-Ray）----------
+const matReg = [];
+function reg(mat, base) { matReg.push({ mat, base }); return mat; }
+function setXray(on) {
+  for (const { mat, base } of matReg) {
+    mat.transparent = true; mat.depthWrite = !on;
+    mat.opacity = on ? base * 0.32 : base; mat.needsUpdate = true;
+  }
+}
+const M = {
+  housing: reg(new THREE.MeshStandardMaterial({ color: 0x9fb6c4, metalness: 0.55, roughness: 0.35, transparent: true, opacity: 0.36 }), 0.36),
+  housingEdge: new THREE.LineBasicMaterial({ color: 0xbfe0f2, transparent: true, opacity: 0.5 }),
+  gear: reg(new THREE.MeshStandardMaterial({ color: 0xd8e1e8, metalness: 0.9, roughness: 0.24 }), 1.0),
+  steel: reg(new THREE.MeshStandardMaterial({ color: 0xb9c4cc, metalness: 0.85, roughness: 0.3 }), 1.0),
+  shaft: reg(new THREE.MeshStandardMaterial({ color: 0x8e99a2, metalness: 0.9, roughness: 0.35 }), 1.0),
+  copper: reg(new THREE.MeshStandardMaterial({ color: 0xd27f3a, metalness: 0.95, roughness: 0.28, emissive: 0x2a1503, emissiveIntensity: 0.5 }), 1.0),
+  rotor: reg(new THREE.MeshStandardMaterial({ color: 0x414b53, metalness: 0.85, roughness: 0.4 }), 1.0),
+  rotorBar: reg(new THREE.MeshStandardMaterial({ color: 0xc4d4de, metalness: 0.8, roughness: 0.25 }), 1.0),
+  inv: reg(new THREE.MeshStandardMaterial({ color: 0x232a30, metalness: 0.6, roughness: 0.45 }), 1.0),
+  invFin: reg(new THREE.MeshStandardMaterial({ color: 0x39434b, metalness: 0.7, roughness: 0.4 }), 1.0),
+  case: reg(new THREE.MeshStandardMaterial({ color: 0x20262c, metalness: 0.7, roughness: 0.5 }), 1.0),
+  bolt: reg(new THREE.MeshStandardMaterial({ color: 0x5c6871, metalness: 0.9, roughness: 0.3 }), 1.0),
+};
+const leaderMat = new THREE.LineBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.5, depthTest: false });
+
+// ---------- 颜色 ----------
+const C_BLUE = '#7fb3d5', C_ORANGE = '#ff8a2a', C_TEAL = '#37f0c0';
+
+// ---------- 齿轮生成 ----------
+function gearShape(teeth, module) {
+  const pitchR = module * teeth / 2;
+  const rTip = pitchR + module * 0.95;
+  const rRoot = pitchR - module * 1.2;
+  const step = Math.PI * 2 / teeth;
+  const halfTooth = step * 0.26, halfTip = step * 0.13;
+  const s = new THREE.Shape();
+  let first = true;
+  for (let i = 0; i < teeth; i++) {
+    const c = i * step + step / 2;
+    const quad = [
+      [rRoot, c - halfTooth], [rTip, c - halfTip], [rTip, c + halfTip], [rRoot, c + halfTooth]
+    ];
+    for (const [r, a] of quad) {
+      const x = r * Math.cos(a), y = r * Math.sin(a);
+      if (first) { s.moveTo(x, y); first = false; } else s.lineTo(x, y);
+    }
+  }
+  s.closePath();
+  return { shape: s, pitchR, rTip, rRoot };
+}
+function makeGear(teeth, module, thickness, mat) {
+  const { shape, pitchR } = gearShape(teeth, module);
+  const geo = new THREE.ExtrudeGeometry(shape, { depth: thickness, bevelEnabled: false, curveSegments: 6 });
+  geo.rotateY(Math.PI / 2); // 轴 Z -> X
+  geo.center();
+  const mesh = new THREE.Mesh(geo, mat);
+  mesh.castShadow = true;
+  return { mesh, pitchR };
+}
+
+// ---------- 部件注册 / 标签 ----------
+const parts = [];       // {id,label,color,group,base,explode,factor,target,spin,meshes}
+const pickMeshes = [];  // 用于射线拾取
+const meshToPart = new Map();
+
+function regPart(id, label, color, explodeVec, baseVec, spinKind) {
+  const g = new THREE.Group();
+  g.position.copy(baseVec);
+  scene.add(g);
+  const p = {
+    id, label, color, group: g,
+    base: baseVec.clone(), explode: explodeVec.clone(),
+    factor: 0, target: 0, spin: spinKind, meshes: []
+  };
+  parts.push(p);
+  return p;
+}
+function addMesh(part, mesh) { part.group.add(mesh); part.meshes.push(mesh); pickMeshes.push(mesh); meshToPart.set(mesh, part); return mesh; }
+
+function label(part, text, anchor, offset) {
+  // 引线
+  const from = anchor.clone(), to = anchor.clone().add(offset);
+  const lineGeo = new THREE.BufferGeometry().setFromPoints([from, to]);
+  const line = new THREE.Line(lineGeo, leaderMat);
+  part.group.add(line);
+  // CSS2D 标签
+  const div = document.createElement('div');
+  div.className = 'lbl';
+  div.innerHTML = text;
+  Object.assign(div.style, {
+    color: part.color, fontSize: '12px', fontWeight: '600', whiteSpace: 'nowrap',
+    textShadow: '0 1px 6px rgba(0,0,0,.9)', background: 'rgba(10,14,18,.55)',
+    padding: '2px 8px', borderRadius: '20px', border: `1px solid ${part.color}55`,
+    letterSpacing: '.5px'
+  });
+  const obj = new CSS2DObject(div);
+  obj.position.copy(to);
+  part.group.add(obj);
+}
+
+// ---------- 尺寸常量 ----------
+const MOTOR_AXIS_Y = 0;      // 电机轴（沿 X）
+const DIFF_AXIS_Y = -72;     // 差速器轴（沿 X，下移）
+const MOTOR_CX = -90;        // 电机本体中心 X
+const GEAR_X = 40;           // 齿轮箱位置 X
+const RATIO = 15 / 75;       // 齿数比 小齿轮15 : 齿圈75 = 1:5
+const PHASE = Math.PI / 75;  // 齿圈初始半齿相位，保证啮合
+
+// ============================================================
+//  1) 逆变器
+// ============================================================
+(function () {
+  const p = regPart('inverter', '逆变器<br>Inverter', C_TEAL, new THREE.Vector3(0, 150, 0), new THREE.Vector3(0, 0, 0), null);
+  const box = new THREE.Mesh(new THREE.BoxGeometry(210, 60, 185), M.inv);
+  box.position.set(-70, 158, 0); box.castShadow = true;
+  addMesh(p, box);
+  // 散热鳍片
+  for (let i = 0; i < 7; i++) {
+    const fin = new THREE.Mesh(new THREE.BoxGeometry(210, 4, 6), M.invFin);
+    fin.position.set(-70, 130 + i * 8, 0);
+    addMesh(p, fin);
+  }
+  // 高压插接口
+  const plug = new THREE.Mesh(new THREE.CylinderGeometry(16, 16, 26, 24), M.invFin);
+  plug.rotation.z = Math.PI / 2; plug.position.set(-70, 158, 100);
+  addMesh(p, plug);
+  label(p, '逆变器 Inverter', new THREE.Vector3(-70, 195, 0), new THREE.Vector3(0, 60, 0));
+})();
+
+// ============================================================
+//  2) 定子壳体（透明）
+// ============================================================
+(function () {
+  const p = regPart('statorHousing', '定子壳体<br>Stator Housing', C_BLUE, new THREE.Vector3(0, 130, 0), new THREE.Vector3(0, 0, 0), null);
+  const shell = new THREE.Mesh(new THREE.CylinderGeometry(120, 120, 165, 48, 1, true), M.housing);
+  shell.rotation.z = Math.PI / 2; shell.position.set(MOTOR_CX, 0, 0);
+  addMesh(p, shell);
+  const edge = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.CylinderGeometry(120, 120, 165, 32)), M.housingEdge);
+  edge.rotation.z = Math.PI / 2; edge.position.set(MOTOR_CX, 0, 0);
+  p.group.add(edge);
+  label(p, '定子壳体 Stator Housing', new THREE.Vector3(MOTOR_CX, 130, 0), new THREE.Vector3(0, 50, 0));
+})();
+
+// ============================================================
+//  3) 定子（铁芯 + 铜绕组）
+// ============================================================
+(function () {
+  const p = regPart('stator', '定子绕组<br>Stator & Windings', C_ORANGE, new THREE.Vector3(0, 100, 0), new THREE.Vector3(0, 0, 0), null);
+  // 铁芯（叠片）
+  const core = new THREE.Mesh(new THREE.CylinderGeometry(106, 106, 150, 48), M.rotor);
+  core.rotation.z = Math.PI / 2; core.position.set(MOTOR_CX, 0, 0);
+  addMesh(p, core);
+  // 两端铜绕组（发卡式端部）
+  for (const sx of [-1, 1]) {
+    const tor = new THREE.Mesh(new THREE.TorusGeometry(104, 17, 18, 40), M.copper);
+    tor.rotation.y = Math.PI / 2;
+    tor.position.set(MOTOR_CX + sx * 72, 0, 0);
+    addMesh(p, tor);
+  }
+  label(p, '定子绕组 Stator', new THREE.Vector3(MOTOR_CX, 118, 0), new THREE.Vector3(0, 42, 0));
+})();
+
+// ============================================================
+//  4) 转子（带可见标记 → 转动可见）
+// ============================================================
+(function () {
+  const p = regPart('rotor', '转子<br>Rotor', C_ORANGE, new THREE.Vector3(0, 70, 0), new THREE.Vector3(0, 0, 0), 'motor');
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(62, 62, 150, 40), M.rotor);
+  body.rotation.z = Math.PI / 2; body.position.set(MOTOR_CX, 0, 0); body.castShadow = true;
+  addMesh(p, body);
+  // 亮色键条 → 转动可辨
+  for (let i = 0; i < 2; i++) {
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(150, 8, 8), M.rotorBar);
+    bar.position.set(MOTOR_CX, 0, i === 0 ? 62 : -62);
+    addMesh(p, bar);
+  }
+  label(p, '转子 Rotor', new THREE.Vector3(MOTOR_CX, 78, 0), new THREE.Vector3(0, 42, 0));
+})();
+
+// ============================================================
+//  5) 输入轴 + 小齿轮（驱动齿轮）
+// ============================================================
+(function () {
+  const p = regPart('inputShaft', '输入轴+小齿轮<br>Input Shaft & Pinion', C_ORANGE, new THREE.Vector3(150, 0, 0), new THREE.Vector3(0, 0, 0), 'motor');
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(11, 11, 52, 24), M.shaft);
+  shaft.rotation.z = Math.PI / 2; shaft.position.set(14, 0, 0); shaft.castShadow = true;
+  addMesh(p, shaft);
+  const { mesh: pinion } = makeGear(15, 1.6, 24, M.gear);
+  pinion.position.set(GEAR_X, 0, 0);
+  addMesh(p, pinion);
+  label(p, '输入轴+小齿轮', new THREE.Vector3(GEAR_X + 20, 26, 0), new THREE.Vector3(20, 40, 0));
+})();
+
+// ============================================================
+//  6) 减速齿圈（大齿轮）
+// ============================================================
+(function () {
+  const p = regPart('ringGear', '减速齿圈<br>Ring Gear', C_ORANGE, new THREE.Vector3(0, 0, 165), new THREE.Vector3(0, DIFF_AXIS_Y, 0), 'diff');
+  const { mesh: ring } = makeGear(75, 1.6, 30, M.gear);
+  ring.position.set(GEAR_X, 0, 0);
+  addMesh(p, ring);
+  label(p, '减速齿圈 Ring Gear', new THREE.Vector3(GEAR_X, -72 + 66, 0), new THREE.Vector3(0, 60, 0));
+})();
+
+// ============================================================
+//  7) 差速器壳
+// ============================================================
+(function () {
+  const p = regPart('diffCase', '差速器壳<br>Differential Case', C_BLUE, new THREE.Vector3(0, 0, 120), new THREE.Vector3(0, DIFF_AXIS_Y, 0), 'diff');
+  const caseBody = new THREE.Mesh(new THREE.CylinderGeometry(48, 48, 56, 32), M.case);
+  caseBody.rotation.z = Math.PI / 2; caseBody.position.set(GEAR_X, 0, 0); caseBody.castShadow = true;
+  addMesh(p, caseBody);
+  // 法兰 + 螺栓 → 转动可辨
+  for (const sx of [-1, 1]) {
+    const flange = new THREE.Mesh(new THREE.CylinderGeometry(54, 54, 12, 32), M.case);
+    flange.rotation.z = Math.PI / 2; flange.position.set(GEAR_X + sx * 32, 0, 0);
+    addMesh(p, flange);
+    for (let i = 0; i < 6; i++) {
+      const a = i * Math.PI / 3;
+      const bolt = new THREE.Mesh(new THREE.SphereGeometry(4.5, 12, 10), M.bolt);
+      bolt.position.set(GEAR_X + sx * 32, Math.cos(a) * 50, Math.sin(a) * 50);
+      addMesh(p, bolt);
+    }
+  }
+  label(p, '差速器壳 Diff Case', new THREE.Vector3(GEAR_X, -72 + 60, 0), new THREE.Vector3(0, 55, 0));
+})();
+
+// ============================================================
+//  8) 半轴齿轮（差速器内部，X 轴）
+// ============================================================
+(function () {
+  const p = regPart('sideGears', '半轴齿轮×2<br>Side Gears', C_ORANGE, new THREE.Vector3(0, 0, 82), new THREE.Vector3(0, DIFF_AXIS_Y, 0), 'diff');
+  for (const sx of [-1, 1]) {
+    const { mesh: g } = makeGear(16, 1.0, 16, M.gear);
+    g.position.set(GEAR_X + sx * 17, 0, 0);
+    addMesh(p, g);
+  }
+  label(p, '半轴齿轮 Side Gears', new THREE.Vector3(GEAR_X, -72 + 28, 0), new THREE.Vector3(24, 46, 0));
+})();
+
+// ============================================================
+//  9) 行星齿轮（差速器内部，Y 轴）
+// ============================================================
+(function () {
+  const p = regPart('spiderGears', '行星齿轮×2<br>Spider Gears', C_ORANGE, new THREE.Vector3(0, 0, 46), new THREE.Vector3(0, DIFF_AXIS_Y, 0), 'diff');
+  for (const sy of [-1, 1]) {
+    const { mesh: g } = makeGear(14, 1.0, 14, M.gear);
+    g.rotation.z = Math.PI / 2; // 轴 X -> Y
+    g.position.set(GEAR_X, sy * 16, 0);
+    addMesh(p, g);
+  }
+  label(p, '行星齿轮 Spider Gears', new THREE.Vector3(GEAR_X, -72 - 26, 0), new THREE.Vector3(24, -40, 0));
+})();
+
+// ============================================================
+//  10) 左半轴
+// ============================================================
+(function () {
+  const p = regPart('halfShaftL', '左半轴<br>Left Half Shaft', C_TEAL, new THREE.Vector3(-160, 0, 0), new THREE.Vector3(0, DIFF_AXIS_Y, 0), 'diff');
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 128, 20), M.shaft);
+  shaft.rotation.z = Math.PI / 2; shaft.position.set(-62, 0, 0); shaft.castShadow = true;
+  addMesh(p, shaft);
+  const bar = new THREE.Mesh(new THREE.BoxGeometry(40, 5, 5), M.rotorBar);
+  bar.position.set(-20, 0, 9);
+  addMesh(p, bar);
+  const cvj = new THREE.Mesh(new THREE.SphereGeometry(20, 20, 16), M.case);
+  cvj.position.set(-126, 0, 0);
+  addMesh(p, cvj);
+  label(p, '左半轴 Left Half Shaft', new THREE.Vector3(-80, -72 + 24, 0), new THREE.Vector3(0, 40, 0));
+})();
+
+// ============================================================
+//  11) 右半轴
+// ============================================================
+(function () {
+  const p = regPart('halfShaftR', '右半轴<br>Right Half Shaft', C_TEAL, new THREE.Vector3(160, 0, 0), new THREE.Vector3(0, DIFF_AXIS_Y, 0), 'diff');
+  const shaft = new THREE.Mesh(new THREE.CylinderGeometry(9, 9, 128, 20), M.shaft);
+  shaft.rotation.z = Math.PI / 2; shaft.position.set(104, 0, 0); shaft.castShadow = true;
+  addMesh(p, shaft);
+  const bar = new THREE.Mesh(new THREE.BoxGeometry(40, 5, 5), M.rotorBar);
+  bar.position.set(62, 0, 9);
+  addMesh(p, bar);
+  const cvj = new THREE.Mesh(new THREE.SphereGeometry(20, 20, 16), M.case);
+  cvj.position.set(168, 0, 0);
+  addMesh(p, cvj);
+  label(p, '右半轴 Right Half Shaft', new THREE.Vector3(120, -72 + 24, 0), new THREE.Vector3(0, 40, 0));
+})();
+
+// ============================================================
+//  12) 齿轮箱前壳（透明）
+// ============================================================
+(function () {
+  const p = regPart('frontHousing', '齿轮箱前壳<br>Gearbox Housing', C_BLUE, new THREE.Vector3(0, 0, 230), new THREE.Vector3(0, DIFF_AXIS_Y, 0), null);
+  const shell = new THREE.Mesh(new THREE.CylinderGeometry(130, 130, 76, 48, 1, true), M.housing);
+  shell.rotation.z = Math.PI / 2; shell.position.set(GEAR_X, 0, 0);
+  addMesh(p, shell);
+  const edge = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.CylinderGeometry(130, 130, 76, 32)), M.housingEdge);
+  edge.rotation.z = Math.PI / 2; edge.position.set(GEAR_X, 0, 0);
+  p.group.add(edge);
+  label(p, '齿轮箱前壳 Gearbox Housing', new THREE.Vector3(GEAR_X, -72 + 140, 0), new THREE.Vector3(0, 55, 0));
+})();
+
+// ============================================================
+//  13) 电机后盖
+// ============================================================
+(function () {
+  const p = regPart('rearCap', '电机后盖<br>Rear End Cap', C_BLUE, new THREE.Vector3(-170, 0, 0), new THREE.Vector3(0, 0, 0), null);
+  const cap = new THREE.Mesh(new THREE.CylinderGeometry(120, 120, 14, 48), M.steel);
+  cap.rotation.z = Math.PI / 2; cap.position.set(-175, 0, 0); cap.castShadow = true;
+  addMesh(p, cap);
+  for (let i = 0; i < 8; i++) {
+    const a = i * Math.PI / 4;
+    const bolt = new THREE.Mesh(new THREE.SphereGeometry(4, 12, 10), M.bolt);
+    bolt.position.set(-175, Math.cos(a) * 112, Math.sin(a) * 112);
+    addMesh(p, bolt);
+  }
+  label(p, '电机后盖 Rear End Cap', new THREE.Vector3(-175, 132, 0), new THREE.Vector3(0, 42, 0));
+})();
+
+// ============================================================
+//  生成每部件滑块列表
+// ============================================================
+const partListEl = document.getElementById('partList');
+let selected = null, selBox = null;
+
+function selectPart(part) {
+  selected = part;
+  if (selBox) { scene.remove(selBox); selBox = null; }
+  document.querySelectorAll('#partList .row').forEach(r => r.classList.toggle('sel', part && r.dataset.id === part.id));
+  document.getElementById('selname').textContent = part ? part.label.replace(/<br>.*/, '') : '无';
+  if (part) {
+    selBox = new THREE.BoxHelper(part.group, 0xff8a2a);
+    selBox.material.depthTest = false;
+    scene.add(selBox);
+  }
+}
+
+for (const p of parts) {
+  const row = document.createElement('div');
+  row.className = 'row'; row.dataset.id = p.id;
+  row.innerHTML = `
+    <span class="dot" style="background:${p.color}"></span>
+    <span class="nm" title="${p.label.replace(/<br>.*/, '')}">${p.label.replace(/<br>.*/, '')}</span>
+    <input type="range" min="0" max="100" value="0">
+    <span class="pct">0%</span>`;
+  const slider = row.querySelector('input');
+  slider.addEventListener('input', () => {
+    p.target = slider.value / 100;
+    row.querySelector('.pct').textContent = slider.value + '%';
+  });
+  row.addEventListener('click', (e) => { if (e.target !== slider) selectPart(selected === p ? null : p); });
+  partListEl.appendChild(row);
+}
+
+// ============================================================
+//  3D 拾取
+// ============================================================
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+renderer.domElement.addEventListener('pointerdown', (e) => {
+  pointer.x = (e.clientX / innerWidth) * 2 - 1;
+  pointer.y = -(e.clientY / innerHeight) * 2 + 1;
+  raycaster.setFromCamera(pointer, camera);
+  const hits = raycaster.intersectObjects(pickMeshes, false);
+  selectPart(hits.length ? meshToPart.get(hits[0].object) : null);
+});
+
+// ============================================================
+//  UI 控制
+// ============================================================
+let motorOn = true, motorSpeed = 0.5, motorAngle = 0;
+let xray = false, labelsOn = true, autoRotate = false;
+let masterTarget = 0;
+
+const speedEl = document.getElementById('speed'), speedVal = document.getElementById('speedval');
+const masterEl = document.getElementById('master'), masterVal = document.getElementById('masterval');
+speedEl.addEventListener('input', () => { motorSpeed = speedEl.value / 100 * 2.2; speedVal.textContent = speedEl.value + '%'; });
+
+masterEl.addEventListener('input', () => {
+  masterTarget = masterEl.value / 100;
+  masterVal.textContent = masterEl.value + '%';
+  // 同步所有滑块
+  parts.forEach((p, i) => {
+    p.target = masterTarget;
+    const row = partListEl.children[i];
+    row.querySelector('input').value = masterEl.value;
+    row.querySelector('.pct').textContent = masterEl.value + '%';
+  });
+});
+
+const btnRun = document.getElementById('btnRun');
+btnRun.addEventListener('click', () => {
+  motorOn = !motorOn;
+  btnRun.textContent = motorOn ? '⏸ 暂停转动' : '▶ 启动转动';
+  btnRun.classList.toggle('on', motorOn);
+});
+document.getElementById('btnExplode').addEventListener('click', () => { masterEl.value = 100; masterEl.dispatchEvent(new Event('input')); });
+document.getElementById('btnMerge').addEventListener('click', () => { masterEl.value = 0; masterEl.dispatchEvent(new Event('input')); });
+
+const btnXray = document.getElementById('btnXray');
+btnXray.addEventListener('click', () => { xray = !xray; setXray(xray); btnXray.classList.toggle('on', xray); });
+const btnLabel = document.getElementById('btnLabel');
+btnLabel.addEventListener('click', () => {
+  labelsOn = !labelsOn; btnLabel.classList.toggle('on', !labelsOn);
+  labelRenderer.domElement.style.display = labelsOn ? 'block' : 'none';
+  leaderMat.visible = labelsOn;
+});
+const btnSpin = document.getElementById('btnSpin');
+btnSpin.addEventListener('click', () => {
+  autoRotate = !autoRotate; controls.autoRotate = autoRotate; controls.autoRotateSpeed = 0.8;
+  btnSpin.classList.toggle('on', autoRotate);
+});
+
+// ============================================================
+//  动画循环
+// ============================================================
+const clock = new THREE.Clock();
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+
+  if (motorOn) motorAngle += motorSpeed * dt;
+  const ringAngle = -motorAngle * RATIO + PHASE;
+
+  for (const p of parts) {
+    if (p.spin === 'motor') p.group.rotation.x = motorAngle;
+    else if (p.spin === 'diff') p.group.rotation.x = ringAngle;
+    p.factor += (p.target - p.factor) * 0.16;
+    p.group.position.copy(p.base).addScaledVector(p.explode, p.factor);
+  }
+  if (selBox) selBox.update();
+
+  controls.update();
+  renderer.render(scene, camera);
+  labelRenderer.render(scene, camera);
+}
+animate();
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth / innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  labelRenderer.setSize(innerWidth, innerHeight);
+});
+</script>
+</body>
+</html>

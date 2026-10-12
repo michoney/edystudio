@@ -1,0 +1,152 @@
+/* ============================================================================
+ *  天池罗盘 —— 图元样式
+ *  线用鎏金，悬停转朱砂。默认极淡，激活时点亮，靠 opacity 与描边说话。
+ * ========================================================================== */
+
+#dial, #heroSvg { font-family: var(--f-song); }
+
+/* ───────── 外框与天球环 ───────── */
+.lp-frame-outer { fill: none; stroke: var(--gold-2); stroke-width: 2; }
+.lp-frame-inner { fill: none; stroke: var(--gold-3); stroke-width: 1; }
+
+.lp-sky { transform-origin: 400px 400px; animation: dial-spin 150s linear infinite; }
+.lp-sky-dot { fill: rgba(201,162,39,.42); }
+@keyframes dial-spin { to { transform: rotate(360deg); } }
+
+/* ───────── 二十四山 ───────── */
+.lp-mtn-divider { fill: none; stroke: rgba(201,162,39,.22); stroke-width: 1; }
+.lp-mtn {
+  fill: var(--paper-2);
+  font-size: 21px;
+  transition: fill .35s;
+}
+.lp-mtn-axis { fill: var(--gold-1); font-size: 26px; }
+.lp-cardinal { fill: var(--paper-3); letter-spacing: .1em; }
+.lp-sector:hover .lp-mtn, .lp-sector.is-active .lp-mtn { fill: var(--gold-1); }
+.lp-sector.is-active .lp-mtn-axis { fill: #fff2cf; }
+
+/* ───────── 刻度 ───────── */
+.lp-tick { fill: none; stroke: rgba(201,162,39,.3); stroke-width: 1; }
+.lp-tick-long  { stroke: rgba(201,162,39,.55); stroke-width: 1.4; }
+.lp-tick-short { stroke: rgba(201,162,39,.18); }
+
+.lp-rule { fill: none; stroke: var(--gold-2); stroke-width: 1.6; }
+.lp-rule-major { stroke: var(--gold-2); }
+
+/* ───────── 八卦主环 ───────── */
+.lp-sector { cursor: pointer; outline: none; }
+.lp-sector-hit { fill: transparent; }
+
+.lp-sector-face {
+  opacity: .045;
+  transition: opacity .38s var(--ease), fill-opacity .38s;
+}
+.lp-sector:hover .lp-sector-face { opacity: .13; }
+.lp-sector.is-active .lp-sector-face { opacity: .2; }
+
+.lp-sect-div { fill: none; stroke: rgba(201,162,39,.2); stroke-width: 1; }
+
+.lp-element-band {
+  fill: none; stroke-width: 5; opacity: .5;
+  transition: opacity .35s, stroke-width .35s;
+}
+.lp-element-band2 { fill: none; stroke-width: 4; opacity: .32; }
+.lp-sector:hover .lp-element-band,
+.lp-sector.is-active .lp-element-band { opacity: 1; stroke-width: 7; }
+
+.lp-sect-name {
+  fill: var(--paper);
+  transition: fill .35s;
+}
+.lp-sector:hover .lp-sect-name { fill: var(--gold-1); }
+.lp-sector.is-active .lp-sect-name { fill: #fff4d6; }
+
+.lp-sect-binary {
+  fill: var(--paper-3);
+  font-family: var(--f-num); letter-spacing: .3em;
+  opacity: 0;
+  transition: opacity .38s;
+}
+.lp-sector:hover .lp-sect-binary,
+.lp-sector.is-active .lp-sect-binary { opacity: 1; }
+
+/* 爻符 */
+.lp-yao { pointer-events: none; }
+.lp-yao-solid, .lp-yao-broken {
+  stroke: var(--gold-2);
+  stroke-linecap: round;
+  transition: stroke .35s, filter .35s;
+}
+.lp-sector:hover .lp-yao-solid, .lp-sector:hover .lp-yao-broken {
+  stroke: var(--gold-1);
+  filter: drop-shadow(0 0 7px rgba(230,205,134,.75));
+}
+.lp-sector.is-active .lp-yao-solid, .lp-sector.is-active .lp-yao-broken {
+  stroke: var(--cinnabar-1);
+  filter: drop-shadow(0 0 9px rgba(220,91,78,.7));
+}
+.lp-sector:focus-visible { outline: none; }
+.lp-sector:focus-visible .lp-yao-solid,
+.lp-sector:focus-visible .lp-yao-broken { stroke: var(--gold-1); }
+
+/* 键盘聚焦环：用扇面自身描一圈 */
+.lp-sector:focus-visible .lp-sector-face {
+  opacity: .18;
+  stroke: var(--gold-1);
+  stroke-width: 2;
+}
+
+/* ───────── 内环：八门 ───────── */
+.lp-inner-face {
+  fill: rgba(201,162,39,.035);
+  stroke: none;
+  transition: fill .35s;
+}
+.lp-inner-div { fill: none; stroke: rgba(201,162,39,.16); stroke-width: 1; }
+.lp-gate {
+  fill: var(--paper-2);
+  letter-spacing: .14em;
+  transition: fill .35s;
+}
+.lp-gate.is-active { fill: var(--gold-1); }
+.lp-sector:hover .lp-gate { fill: var(--gold-1); }
+
+/* ───────── 天池 ───────── */
+.lp-pool-face {
+  fill: #0b0906;
+  stroke: var(--gold-3);
+  stroke-width: 1;
+}
+.lp-pool-rule { stroke: rgba(201,162,39,.2); stroke-width: 1; }
+
+.lp-taiji-spin {
+  transform-origin: 400px 400px;
+  animation: dial-spin 34s linear infinite;
+}
+
+#dial.paused .lp-taiji-spin,
+#dial.paused .lp-sky { animation-play-state: paused; }
+
+.lp-pool { cursor: pointer; }
+#dial.paused .lp-pool-rule { stroke: var(--cinnabar); opacity: .7; }
+
+/* ───────── 序 · 封面太极 ───────── */
+#heroSvg .ht-ring { transform-origin: 310px 310px; animation: dial-spin 76s linear infinite; }
+#heroSvg .ht-taiji { transform-origin: 310px 310px; animation: dial-spin 42s linear infinite reverse; }
+#heroSvg .ht-arc { fill: none; stroke: rgba(201,162,39,.16); stroke-width: 1; }
+#heroSvg .ht-mark { fill: none; stroke: rgba(201,162,39,.32); stroke-width: 1.2; }
+#heroSvg .ht-name {
+  fill: var(--paper-2);
+  font-family: var(--f-song); font-size: 27px;
+  text-anchor: middle; dominant-baseline: central;
+  letter-spacing: .1em;
+}
+#heroSvg .ht-yang {
+  fill: none; stroke: var(--gold-2); stroke-width: 8; stroke-linecap: round;
+}
+#heroSvg .ht-yang.is-yin { stroke: var(--gold-1); }
+#heroSvg .ht-caption {
+  fill: var(--gold-3);
+  font-family: var(--f-song); font-size: 15px;
+  text-anchor: middle; letter-spacing: .3em;
+}

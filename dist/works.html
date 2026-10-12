@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>作品索引 · EdyStudio</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{--bg:#0a0a0a;--fg:#f4f4ef;--dim:#8d8d86;--line:#232323;--red:#ff3333;--gold:#e0a433}
+  body{background:var(--bg);color:var(--fg);overflow-x:hidden;
+       font-family:-apple-system,BlinkMacSystemFont,'PingFang SC','Helvetica Neue',sans-serif;
+       font-size:16px;line-height:1.9;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  .mono{font-family:'Courier New',monospace}
+
+  .topbar{position:sticky;top:0;z-index:9;display:flex;justify-content:space-between;align-items:center;
+          gap:14px;padding:14px clamp(18px,4vw,56px);background:rgba(10,10,10,.86);
+          backdrop-filter:blur(12px);border-bottom:1px solid var(--line);font-size:13px}
+  .topbar a.back{letter-spacing:.06em}
+  .topbar .count{color:var(--dim);font-size:12px;letter-spacing:.1em}
+
+  .hero{padding:clamp(56px,9vh,110px) clamp(18px,4vw,56px) 34px;max-width:1180px;margin:0 auto}
+  .eyebrow{font-size:11px;letter-spacing:.24em;color:var(--red);text-transform:uppercase}
+  h1{font-size:clamp(34px,6.2vw,66px);font-weight:600;letter-spacing:-.02em;line-height:1.12;margin:14px 0 18px}
+  .hero p{color:var(--dim);font-size:17px;line-height:1.9;max-width:64ch}
+  .stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:26px}
+  .stat{border:1px solid var(--line);border-radius:999px;padding:7px 15px;font-size:13px;color:var(--dim)}
+  .stat b{color:var(--fg);font-weight:600}
+
+  main{max-width:1180px;margin:0 auto;padding:0 clamp(18px,4vw,56px) 90px}
+  section{margin-top:clamp(52px,7vh,88px)}
+  .sec-head{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;
+            border-bottom:1px solid var(--line);padding-bottom:14px;margin-bottom:8px}
+  .sec-head h2{font-size:clamp(22px,3.2vw,32px);font-weight:600;letter-spacing:-.01em}
+  .sec-head .cnt{font-size:12px;color:var(--dim);letter-spacing:.14em}
+  .sec-note{color:var(--dim);font-size:14px;margin:10px 0 4px}
+
+  .card{display:flex;justify-content:space-between;align-items:center;gap:20px;
+        padding:24px 4px;border-bottom:1px solid var(--line);transition:background .18s,padding .18s}
+  a.card:hover{background:#111;padding-left:12px;padding-right:12px}
+  .card .idx{font-family:'Courier New',monospace;font-size:12px;color:var(--dim);min-width:30px;letter-spacing:.08em}
+  .card .body{flex:1;min-width:0}
+  .card h3{font-size:19px;font-weight:600;letter-spacing:-.01em;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .card p{color:var(--dim);font-size:14.5px;line-height:1.75;margin-top:5px}
+  .card .go{font-size:20px;color:var(--dim);flex:0 0 auto}
+  a.card:hover .go{color:var(--red)}
+  .pill{font-size:11px;letter-spacing:.1em;padding:3px 9px;border-radius:999px;border:1px solid #3a3a3a;color:var(--dim)}
+  .pill.oss{border-color:#2f4a2f;color:#8fd18f}
+  .pill.local{border-color:#4a3a2f;color:#e0b173}
+  .pill.site{border-color:#3a2f4a;color:#c3a2e0}
+
+  footer{border-top:1px solid var(--line);padding:34px clamp(18px,4vw,56px);
+         color:var(--dim);font-size:12px;letter-spacing:.1em;max-width:1180px;margin:0 auto}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <a class="back" href="index.html">← EdyStudio</a>
+  <span class="count mono" id="topCount"></span>
+</div>
+
+<header class="hero">
+  <p class="eyebrow">// WORKS INDEX</p>
+  <h1>作品索引</h1>
+  <p>EdyStudio 全部可看的东西，一页看完。分三类：<b>网页 / 3D / 交互</b>在线上能直接打开；
+     <b>开源仓库</b>是能 clone 的代码与工具；<b>影像 · 图像</b>是成片与图集，标注了上线状态。</p>
+  <div class="stats" id="stats"></div>
+</header>
+
+<main>
+  <section id="s-web"><div class="sec-head"><h2>网页 · 3D · 交互</h2><span class="cnt mono" id="c-web"></span></div>
+    <p class="sec-note">线上可直接打开，手机也能看。点名称进入。</p><div class="list" data-list="web"></div></section>
+
+  <section id="s-oss"><div class="sec-head"><h2>开源仓库 · GitHub</h2><span class="cnt mono" id="c-oss"></span></div>
+    <p class="sec-note">能 clone、能跑、能改的代码与工具集。</p><div class="list" data-list="oss"></div></section>
+
+  <section id="s-media"><div class="sec-head"><h2>影像 · 图像作品</h2><span class="cnt mono" id="c-media"></span></div>
+    <p class="sec-note">AI 生成的短片、MV、商业视频与图集。标「本地」的尚未上线，需要时再部署。</p><div class="list" data-list="media"></div></section>
+</main>
+
+<footer>EDY.AI.STUDIO · 作品索引 · 线上 <span id="fCount"></span> 件</footer>
+
+<script>
+/* 加内容 = 往对应数组加一条。
+   字段：[名称, 一句话说明, 链接, 标签]
+   标签：site=站内页面 / oss=开源仓库 / local=本地待上线 */
+const DATA = {
+  web: [
+    ["3D 网页作品墙", "001–010 十件：Aethera® / Liquid Studio / MicroVisuals / Lumina / RIVR / Fastshot / SpaceEdu / Aurevon / Moss Memory / Asme", "3d-web/", "site"],
+    ["EDY 选品 · Web3D 独立站", "商品图＝代码生成的 3D 模型 · 加购 / 下单全流程", "shop/", "site"],
+    ["EdyStudio 首页", "ASCII 水波纹首页 · 全站入口", "index.html", "site"],
+    ["Particle Gallery", "粒子特效画廊 · 生成艺术集合", "gallery.html", "site"],
+    ["Earth AI Command Center", "3D 地球气象监控仪表盘", "earth-ai-dashboard/", "site"],
+    ["施瓦西黑洞", "WebGL 实时渲染 · 黑洞引力透镜", "schwarzschild-blackhole/", "site"],
+    ["Tesla Model Y", "3D 产品展示 · 交互式看车", "tesla-model3/", "site"],
+    ["张五常 · 代总 DEMO", "560 篇朗读系统 · 双引擎 TTS", "zhangwuchang/toc.html", "site"],
+    ["易象 · 八卦罗盘", "MiniMax 版 · 天池罗盘", "yixiang/luopan-first/index.html#luopan", "site"],
+    ["GPT-6.0 项目", "001 筑城之间 / 002 大梅沙钓鱼", "gpt6/", "site"],
+    ["小游戏平台", "浏览器小游戏合集", "games/", "site"],
+    ["头像 INS", "灵感头像墙 · 密集网格", "avatar-ins/", "site"],
+    ["MiniMax H3 工作流", "本地 H3 技能展示页 · 一个工作流一张卡", "pixel-dither-art.html", "site"],
+    ["视频创作 Skill 矩阵", "AI 视频搬运/复刻类技能页", "ai-video/", "site"],
+    ["超哥严选 Skill", "已上线技能总汇", "skills.html", "site"],
+    ["Model Products", "模型与产品线", "models.html", "site"],
+    ["马哥验机 · 性能跑分", "Benchmark · 设备检测", "benchmark/", "site"],
+    ["GitHub 本周热榜", "自动更新的开源周榜", "github-weekly.html", "site"],
+    ["AI News", "AI 新闻聚合页", "ai-news.html", "site"],
+    ["AI Design", "AI 设计方向作品集", "ai-design.html", "site"],
+    ["Live Flights", "实时航班可视化", "flights.html", "site"],
+    ["实战训练营", "培训营介绍与报名", "camp.html", "site"],
+    ["金融实战训练", "金融方向课程页", "financial-practice.html", "site"],
+    ["Software", "软件与工具清单", "software.html", "site"],
+    ["合伙人招募", "达人/合伙人招募页", "recruit.html", "site"]
+  ],
+  oss: [
+    ["tidewater · 潮水镇", "浏览器 WebGPU 钓鱼小游戏（上游 dgreenheck/tidewater）", "https://michoney.github.io/tidewater/", "oss"],
+    ["sea-drift · 渔帆漂流记 V2.2", "南海航海日志 · 大鹏半岛增强版", "https://michoney.github.io/sea-drift/", "oss"],
+    ["winxp · 怀旧模拟器", "Windows XP 网页版 · 2005", "https://michoney.github.io/winxp/", "oss"],
+    ["yanglegeyang · 羊了个羊", "p5.js 消除闯关复刻", "https://michoney.github.io/yanglegeyang/", "oss"],
+    ["skill-library · 综合技能库", "Hermes / OpenClaw / Claude Codex 技能库", "https://michoney.github.io/skill-library/", "oss"],
+    ["agency-agents-zh", "267 个即插即用 AI 专家角色库", "https://michoney.github.io/agency-agents-zh/", "oss"],
+    ["minicpm5-tutorial", "MiniCPM5-1B 本地部署教程", "https://michoney.github.io/minicpm5-tutorial/", "oss"],
+    ["michoney-tutorials", "AI 教程合集 · 整合包部署 / Chrome 降内存", "https://michoney.github.io/michoney-tutorials/", "oss"],
+    ["xiaomage-shop", "小马哥海外独立站 · 极简电商 demo", "https://michoney.github.io/xiaomage-shop/", "oss"],
+    ["picrew-gallery", "二次元头像/插画画廊", "https://michoney.github.io/picrew-gallery/", "oss"],
+    ["okr-radar", "团队 OKR 雷达图", "https://michoney.github.io/okr-radar/", "oss"],
+    ["lottery-tools", "抽奖游戏 + 电商主图设计器", "https://michoney.github.io/lottery-tools/", "oss"]
+  ],
+  media: [
+    ["AI 发展史 · 50 秒", "Three.js + FFmpeg 程序化生成 · 62 段视频素材", "", "local"],
+    ["微缩世界 · 三场景", "微缩世界发布版 · 已出 edystudio 发布包", "", "local"],
+    ["山林民宿与飞机残骸", "交互式微缩场景", "", "local"],
+    ["富士山罗森", "交互式微缩场景", "", "local"],
+    ["冰岛飞机残骸", "海螺图生视频成片", "", "local"],
+    ["Y2K 游戏机", "海螺图生视频成片", "", "local"],
+    ["时尚修女短片 · 19 秒", "8 段分镜 + 27 张参考图", "", "local"],
+    ["中国 5000 年", "长片项目 · 201 张图 + 3 段视频", "", "local"],
+    ["云雾仙门", "15 段镜头 · 110 张图", "", "local"],
+    ["中式花房", "男主替换 + 双人首尾帧 + 建立镜头", "", "local"],
+    ["古风花轿镜头延续", "首尾帧延续镜头", "", "local"],
+    ["机器人视频男主替换", "11 段视频 · 24 张参考", "", "local"],
+    ["千禧住宅换装系列", "换装测试 + 千禧年之家（多版本）", "", "local"],
+    ["hi 红椅云朵 · 20 秒", "短片 · 5 段视频", "", "local"],
+    ["风与海 · BLUE", "83 段素材的影像项目", "", "local"],
+    ["战术女兵手办", "手办 360 转台 + 图集", "", "local"],
+    ["复古版画风插画", "11 张 · 版画风图集", "", "local"],
+    ["中国 / 卡通壁纸", "壁纸图集 · 14 张", "", "local"]
+  ]
+};
+
+const LABEL = {site:"站内", oss:"开源", local:"本地"};
+const root = document.querySelectorAll('[data-list]');
+let onlineCount = 0, totalOnlineItems = 0;
+
+Object.keys(DATA).forEach(key => {
+  const host = document.querySelector('[data-list="'+key+'"]');
+  if (!host) return;
+  DATA[key].forEach((it, i) => {
+    const [name, desc, href, tag] = it;
+    const n = String(i+1).padStart(2,'0');
+    const inner =
+      '<span class="idx">'+n+'</span>' +
+      '<span class="body"><h3>'+name+'<span class="pill '+tag+'">'+LABEL[tag]+'</span></h3><p>'+desc+'</p></span>' +
+      (href ? '<span class="go">↗</span>' : '<span class="go" style="opacity:.3">·</span>');
+    if (href) {
+      const a = document.createElement('a');
+      a.className = 'card'; a.href = href;
+      if (href.startsWith('http')) { a.target = '_blank'; a.rel = 'noopener'; }
+      a.innerHTML = inner;
+      host.appendChild(a);
+      totalOnlineItems++;
+    } else {
+      const d = document.createElement('div');
+      d.className = 'card'; d.innerHTML = inner;
+      host.appendChild(d);
+    }
+  });
+  const cEl = document.getElementById('c-'+key);
+  if (cEl) cEl.textContent = DATA[key].length + ' 件';
+});
+
+const online = DATA.web.length + DATA.oss.length;
+document.getElementById('stats').innerHTML =
+  '<span class="stat"><b>'+DATA.web.length+'</b> 个网页 / 交互作品</span>' +
+  '<span class="stat"><b>'+DATA.oss.length+'</b> 个开源仓库</span>' +
+  '<span class="stat"><b>'+DATA.media.length+'</b> 部影像 / 图像作品</span>' +
+  '<span class="stat">线上可直接打开 <b>'+online+'</b> 件</span>';
+document.getElementById('topCount').textContent = 'ONLINE ' + online + ' · LOCAL ' + DATA.media.length;
+document.getElementById('fCount').textContent = online + ' 件';
+</script>
+</body>
+</html>

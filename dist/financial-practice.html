@@ -58,6 +58,8 @@
   .data-table td { padding: 10px 14px; border-bottom: 1px solid #111; color: #ccc; }
   .data-table tr:hover td { background: #0d0d0d; }
   .data-table .highlight { color: #2ecc71; font-weight: 700; }
+  .mag7 td.red { color:#e74c3c; font-weight:700; font-family:'Courier New',monospace; }
+  .mag7 td.green { color:#2ecc71; font-weight:700; font-family:'Courier New',monospace; }
 
   .key-points { margin-top: 20px; padding: 20px; background: #0d0d0d; border-left: 3px solid #9b59b6; border-radius: 0 6px 6px 0; }
   .key-points h4 { font-size: 13px; color: #9b59b6; letter-spacing: 2px; margin-bottom: 12px; }
@@ -168,11 +170,15 @@
     <div class="stat-row">
       <div class="stat">
         <div class="label"><span class="cn">最新价</span>LATEST PRICE</div>
-        <div class="value red">¥406.49</div>
+        <div class="value">¥<span id="livePrice">--</span></div>
       </div>
       <div class="stat">
         <div class="label"><span class="cn">涨跌</span>CHANGE</div>
-        <div class="value red">-17.13%</div>
+        <div id="liveChange" class="value">--</div>
+      </div>
+      <div class="stat" style="flex-basis:100%">
+        <div class="label"><span class="cn">行情</span>LIVE <span id="liveTime">--</span> · 每 60 秒自动刷新</div>
+        <div id="liveMeta" class="value" style="font-size:12px;color:#999">--</div>
       </div>
       <div class="stat">
         <div class="label"><span class="cn">52周高</span>52W HIGH</div>
@@ -191,6 +197,21 @@
         <div class="value">创业板</div>
       </div>
     </div>
+
+    <div style="margin:34px 0 8px;font-size:15px;letter-spacing:2px;color:#ccc;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;">
+      <strong>大盘看板</strong>
+      <span style="font-size:10px;letter-spacing:2px;color:#ff4444;font-family:'Courier New',monospace;">MARKET INDICES · <span id="indexTime">--</span> · 每 60 秒自动刷新</span>
+    </div>
+    <div class="stat-row" id="indexGrid"><!-- rendered by live-quote.js --></div>
+
+    <div style="margin:34px 0 8px;font-size:15px;letter-spacing:2px;color:#ccc;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;">
+      <strong>自选行情 Watchlist</strong>
+      <span style="font-size:10px;letter-spacing:2px;color:#ff4444;font-family:'Courier New',monospace;">LIVE <span id="mag7Time">--</span> · 每 60 秒自动刷新</span>
+    </div>
+    <table class="data-table mag7">
+      <tr><th>公司</th><th>最新价 USD</th><th>涨跌</th><th>涨跌幅</th></tr>
+      <tbody id="mag7Body"><tr><td colspan="4" style="color:#555">加载中…</td></tr></tbody>
+    </table>
 
     <table class="data-table">
       <tr>
@@ -258,6 +279,71 @@
     </div>
   </div>
 
+  <div style="margin:34px 0 8px;font-size:15px;letter-spacing:2px;color:#ccc;display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px;">
+    <strong>港股 AI 科技 + 东南亚供应链 Watchlist</strong>
+    <span style="font-size:10px;letter-spacing:2px;color:#ff4444;font-family:'Courier New',monospace;">HK + SEA · AI TECH · <span id="hkTime">2026-09-25</span> · 28 标的</span>
+  </div>
+  <table class="data-table mag7">
+    <tr>
+      <th>代码</th><th>公司</th><th>赛道 / 东南亚关联</th><th>最新价 HKD</th><th>涨跌</th><th>涨跌幅</th><th>今开</th><th>最高</th><th>最低</th><th>昨收</th>
+    </tr>
+    <tr style="background:#0a0a0a;"><td colspan="10" style="font-size:10px;color:#9b59b6;letter-spacing:2px;padding:6px 14px;">▸ AI 大模型 / 应用层 · LLM · CHATBOT · VIDEO</td></tr>
+    <tr><td>00700</td><td>腾讯控股</td><td>混元 LLM · 投资 SE Asia 业务</td><td class="red">436.60</td><td class="red">-1.80</td><td class="red">-0.41%</td><td>437.20</td><td>437.20</td><td>431.20</td><td>438.40</td></tr>
+    <tr><td>09988</td><td>阿里巴巴-W</td><td>通义 · Lazada SE Asia</td><td class="red">108.40</td><td class="red">-1.60</td><td class="red">-1.46%</td><td>108.60</td><td>108.60</td><td>106.30</td><td>110.00</td></tr>
+    <tr><td>09888</td><td>百度集团-W</td><td>文心 · Apollo · 印尼投资</td><td class="red">85.30</td><td class="red">-1.00</td><td class="red">-1.16%</td><td>86.00</td><td>86.00</td><td>84.30</td><td>86.30</td></tr>
+    <tr><td>09999</td><td>网易</td><td>AI 游戏 · 海外发行</td><td class="red">180.90</td><td class="red">-5.70</td><td class="red">-3.06%</td><td>180.90</td><td>180.90</td><td>180.90</td><td>186.60</td></tr>
+    <tr><td>09618</td><td>京东集团-W</td><td>AI 物流 · 印尼站</td><td class="red">103.70</td><td class="red">-1.90</td><td class="red">-1.80%</td><td>103.70</td><td>103.70</td><td>103.70</td><td>105.60</td></tr>
+    <tr><td>03690</td><td>美团-W</td><td>本地生活 AI</td><td class="red">71.65</td><td class="red">-0.60</td><td class="red">-0.83%</td><td>71.65</td><td>71.65</td><td>71.65</td><td>72.25</td></tr>
+    <tr><td>09626</td><td>哔哩哔哩-W</td><td>AI 字幕 · 二次元</td><td class="green">116.50</td><td class="green">+0.10</td><td class="green">+0.09%</td><td>116.50</td><td>116.50</td><td>116.50</td><td>116.40</td></tr>
+    <tr><td>01024</td><td>快手-W</td><td>可灵 AI 视频</td><td class="red">30.02</td><td class="red">-0.48</td><td class="red">-1.57%</td><td>30.42</td><td>30.42</td><td>29.36</td><td>30.50</td></tr>
+    <tr><td>00020</td><td>商汤-W</td><td>AI 视觉 · 印尼智慧城市</td><td class="red">1.26</td><td class="red">-0.04</td><td class="red">-3.08%</td><td>1.30</td><td>1.30</td><td>1.22</td><td>1.30</td></tr>
+    <tr><td>06682</td><td>第四范式</td><td>决策 AI · 企业服务</td><td class="red">27.48</td><td class="red">-0.20</td><td class="red">-0.72%</td><td>28.50</td><td>28.50</td><td>26.54</td><td>27.68</td></tr>
+    <tr><td>02121</td><td>创新奇智</td><td>企业 AI</td><td class="red">3.05</td><td class="red">-0.01</td><td class="red">-0.33%</td><td>3.07</td><td>3.07</td><td>3.00</td><td>3.06</td></tr>
+    <tr><td>01357</td><td>美图公司</td><td>AI 图像 · 海外用户</td><td class="red">3.73</td><td class="red">-0.04</td><td class="red">-0.93%</td><td>3.77</td><td>3.77</td><td>3.65</td><td>3.76</td></tr>
+    <tr><td>03888</td><td>金山软件</td><td>WPS AI · Office</td><td class="red">24.52</td><td class="red">-0.24</td><td class="red">-0.97%</td><td>24.62</td><td>24.62</td><td>23.96</td><td>24.76</td></tr>
+    <tr style="background:#0a0a0a;"><td colspan="10" style="font-size:10px;color:#9b59b6;letter-spacing:2px;padding:6px 14px;">▸ 芯片代工 / 封测 / 设备 · 2nm vs 7nm 差距拉大</td></tr>
+    <tr><td>00981</td><td>中芯国际</td><td>7nm 代工 · 扩产滞后</td><td class="red">63.35</td><td class="red">-0.45</td><td class="red">-0.71%</td><td>63.70</td><td>63.70</td><td>62.35</td><td>63.80</td></tr>
+    <tr><td>01347</td><td>华虹宏力</td><td>特色工艺 · 成熟制程</td><td>110.40</td><td>0.00</td><td>0.00%</td><td>110.40</td><td>111.20</td><td>107.70</td><td>110.40</td></tr>
+    <tr><td>00522</td><td>ASMPT</td><td>封测设备 · 马来/新加坡厂</td><td class="red">164.20</td><td class="red">-1.80</td><td class="red">-1.08%</td><td>166.00</td><td>166.00</td><td>160.80</td><td>166.00</td></tr>
+    <tr style="background:#0a0a0a;"><td colspan="10" style="font-size:10px;color:#9b59b6;letter-spacing:2px;padding:6px 14px;">▸ 光学 / 摄像头 / AI 硬件 · 模组厂·越南/印尼产能</td></tr>
+    <tr><td>02382</td><td>舜宇光学</td><td>手机镜头 · 越南厂</td><td class="red">64.90</td><td class="red">-0.30</td><td class="red">-0.46%</td><td>65.20</td><td>65.20</td><td>63.00</td><td>65.20</td></tr>
+    <tr><td>01478</td><td>丘钛科技</td><td>摄像头模组 · 印度扩产</td><td class="red">5.12</td><td class="red">-0.01</td><td class="red">-0.10%</td><td>5.13</td><td>5.15</td><td>4.98</td><td>5.13</td></tr>
+    <tr><td>01415</td><td>高伟电子</td><td>Camera 模块 · 韩资客户</td><td class="green">22.76</td><td class="green">+0.22</td><td class="green">+0.98%</td><td>22.76</td><td>22.76</td><td>22.76</td><td>22.54</td></tr>
+    <tr><td>00732</td><td>信利国际</td><td>显示模组 · 惠州/汕尾</td><td class="red">0.80</td><td class="red">-0.01</td><td class="red">-0.63%</td><td>0.80</td><td>0.80</td><td>0.80</td><td>0.80</td></tr>
+    <tr><td>02018</td><td>瑞声科技</td><td>声学 · 越南/印尼产线</td><td class="red">39.54</td><td class="red">-0.80</td><td class="red">-1.98%</td><td>39.54</td><td>39.54</td><td>39.54</td><td>40.34</td></tr>
+    <tr style="background:#0a0a0a;"><td colspan="10" style="font-size:10px;color:#9b59b6;letter-spacing:2px;padding:6px 14px;">▸ 端侧 AI · 智驾 · 电子组装 · AI PC</td></tr>
+    <tr><td>00992</td><td>联想集团</td><td>AI PC · 合肥/深圳</td><td class="green">37.16</td><td class="green">+1.14</td><td class="green">+3.17%</td><td>36.02</td><td>37.16</td><td>35.58</td><td>36.02</td></tr>
+    <tr><td>01810</td><td>小米集团-W</td><td>SoC · 端侧 AI · 印度厂</td><td class="red">25.90</td><td class="red">-0.68</td><td class="red">-2.56%</td><td>26.20</td><td>26.20</td><td>25.36</td><td>26.58</td></tr>
+    <tr><td>02015</td><td>理想汽车-W</td><td>端到端智驾</td><td class="red">45.24</td><td class="red">-1.52</td><td class="red">-3.25%</td><td>46.76</td><td>46.76</td><td>44.90</td><td>46.76</td></tr>
+    <tr><td>09868</td><td>小鹏集团-W</td><td>AI 智驾 · 海外扩张</td><td class="red">39.46</td><td class="red">-0.76</td><td class="red">-1.89%</td><td>40.22</td><td>40.22</td><td>39.04</td><td>40.22</td></tr>
+    <tr><td>00285</td><td>比亚迪电子</td><td>组装 · 印尼/越南产能</td><td class="red">22.66</td><td class="red">-0.20</td><td class="red">-0.88%</td><td>22.66</td><td>22.66</td><td>22.66</td><td>22.86</td></tr>
+    <tr><td>06088</td><td>鸿腾精密</td><td>Foxconn 关联 · 连接器</td><td class="red">5.18</td><td class="red">-0.20</td><td class="red">-3.72%</td><td>5.18</td><td>5.18</td><td>5.18</td><td>5.38</td></tr>
+  </table>
+  <div style="margin:6px 0 24px;font-size:11px;color:#666;letter-spacing:1px;font-family:'Courier New',monospace;">
+    ⚡ <span style="color:#2ecc71;">领涨</span>：联想 +3.17% (AI PC 催化) · 高伟电子 +0.98% · 哔哩哔哩 +0.09% &nbsp;|&nbsp;
+    <span style="color:#e74c3c;">领跌</span>：鸿腾 -3.72% · 理想 -3.25% · 网易 -3.06% · 商汤 -3.08% · 小米 -2.56%
+    <br>💡 供应链：2nm (TSMC) vs 7nm (SMIC) 差距持续 → 港股芯片股估值压制；东南亚产能 (越南/印尼/马来) 成承接关键。
+  </div>
+
+  <div style="margin:34px 0 8px;border:1px solid #222;border-radius:10px;background:linear-gradient(160deg,#12121a,#0b0b10);padding:22px 26px;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+      <span style="font-size:18px;">🤖</span>
+      <span style="background:#9b59b6;color:#fff;font-size:10px;letter-spacing:2px;padding:3px 10px;border-radius:2px;font-family:'Courier New',monospace;">AI 看股</span>
+      <span style="margin-left:auto;font-size:10px;color:#555;font-family:'Courier New',monospace;letter-spacing:1px;">WHY AI WATCHES</span>
+    </div>
+    <div style="font-size:17px;font-weight:700;color:#f5f5f5;margin-bottom:4px;">用 AI 看股有什么用？</div>
+    <div style="font-size:11px;color:#666;margin-bottom:12px;letter-spacing:1px;">AI as your market information assistant — 不是荐股，是把盯盘交给机器</div>
+    <ul style="margin:0;padding-left:18px;font-size:13px;color:#aaa;line-height:2;">
+      <li><strong style="color:#f5f5f5;">7×24 自动盯盘</strong> — A股 / 港股 / 美股 24 个标的，60 秒自动刷新，不用自己刷行情软件</li>
+      <li><strong style="color:#f5f5f5;">一张看板看全市场</strong> — 7 大指数 + 七姐妹 + 自选股 + <span style="color:#9b59b6;">港股 AI + 东南亚供应链 28 标的</span>，红涨绿跌一眼看懂</li>
+      <li><strong style="color:#f5f5f5;">东南亚产业链跟踪</strong> — 中芯/华虹/ASMPT/舜宇/丘钛/瑞声/比亚迪电子/鸿腾，覆盖芯片 → 封测 → 光学 → 模组 → 组装全链路</li>
+      <li><strong style="color:#f5f5f5;">2nm vs 7nm 估值差</strong> — 港股代工股 vs TSMC/Samsung 之间的预期差，看资金往哪边跑</li>
+      <li><strong style="color:#f5f5f5;">不记代码也能答</strong> — 「联想多少？」→ 37.16 HKD +3.17%，即看即答</li>
+      <li><strong style="color:#f5f5f5;">AI 做信息助理，你做判断</strong> — 数据归机器整理，决策归人</li>
+    </ul>
+    <div style="margin-top:10px;font-size:11px;color:#555;">行情仅供参考，不构成投资建议。</div>
+  </div>
+
   <div class="footer">
     Edy.AI.Studio &nbsp;·&nbsp; 金融实战训练 &nbsp;·&nbsp;
     <a href="https://github.com/michoney/edystudio" target="_blank">GitHub</a>
@@ -265,5 +351,6 @@
   </div>
 
 </div>
+<script src="assets/live-quote.js"></script>
 </body>
 </html>

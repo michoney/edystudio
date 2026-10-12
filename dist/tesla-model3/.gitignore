@@ -1,0 +1,8 @@
+# 系统
+.DS_Store
+
+# 原始高精度模型（79MB），只提交减面后的 model-y.glb
+assets/model3.glb
+
+# 本地日志
+*.log

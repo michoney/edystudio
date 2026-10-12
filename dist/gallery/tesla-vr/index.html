@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tesla Model Y VR · 3D Product Showcase</title>
+<style>
+  html,body{margin:0;height:100%;overflow:hidden;background:#0e1116;color:#dbe4ec;font-family:system-ui,-apple-system,"PingFang SC",sans-serif}
+  #info{position:fixed;left:14px;bottom:12px;font-size:12px;letter-spacing:.05em;opacity:.75;z-index:2;pointer-events:none}
+  #hint{position:fixed;right:14px;top:12px;font-size:12px;opacity:.8;z-index:2;pointer-events:none}
+</style>
+</head>
+<body>
+<div id="hint">🥽 右上角进入 VR · 扳机抓取 · 握把飞行 · 左摇杆移动 · 右摇杆转向</div>
+<div id="info">Tesla Model Y · VR 展示（GLB 真车模型）</div>
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+               "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { initVRLocomotion, createVRButton } from '../../assets/vr-controls.js';
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0e1116);
+scene.fog = new THREE.Fog(0x0e1116, 20, 60);
+const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 200);
+camera.position.set(4.2, 2.6, 7.5);
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.xr.enabled = true;
+document.body.appendChild(renderer.domElement);
+document.body.appendChild(createVRButton(renderer));
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.set(0, 0.8, 0);
+controls.maxDistance = 12; controls.minDistance = 1.5;
+
+// 地面
+const ground = new THREE.Mesh(new THREE.PlaneGeometry(20, 20),
+  new THREE.MeshStandardMaterial({ color: 0x18202b, roughness: .95 }));
+ground.rotation.x = -Math.PI/2; ground.receiveShadow = true;
+scene.add(ground);
+const grid = new THREE.GridHelper(20, 20, 0x3a4a5a, 0x1a242f);
+grid.position.y = 0.001; scene.add(grid);
+
+const light = new THREE.DirectionalLight(0xffffff, 2);
+light.position.set(4, 6, 3); scene.add(light);
+scene.add(new THREE.AmbientLight(0x445566, 0.8));
+const rim = new THREE.PointLight(0x37f0c0, 1.2, 15); rim.position.set(-3, 2, -2); scene.add(rim);
+
+// 真车 GLB
+let car = null;
+new GLTFLoader().load('../../tesla-model3/assets/model-y.glb', (gltf) => {
+  car = gltf.scene;
+  car.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  const box = new THREE.Box3().setFromObject(car);
+  const size = box.getSize(new THREE.Vector3());
+  const scale = 2.4 / Math.max(size.x, size.y, size.z);
+  car.scale.setScalar(scale);
+  const c = box.getCenter(new THREE.Vector3());
+  car.position.set(-c.x*scale, (-c.y*scale)+0.75, -c.z*scale);
+  car.rotation.y = Math.PI;
+  scene.add(car);
+});
+
+// —— 手柄移动：抓取 / 飞行 / 摇杆（类似 Google Earth VR） ——
+const vr = initVRLocomotion({ renderer, camera, scene, controls });
+
+renderer.setAnimationLoop((tms) => {
+  vr.update();
+  const t = tms/1000;
+  if (car && !renderer.xr.isPresenting) car.rotation.y += 0.0015;
+  renderer.render(scene, camera);
+});
+window.addEventListener('resize', () => { camera.aspect = innerWidth/innerHeight; camera.updateProjectionMatrix(); renderer.setSize(innerWidth, innerHeight); });
+</script>
+</body>
+</html>

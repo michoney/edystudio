@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 人物一致性控制 · 角色卡制作 Skill · Edy.AI.Studio</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0a;color:#e0e0e0;font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;line-height:1.9;font-size:16px}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;border-bottom:1px solid #1a1a1a;background:#0d0d0d;position:sticky;top:0;z-index:100}
+.nav .brand{font-size:16px;font-weight:300;letter-spacing:4px;color:#f5f5f5;text-decoration:none}
+.nav .brand span{color:#ff3333;font-weight:700}
+.nav .links a{color:#888;text-decoration:none;font-size:13px;letter-spacing:1px;margin-left:24px;transition:color .2s}
+.nav .links a:hover{color:#f5f5f5}
+.hero{text-align:center;padding:44px 20px 26px;border-bottom:1px solid #1f1f1f}
+.hero .eyebrow{font-size:12px;letter-spacing:4px;color:#ff4444;font-family:'Courier New',monospace;margin-bottom:14px}
+.hero h1{font-size:30px;font-weight:300;letter-spacing:3px;color:#f5f5f5;margin-bottom:12px;line-height:1.5}
+.hero .sub{color:#777;font-size:13px;letter-spacing:1px;max-width:820px;margin:0 auto;line-height:2}
+.hero .sub a{color:#4fc3f7;text-decoration:none}
+.hero .sub a:hover{text-decoration:underline}
+.cover{max-width:1000px;margin:26px auto 0;padding:0 20px}
+.cover img{width:100%;border-radius:10px;border:1px solid #1f1f1f;display:block}
+.article{max-width:860px;margin:34px auto 60px;padding:0 20px}
+.article p{margin-bottom:18px;color:#cfcfcf}
+.article h2{font-size:22px;color:#f5f5f5;font-weight:700;margin:38px 0 16px;padding-left:14px;border-left:3px solid #ff3333;letter-spacing:1px}
+.article figure{margin:22px 0 26px}
+.article figure img{width:100%;border-radius:10px;border:1px solid #1f1f1f;display:block;cursor:zoom-in}
+.article figcaption{font-size:12.5px;color:#777;margin-top:10px;text-align:center;font-family:'Courier New',monospace;letter-spacing:.5px}
+.lead{font-size:17px;color:#e8e8e8}
+.prompt-wrap{margin:26px 0;border:1px solid #2a2a2a;border-radius:10px;overflow:hidden;background:#0f0f0f}
+.prompt-head{display:flex;justify-content:space-between;align-items:center;padding:12px 16px;background:#141414;border-bottom:1px solid #232323}
+.prompt-head .t{font-size:12px;letter-spacing:2px;color:#ff4444;font-family:'Courier New',monospace}
+.prompt-head button{background:#1c1c1c;color:#e0e0e0;border:1px solid #333;border-radius:6px;padding:7px 14px;font-size:13px;cursor:pointer;font-family:'PingFang SC',sans-serif}
+.prompt-head button:hover{border-color:#ff3333;color:#fff}
+.prompt-wrap pre{padding:18px;overflow-x:auto;font-family:'SF Mono',Menlo,'Courier New',monospace;font-size:13px;line-height:1.85;color:#b8e0b8;white-space:pre}
+.tips{background:#101010;border:1px solid #1f1f1f;border-left:3px solid #ff3333;border-radius:8px;padding:16px 20px;margin:24px 0;font-size:14.5px;color:#a8a8a8;line-height:2}
+.tips b{color:#ff4444}
+footer{border-top:1px solid #1a1a1a;padding:26px 20px 40px;text-align:center;color:#666;font-size:12.5px;line-height:2.2}
+footer a{color:#4fc3f7;text-decoration:none}
+footer a:hover{text-decoration:underline}
+.lb{position:fixed;inset:0;background:rgba(0,0,0,.94);display:none;align-items:center;justify-content:center;z-index:999;padding:24px;cursor:zoom-out}
+.lb.on{display:flex}
+.lb img{max-width:100%;max-height:100%;border-radius:8px}
+@media(max-width:640px){.nav{padding:14px 16px}.nav .links a{margin-left:12px}.hero h1{font-size:22px}.article h2{font-size:19px}body{font-size:15px}}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <a class="brand" href="../index.html">EDY.<span>AI</span>.STUDIO</a>
+  <div class="links">
+    <a href="../index.html">首页</a>
+    <a href="../ai-video.html">AI Video</a>
+    <a href="../skills.html" class="active">Skills</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">// CHARACTER SHEET SKILL</div>
+  <h1>AI 人物一致性控制 · 角色卡制作 Skill</h1>
+  <div class="sub">
+    一套「角色说明书」做法：把脸、身材、发型、表情、服装和视角一次性固定下来，出图和做视频都基于同一角色结构。<br>
+    来源：<a href="https://x.com/leo_xiaolei/article/2102013053084545433" target="_blank">XiaoLei Liu (@leo_xiaolei) · X 长文 · 2026-09-21 ↗</a> ｜ 本站整理排版 · 图文原样保留
+  </div>
+</div>
+
+<div class="cover">
+  <img src="assets/cover.jpg" alt="AI 角色设定板 Character Sheet">
+</div>
+
+<div class="article">
+
+  <p class="lead">无论是出图还是做视频，AI 人物长期一致性控制都是一个很重要的课题，对作品的留存率、形象感有显著的影响。也是打造 IP 必备的技能。</p>
+  <p>它本质上是一张角色视觉定义图，把脸、身材、发型、表情、服装和不同视角一次性固定下来。</p>
+
+  <h2>一、确定角色结构</h2>
+  <p>很多人初次见到角色设定提示词可能会感到困惑。其实，这可以视为一项简单的任务。</p>
+  <p>这一步的关键在于固定角色的结构：通过正面、侧面和背面的视角，确保锁定角色的脸部特征、比例以及整体造型。稳定这一部分后，后续的生成就不易出现问题。（适用于真人角色）</p>
+  <figure>
+    <img src="assets/fig-01-role-structure.jpg" alt="角色设定板示例：Lin Yuxin">
+    <figcaption>角色设定板示例 · Lin Yuxin（Storm Reporter）：全身转身 / 剪影 / 表情系统 / 微表情 / 头部结构 / 特写 / 姿态 / 服装细节 / 手部动作 / 配色板</figcaption>
+  </figure>
+
+  <h2>二、增强表现力</h2>
+  <p>角色的表情、微表情、姿态变化和手部动作等元素有助于传达角色的动态特征和情绪表达。这样生成的人物会显得栩栩如生，而非僵硬呆板。</p>
+  <figure>
+    <img src="assets/fig-02-expression.jpg" alt="角色设定板示例：YUNA">
+    <figcaption>角色设定板示例 · YUNA（Urban Hero 主题）：同一角色换风格后，结构与表情系统照旧保持一致</figcaption>
+  </figure>
+
+  <h2>三、细节说明</h2>
+  <p>对头部结构、服装细节和材质等方面的说明，有助于 AI 更精准地理解。例如，发型的分层方式、衣物材质和金属质感等。</p>
+  <p>这一步决定了角色的质感和高端感，使生成的视频内容更加可控。</p>
+  <figure>
+    <img src="assets/fig-03-detail.jpg" alt="角色设定板示例：Lin Yue">
+    <figcaption>角色设定板示例 · Lin Yue（Field Reporter）：材质与配饰细节（眼镜 / 发丝 / 布料 / 鞋）单独成块</figcaption>
+  </figure>
+
+  <h2>四、操作步骤</h2>
+  <p>选择一个图像生成工具，准备一张角色图片，然后在节点中选择图片输入。</p>
+  <p>将提示词复制到窗口，根据需要进行调整，整个过程非常灵活。</p>
+  <figure>
+    <img src="assets/fig-04-workflow.jpg" alt="角色设定板示例：Lin Yuxi">
+    <figcaption>角色设定板示例 · Lin Yuxi（Active Lifestyle Girl）：01–09 模块化版式，可直接照此排版生成</figcaption>
+  </figure>
+
+  <div class="prompt-wrap">
+    <div class="prompt-head">
+      <span class="t">// CHARACTER SHEET PROMPT · 角色设定板提示词</span>
+      <button onclick="copyPrompt(this)">⎘ 复制提示词</button>
+    </div>
+<pre id="promptText">【任务】
+基于参考图生成一张高精度角色设定板(Character Sheet)锁定角色ID，不允许生成新角色，所有画面必须基于同一角色结构
+
+【基础设定】
+风格:[写实3D/风格化3D/动漫/半写实/IP设计]
+角色描述:[填写你的角色描述或上传参考图]
+性别:[男/女/中性]
+年龄:[数值]
+体型:[瘦/标准/健壮/夸张比例]
+风格关键词:[高级感/时尚/潮流/科技感/情绪化等】
+
+【画面结构】
+- 画面比例:4:3横版
+- 背景:纯白/米白/极简
+- U1:干净技术排版,无logo,无水印
+- 字体:清晰可读英文标签
+
+【必须包含模块】
+1. 顶部信息
+    - 名字(可自动生成)
+    - 角色身份
+    - 年龄
+    - 性格关键词(3-5个)
+    - 核心主题(1句)
+2. 配色系统-6~8个色块(无文字)
+3. 主身份展示(最大区域) 重点:锁定角色
+    - 正面/3/4/侧面/背面
+    - 标准站姿
+    - 带比例线(身高刻度)
+    - 无道具
+4. 轮廓剪影
+    - 正面剪影
+    - 侧面剪影
+5. 表情系统(8张)
+    - 平静/好奇/紧张/惊讶/害怕/悲伤/坚定/放松
+6. 微表情(5张)
+    - 眼部紧张/微笑/嘴部用力/微恐惧/呼吸控制
+7. 头部结构
+    - 多角度(3/4/侧面/仰视/俯视)
+8. 姿态变化
+    - 放松/紧张/自信
+9. 特写镜头(1张)
+    - 胸部以上
+    - 强情绪表达
+10. 服装细节(4张)
+    - 发型/材质/配饰/鞋
+11. 手部动作
+    - 放松/紧张/指向/抓握/面部动作
+
+【一致性要求】
+- 所有画面角色完全一致(脸/发型/比例/服装)
+- 不允许风格漂移
+- 主展示区域必须最大
+
+【质量要求】
+- 0G级细节
+- 材质真实(皮肤/布料/金属)
+- 影视级光影</pre>
+  </div>
+
+  <h2>五、核心原则</h2>
+  <p>所有的小图实际上都是为中心的「主形象图」服务。</p>
+  <p>理解了这一点后，整段提示词内容就变得清晰简洁。</p>
+  <p>目标是为 AI 提供一份「角色说明书」，而不仅仅是生成一幅美观的图像。</p>
+
+  <div class="tips">
+    <b>落地要点（本站补充）</b><br>
+    · 设定板生成后，把它作为<b>首帧 / 参考图</b>持续喂给后续每个镜头，人物才不会漂<br>
+    · 出视频时把「冻结项」写死（脸型 / 发型 / 服装 / 配饰 / 比例），并在提示词里明确禁止换装、变脸、新增人物<br>
+    · 跨镜头仍然要抽帧验收：同一角色在相邻镜头里的发型、配饰、服装细节是否一致
+  </div>
+
+</div>
+
+<footer>
+  <div>原内容 © XiaoLei Liu（@leo_xiaolei）· 转载自 X 长文，图文原样保留，本站仅做排版整理</div>
+  <div><a href="https://x.com/leo_xiaolei/article/2102013053084545433" target="_blank">原文链接 ↗</a> ｜ <a href="../ai-video.html">← 返回 AI Video</a></div>
+  <div style="margin-top:8px;color:#444;">EDY.AI.STUDIO · 学习资料归档</div>
+</footer>
+
+<div class="lb" id="lb" onclick="this.classList.remove('on')"><img id="lbimg" src="" alt=""></div>
+<script>
+function copyPrompt(btn){
+  const t = document.getElementById('promptText').innerText;
+  navigator.clipboard.writeText(t).then(()=>{
+    const old = btn.textContent; btn.textContent = '✓ 已复制';
+    setTimeout(()=>{ btn.textContent = old; }, 1600);
+  }).catch(()=>{ btn.textContent = '复制失败，请手动选'; });
+}
+document.querySelectorAll('.article figure img').forEach(img=>{
+  img.addEventListener('click', ()=>{
+    document.getElementById('lbimg').src = img.src;
+    document.getElementById('lb').classList.add('on');
+  });
+});
+</script>
+</body>
+</html>

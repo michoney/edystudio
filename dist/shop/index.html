@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>EDY STUDIO 选品 · 独立站</title>
+<meta name="description" content="Web3D 独立站：每件商品都能转过来看。">
+<meta name="theme-color" content="#0a0b0d">
+<link rel="stylesheet" href="css/shop.css">
+</head>
+<body>
+
+<header class="site-head">
+  <a class="brand" href="index.html">EDY<small>STUDIO</small></a>
+  <nav class="head-nav">
+    <a href="index.html">全部</a>
+    <a href="#about">关于</a>
+    <button class="cart-btn" data-cart-btn aria-label="购物车">
+      🛒
+      <span class="cart-badge">0</span>
+    </button>
+  </nav>
+</header>
+
+<!-- ── 主推：可 360° 转的 3D 商品 ─────────────────────── -->
+<section class="hero">
+  <div class="hero-stage" id="heroStage"></div>
+  <p class="hero-hint">拖 动 旋 转　·　滚 轮 缩 放</p>
+
+  <button class="hero-nav hero-prev" id="heroPrev" aria-label="上一个">‹</button>
+  <button class="hero-nav hero-next" id="heroNext" aria-label="下一个">›</button>
+  <div class="hero-dots" id="heroDots"></div>
+
+  <div class="hero-info">
+    <div>
+      <p class="hero-kicker" id="heroKicker">FEATURED</p>
+      <h1 id="heroName">—</h1>
+      <p class="pd-tagline" id="heroTagline">—</p>
+      <a class="back-home" id="heroLink" href="product.html">查看详情 →</a>
+    </div>
+    <p class="hero-price" id="heroPrice">—</p>
+  </div>
+</section>
+
+<!-- ── 分类 ──────────────────────────────────────────── -->
+<nav class="filters" id="filters" aria-label="商品分类"></nav>
+
+<!-- ── 商品 ──────────────────────────────────────────── -->
+<main class="grid" id="grid"></main>
+
+<footer class="site-foot" id="about">
+  <p class="foot-title">EDY STUDIO</p>
+  <p id="footContact">—</p>
+  <p style="margin-top:8px">本站商品图为浏览器实时渲染的 3D 模型，仅作款式示意，尺寸与细节以实物为准。</p>
+  <p style="margin-top:14px"><a href="../index.html">← 回到 Edy.AI.Studio</a></p>
+</footer>
+
+<script src="vendor/three.min.js"></script>
+<script src="data/products.js"></script>
+<script src="js/models.js"></script>
+<script src="js/viewer.js"></script>
+<script src="js/store.js"></script>
+<script src="js/thumbs.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

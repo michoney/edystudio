@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="盐冰挠曲流电效应交互原理示意。">
+  <title>Saline Ice Energy — EdyStudio</title>
+  <link rel="stylesheet" href="./style.css?v=5">
+</head>
+<body>
+  <main>
+    <canvas id="ice-scene" aria-label="盐冰弯曲产生电荷并储存在电容中的动态原理示意"></canvas>
+    <header><a href="../../models.html">EDY / MODEL 06</a><span>STREAMING FLEXOELECTRICITY · 2025</span></header>
+    <section class="title-block">
+      <p>ICE / BRINE / STRAIN GRADIENT</p>
+      <h1>弯曲盐冰，<br><em>让晶界输运电荷。</em></h1>
+    </section>
+    <section class="controls" aria-label="实验控制">
+      <div class="meter"><span>CAPACITOR</span><strong id="charge">00.0</strong><i>%</i><b><u id="fill"></u></b></div>
+      <button id="bend" type="button"><span>按住弯曲</span><small>HOLD TO BEND</small></button>
+      <button id="auto" type="button" aria-pressed="false">循环实验：关闭</button>
+    </section>
+    <aside class="legend">
+      <div><i class="ice"></i><span>多晶盐冰骨架</span></div>
+      <div><i class="brine"></i><span>晶界准液态盐水</span></div>
+      <div><i class="charge"></i><span>电双层携带净电荷</span></div>
+    </aside>
+    <footer>原理示意：机械输入 → 盐水晶界流动 → 瞬时电流 → 整流 → 电容储能。不能自发持续发电。</footer>
+  </main>
+  <script src="./fluid-layer.js?v=5"></script>
+  <script src="./main.js?v=5"></script>
+</body>
+</html>

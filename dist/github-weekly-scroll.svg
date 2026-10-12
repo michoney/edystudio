@@ -20,7 +20,7 @@
 
 <g>
   <animateTransform attributeName="transform" type="translate" from="0 0" to="0 -4460" dur="35s" repeatCount="indefinite" calcMode="linear"/>
-  
+
 <g transform="translate(0, 0)">
   <rect x="0" y="0" width="1080" height="300" fill="#0b1115"/>
   <text x="540" y="110" font-family="monospace" font-size="26" font-weight="800" fill="#5bd7f3" text-anchor="middle" letter-spacing="4">GITHUB WEEKLY TRENDING</text>
@@ -28,157 +28,143 @@
   <text x="540" y="260" font-family="PingFang SC, sans-serif" font-size="26" font-weight="800" fill="#71868c" text-anchor="middle">近 7 天新建仓库 · 按星数排序</text>
   <rect x="215" y="280" width="650" height="4" fill="url(#rainbow)"/>
 </g>
-  
 <g transform="translate(80, 300)">
   <rect x="0" y="0" width="920" height="360" rx="24" ry="24" fill="#ff6c9f" stroke="#080b0d" stroke-width="4"/>
   <rect x="840" y="-30" width="120" height="120" rx="60" fill="rgba(255,255,255,0.22)"/>
-  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2">#01 · QM</text>
-  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">TS</text>
+  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2"># 01 · HALLMARK</text>
+  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">CSS</text>
   <line x1="30" y1="62" x2="890" y2="62" stroke="#080b0d" stroke-width="3"/>
-  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">qm</text>
+  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">hallmark</text>
   <rect x="30" y="165" width="130" height="42" rx="21" fill="white" stroke="#080b0d" stroke-width="3"/>
-  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 7,529</text>
+  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 15,089</text>
   <rect x="175" y="165" width="170" height="42" rx="21" fill="#080b0d" stroke="#080b0d" stroke-width="3"/>
-  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white">本周 NEW</text>
-  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">Multiplayer agent harness for work</text>
-  
+  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white"></text>
+  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">为 Claude Code、Cursor 和 Codex 准备的去 A</text>
+  <text x="30" y="340" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">I 味设计 Skill。</text>
 </g>
 <g transform="translate(80, 700)">
   <rect x="0" y="0" width="920" height="360" rx="24" ry="24" fill="#ffd13b" stroke="#080b0d" stroke-width="4"/>
   <rect x="840" y="-30" width="120" height="120" rx="60" fill="rgba(255,255,255,0.22)"/>
-  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2">#02 · DECIMEN-OPTICAL-TRANS…</text>
+  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2"># 02 · OPENCUT</text>
   <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">TS</text>
   <line x1="30" y1="62" x2="890" y2="62" stroke="#080b0d" stroke-width="3"/>
-  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">decimen-optical-trans…</text>
+  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">opencut</text>
   <rect x="30" y="165" width="130" height="42" rx="21" fill="white" stroke="#080b0d" stroke-width="3"/>
-  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 3,744</text>
+  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 77,134</text>
   <rect x="175" y="165" width="170" height="42" rx="21" fill="#080b0d" stroke="#080b0d" stroke-width="3"/>
-  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white">本周 NEW</text>
-  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">No description</text>
-  
+  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white"></text>
+  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">开源 CapCut 替代品。</text>
 </g>
 <g transform="translate(80, 1100)">
   <rect x="0" y="0" width="920" height="360" rx="24" ry="24" fill="#53d8f3" stroke="#080b0d" stroke-width="4"/>
   <rect x="840" y="-30" width="120" height="120" rx="60" fill="rgba(255,255,255,0.22)"/>
-  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2">#03 · CRM</text>
-  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">TS</text>
+  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2"># 03 · DEEPTUTOR</text>
+  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">PY</text>
   <line x1="30" y1="62" x2="890" y2="62" stroke="#080b0d" stroke-width="3"/>
-  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">crm</text>
+  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">deeptutor</text>
   <rect x="30" y="165" width="130" height="42" rx="21" fill="white" stroke="#080b0d" stroke-width="3"/>
-  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 1,903</text>
+  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 28,903</text>
   <rect x="175" y="165" width="170" height="42" rx="21" fill="#080b0d" stroke="#080b0d" stroke-width="3"/>
-  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white">本周 NEW</text>
-  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">An open-source, agentic-first CRM.</text>
-  
+  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white"></text>
+  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">终身个性化 AI 导师。</text>
 </g>
 <g transform="translate(80, 1500)">
   <rect x="0" y="0" width="920" height="360" rx="24" ry="24" fill="#aa82f4" stroke="#080b0d" stroke-width="4"/>
   <rect x="840" y="-30" width="120" height="120" rx="60" fill="rgba(255,255,255,0.22)"/>
-  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2">#04 · FDE-THE-GUIDANCE-BOOK…</text>
-  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">?</text>
+  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2"># 04 · CODE-REVIEW-GRAPH</text>
+  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">PY</text>
   <line x1="30" y1="62" x2="890" y2="62" stroke="#080b0d" stroke-width="3"/>
-  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">fde-the-guidance-book…</text>
+  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">code-review-graph</text>
   <rect x="30" y="165" width="130" height="42" rx="21" fill="white" stroke="#080b0d" stroke-width="3"/>
-  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 1,663</text>
+  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 24,779</text>
   <rect x="175" y="165" width="170" height="42" rx="21" fill="#080b0d" stroke="#080b0d" stroke-width="3"/>
-  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white">本周 NEW</text>
-  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">FDE（前沿部署工程师）从零入门指南（基于范冰《增长黑客》原书框架）</text>
-  
+  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white"></text>
+  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">本地优先的代码智能图谱，支持 MCP 与 CLI。</text>
 </g>
 <g transform="translate(80, 1900)">
   <rect x="0" y="0" width="920" height="360" rx="24" ry="24" fill="#68e69a" stroke="#080b0d" stroke-width="4"/>
   <rect x="840" y="-30" width="120" height="120" rx="60" fill="rgba(255,255,255,0.22)"/>
-  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2">#05 · WILONITYLOADER</text>
-  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">?</text>
+  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2"># 05 · AWESOME-LLM-APPS</text>
+  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">PY</text>
   <line x1="30" y1="62" x2="890" y2="62" stroke="#080b0d" stroke-width="3"/>
-  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">wilonityloader</text>
+  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">awesome-llm-apps</text>
   <rect x="30" y="165" width="130" height="42" rx="21" fill="white" stroke="#080b0d" stroke-width="3"/>
-  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 1,216</text>
+  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 125,908</text>
   <rect x="175" y="165" width="170" height="42" rx="21" fill="#080b0d" stroke="#080b0d" stroke-width="3"/>
-  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white">本周 NEW</text>
-  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">Wilonity Loader – cheat lib w/</text>
-  <text x="30" y="340" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">spoofer, driver bypass, undetecte…</text>
-  
+  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white"></text>
+  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">100+ 开源 AI Agent、Agent Skills 和 RAG</text>
+  <text x="30" y="340" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">应用。</text>
 </g>
 <g transform="translate(80, 2300)">
   <rect x="0" y="0" width="920" height="360" rx="24" ry="24" fill="#ff9c4a" stroke="#080b0d" stroke-width="4"/>
   <rect x="840" y="-30" width="120" height="120" rx="60" fill="rgba(255,255,255,0.22)"/>
-  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2">#06 · WASTE</text>
-  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">C</text>
+  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2"># 06 · KIMI-CLI</text>
+  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">PY</text>
   <line x1="30" y1="62" x2="890" y2="62" stroke="#080b0d" stroke-width="3"/>
-  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">waste</text>
+  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">kimi-cli</text>
   <rect x="30" y="165" width="130" height="42" rx="21" fill="white" stroke="#080b0d" stroke-width="3"/>
-  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 1,142</text>
+  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 10,542</text>
   <rect x="175" y="165" width="170" height="42" rx="21" fill="#080b0d" stroke="#080b0d" stroke-width="3"/>
-  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white">本周 NEW</text>
-  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">Run the full</text>
-  <text x="30" y="340" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">2.78-trillion-parameter Kimi K3 m…</text>
-  
+  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white"></text>
+  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">Kimi Code 命令行编程 Agent。</text>
 </g>
 <g transform="translate(80, 2700)">
   <rect x="0" y="0" width="920" height="360" rx="24" ry="24" fill="#aa82f4" stroke="#080b0d" stroke-width="4"/>
   <rect x="840" y="-30" width="120" height="120" rx="60" fill="rgba(255,255,255,0.22)"/>
-  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2">#07 · SKILL-RECORDER</text>
+  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2"># 07 · UI-SKILLS</text>
   <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">TS</text>
   <line x1="30" y1="62" x2="890" y2="62" stroke="#080b0d" stroke-width="3"/>
-  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">skill-recorder</text>
+  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">ui-skills</text>
   <rect x="30" y="165" width="130" height="42" rx="21" fill="white" stroke="#080b0d" stroke-width="3"/>
-  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 884</text>
+  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 5,885</text>
   <rect x="175" y="165" width="170" height="42" rx="21" fill="#080b0d" stroke="#080b0d" stroke-width="3"/>
-  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white">本周 NEW</text>
-  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">Desktop app that records your</text>
-  <text x="30" y="340" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">on-screen work session and uses t…</text>
-  
+  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white"></text>
+  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">面向设计工程师的 Skills。</text>
 </g>
 <g transform="translate(80, 3100)">
   <rect x="0" y="0" width="920" height="360" rx="24" ry="24" fill="#ff6c9f" stroke="#080b0d" stroke-width="4"/>
   <rect x="840" y="-30" width="120" height="120" rx="60" fill="rgba(255,255,255,0.22)"/>
-  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2">#08 · PERSONA</text>
-  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">JS</text>
+  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2"># 08 · JCODE</text>
+  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">RS</text>
   <line x1="30" y1="62" x2="890" y2="62" stroke="#080b0d" stroke-width="3"/>
-  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">persona</text>
+  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">jcode</text>
   <rect x="30" y="165" width="130" height="42" rx="21" fill="white" stroke="#080b0d" stroke-width="3"/>
-  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 795</text>
+  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 10,452</text>
   <rect x="175" y="165" width="170" height="42" rx="21" fill="#080b0d" stroke="#080b0d" stroke-width="3"/>
-  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white">本周 NEW</text>
-  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">Bringing real-time voice to life.</text>
-  
+  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white"></text>
+  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">面向代码的智能 Agent Harness。</text>
 </g>
 <g transform="translate(80, 3500)">
   <rect x="0" y="0" width="920" height="360" rx="24" ry="24" fill="#53d8f3" stroke="#080b0d" stroke-width="4"/>
   <rect x="840" y="-30" width="120" height="120" rx="60" fill="rgba(255,255,255,0.22)"/>
-  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2">#09 · SOL-ADVISOR</text>
-  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">SH</text>
+  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2"># 09 · CANGJIE-SKILL</text>
+  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">PY</text>
   <line x1="30" y1="62" x2="890" y2="62" stroke="#080b0d" stroke-width="3"/>
-  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">sol-advisor</text>
+  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">cangjie-skill</text>
   <rect x="30" y="165" width="130" height="42" rx="21" fill="white" stroke="#080b0d" stroke-width="3"/>
-  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 711</text>
+  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 4,297</text>
   <rect x="175" y="165" width="170" height="42" rx="21" fill="#080b0d" stroke="#080b0d" stroke-width="3"/>
-  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white">本周 NEW</text>
-  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">Codex-native architect</text>
-  <text x="30" y="340" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">orchestration with Luna and Terra…</text>
-  
+  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white"></text>
+  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">把书、长视频和播客蒸馏成 Agent Skills。</text>
 </g>
 <g transform="translate(80, 3900)">
   <rect x="0" y="0" width="920" height="360" rx="24" ry="24" fill="#68e69a" stroke="#080b0d" stroke-width="4"/>
   <rect x="840" y="-30" width="120" height="120" rx="60" fill="rgba(255,255,255,0.22)"/>
-  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2">#10 · TALIVIA</text>
-  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">TS</text>
+  <text x="30" y="42" font-family="monospace" font-size="22" font-weight="900" fill="#080b0d" letter-spacing="2"># 10 · VIBE-TRADING</text>
+  <text x="890" y="42" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d" text-anchor="end" opacity="0.6">PY</text>
   <line x1="30" y1="62" x2="890" y2="62" stroke="#080b0d" stroke-width="3"/>
-  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">talivia</text>
+  <text x="30" y="135" font-family="Arial Rounded MT Bold, PingFang SC, sans-serif" font-size="52" font-weight="900" fill="#080b0d" letter-spacing="-1">vibe-trading</text>
   <rect x="30" y="165" width="130" height="42" rx="21" fill="white" stroke="#080b0d" stroke-width="3"/>
-  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 653</text>
+  <text x="50" y="194" font-family="monospace" font-size="20" font-weight="900" fill="#080b0d">★ 26,206</text>
   <rect x="175" y="165" width="170" height="42" rx="21" fill="#080b0d" stroke="#080b0d" stroke-width="3"/>
-  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white">本周 NEW</text>
-  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">Open-source, self-hosted</text>
-  <text x="30" y="340" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">revenue-first analytics for found…</text>
-  
+  <text x="195" y="194" font-family="monospace" font-size="20" font-weight="900" fill="white"></text>
+  <text x="30" y="300" font-family="PingFang SC, Microsoft YaHei, sans-serif" font-size="26" font-weight="800" fill="#080b0d">个人 AI 交易 Agent。</text>
 </g>
-  
+
 <g transform="translate(0, 4300)">
   <rect x="0" y="0" width="1080" height="160" fill="#0b1115"/>
-  <text x="540" y="75" font-family="monospace" font-size="22" font-weight="700" fill="#71868c" text-anchor="middle">ISSUE 001 · 2026.08.03 · SHENZHEN</text>
-  <text x="540" y="115" font-family="monospace" font-size="18" font-weight="700" fill="#4a5a60" text-anchor="middle">NEW REPOS LAST 7 DAYS SORTED BY STARS</text>
+  <text x="540" y="75" font-family="monospace" font-size="22" font-weight="700" fill="#71868c" text-anchor="middle">ISSUE 001 · 2026.07.22 · SHENZHEN</text>
+  <text x="540" y="115" font-family="monospace" font-size="18" font-weight="700" fill="#4a5a60" text-anchor="middle">GITHUB WEEKLY TRENDING 官方顺序 · 实时数据</text>
 </g>
 </g>
 </svg>

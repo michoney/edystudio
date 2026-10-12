@@ -1,0 +1,33 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-background: #ffffff;
+  --color-muted: #6f6f6f;
+  --font-display: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Inter', sans-serif;
+  --animate-fade-rise: fade-rise .8s ease-out both;
+  --animate-fade-rise-delay: fade-rise .8s ease-out .2s both;
+  --animate-fade-rise-delay-2: fade-rise .8s ease-out .4s both;
+  @keyframes fade-rise {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
+body { margin: 0; background: #fff; color: #000; font-family: var(--font-body); }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+button:focus-visible, a:focus-visible { outline: 2px solid #6f6f6f; outline-offset: 6px; }
+::selection { background: #dfdfd8; }
+.hero-shell { min-height: max(100svh, 820px); }
+.video-layer { position: absolute; inset: auto 0 0 0; top: 300px; }
+.hero-title { line-height: .95; letter-spacing: -2.46px; }
+dialog { margin: auto; width: min(560px, calc(100% - 40px)); padding: 40px; border: 1px solid #ffffffb3; border-radius: 24px; background: #fffffff0; backdrop-filter: blur(24px); box-shadow: 0 30px 120px #0002; }
+dialog::backdrop { background: #15151540; backdrop-filter: blur(8px); }
+@media (max-width: 639px) {
+  .hero-shell { min-height: max(100svh, 780px); }
+  .hero-title { letter-spacing: -1.4px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

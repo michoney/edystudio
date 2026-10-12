@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Edy.AI.Studio · AI News</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#0a0a0a;color:#e0e0e0;font-family:'PingFang SC','Microsoft YaHei','Helvetica Neue',sans-serif;line-height:1.85;}
+  /* vamoss particle background */
+  canvas{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;}
+  .hero,.container,.footer{position:relative;z-index:1;}
+.nav{display:flex;justify-content:space-between;align-items:center;padding:16px 32px;border-bottom:1px solid #1a1a1a;background:#0d0d0d;position:sticky;top:0;z-index:100;}
+.nav .brand{font-size:16px;font-weight:300;letter-spacing:4px;color:#f5f5f5;text-decoration:none;}
+.nav .brand span{color:#ff3333;font-weight:700;}
+.nav .links a{color:#888;text-decoration:none;font-size:13px;letter-spacing:1px;margin-left:24px;transition:color 0.2s;}
+.nav .links a:hover{color:#f5f5f5;}
+.nav .links a.active{color:#ff3333;}
+
+.hero{text-align:center;padding:45px 20px 25px;border-bottom:1px solid #1f1f1f;}
+.hero .eyebrow{font-size:12px;letter-spacing:4px;color:#ff4444;font-family:'Courier New',monospace;margin-bottom:14px;}
+.hero h1{font-size:30px;font-weight:300;letter-spacing:6px;color:#f5f5f5;margin-bottom:10px;}
+.hero .sub{color:#666;font-size:12px;letter-spacing:2px;}
+.hero .badge{display:inline-block;margin-top:14px;padding:4px 12px;background:#1a0a0a;border:1px solid #ff3333;color:#ff4444;font-size:10px;letter-spacing:2px;font-family:'Courier New',monospace;}
+
+.container{max-width:760px;margin:30px auto;padding:0 20px;}
+
+.section-title{font-size:16px;font-weight:300;letter-spacing:2px;margin-bottom:24px;color:#ccc;display:flex;align-items:center;gap:10px;}
+.section-title::before{content:"";display:inline-block;width:16px;height:1px;background:#ff3333;}
+
+/* News card */
+.news-card{background:#111;border:1px solid #1f1f1f;border-radius:8px;padding:28px 32px;margin-bottom:20px;transition:border-color 0.2s;}
+.news-card:hover{border-color:#333;}
+.news-card.hot{border-color:#331111;}
+.news-card.hot:hover{border-color:#ff3333;}
+
+.news-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+.news-head .fire{font-size:20px;}
+.news-head .tag{padding:3px 10px;background:#ff3333;color:#fff;font-size:10px;letter-spacing:2px;font-family:'Courier New',monospace;border-radius:2px;font-weight:700;}
+.news-head .date{margin-left:auto;font-size:10px;color:#555;font-family:'Courier New',monospace;letter-spacing:1px;}
+.news-head .link-ext{color:#ff4444;font-size:12px;text-decoration:none;font-family:'Courier New',monospace;letter-spacing:1px;}
+.news-head .link-ext:hover{text-decoration:underline;}
+
+.news-title{font-size:19px;font-weight:700;color:#f5f5f5;margin-bottom:6px;letter-spacing:1px;}
+.news-title .en{display:block;font-size:12px;color:#666;font-weight:400;letter-spacing:2px;font-family:'Courier New',monospace;margin-top:6px;}
+.news-subtitle{font-size:13px;color:#aaa;margin-bottom:18px;line-height:1.7;}
+
+.news-body{font-size:13px;color:#999;line-height:1.9;}
+.news-body h3{font-size:14px;color:#f5f5f5;font-weight:700;margin:20px 0 8px;letter-spacing:1px;display:flex;align-items:center;gap:8px;}
+.news-body h3::before{content:"▸";color:#ff3333;font-size:12px;}
+.news-body p{margin-bottom:10px;}
+.news-body ul{margin:8px 0 8px 20px;padding:0;}
+.news-body ul li{margin-bottom:6px;}
+.news-body strong{color:#e0e0e0;font-weight:600;}
+.news-body code{background:#0a0a0a;padding:1px 6px;border-radius:3px;font-size:12px;color:#ff9999;font-family:'Courier New',monospace;border:1px solid #1a1a1a;}
+
+.news-meta{display:flex;gap:10px;margin-top:18px;padding-top:14px;border-top:1px solid #1a1a1a;}
+.news-meta .pill{padding:3px 10px;background:#0a0a0a;border:1px solid #1f1f1f;border-radius:12px;font-size:10px;color:#888;letter-spacing:1px;font-family:'Courier New',monospace;}
+
+/* Empty state */
+.empty{text-align:center;padding:60px 20px;color:#444;font-family:'Courier New',monospace;}
+.empty .icon{font-size:36px;margin-bottom:14px;opacity:0.5;}
+.empty .text{font-size:12px;letter-spacing:2px;}
+
+/* Footer */
+.footer{border-top:1px solid #1f1f1f;padding:24px 20px;text-align:center;color:#444;font-size:12px;letter-spacing:2px;margin-top:40px;}
+@media(max-width:768px){.nav .links a{margin-left:14px;font-size:12px;}.news-card{padding:20px;}}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a class="brand" href="index.html">EDY.<span>AI</span>.STUDIO</a>
+  <div class="links">
+    <a href="index.html">首页</a>
+    <a href="skills.html">Skills</a>
+    <a href="camp.html">实战训练营</a>
+    <a href="financial-practice.html">Financial</a>
+    <a href="ai-video.html">AI Video</a>
+    <a href="ai-news.html" class="active">AI News</a>
+  </div>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">// AI NEWS · 不定时更新</div>
+  <h1>AI 动态</h1>
+  <div class="sub">Interesting things in AI · Curated by Edy.AI.Studio</div>
+  <div class="badge">UPDATED 2026.08</div>
+</div>
+
+<div class="container">
+
+  <div class="section-title">🔥 重磅推荐 · Hot Picks</div>
+
+  <div class="news-card hot">
+    <div class="news-head">
+      <span class="fire">🔥</span>
+      <span class="tag">HOT</span>
+      <a class="link-ext" href="https://github.com/xmanrui/dsh-im" target="_blank">→ GitHub</a>
+      <a class="link-ext" href="https://github.com/xmanrui/dsh-im" target="_blank">文档</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      dsh-im —— 九种 IM 全部接入 DeepSeek Harness，一个插件搞定
+      <span class="en">dsh-im · Nine IM Platforms Unified into DeepSeek Harness via One Plugin</span>
+    </div>
+    <div class="news-subtitle">
+      飞书、微信、钉钉、企业微信、QQ、Slack、Telegram、Discord、WhatsApp 九渠道多机器人统一管理，还能扫码直连公网 AI Office，零公网 IP / 端口转发。
+    </div>
+    <div class="news-body">
+
+      <p>dsh-im 解决的核心痛点是：<strong>AI 助理被锁在本地终端里</strong>，家人、同事、客户根本用不上。它通过扫码、App Manifest 或已有机器人凭据，把九大 IM 渠道统一接入 DeepSeek Harness——一个插件、一个设置入口，每个渠道还支持多个机器人并行，连接状态、工作区、会话绑定彼此独立。更关键的是，本机 Harness 可以<strong>主动向外连接公网 AI Office</strong>，无需公网 IP、端口转发或自建 WebSocket。</p>
+
+      <h3>九渠道多机器人统一管理</h3>
+      <ul>
+        <li><strong>飞书</strong>：扫码或 App ID+Secret 接入</li>
+        <li><strong>微信</strong>：扫码即绑</li>
+        <li><strong>钉钉 / 企业微信 / QQ / Telegram / Discord / Slack / WhatsApp</strong>：各有官方长连接或轮询方案，全部走内置引导完成配置</li>
+        <li>每个渠道支持<strong>多个机器人并行</strong></li>
+      </ul>
+
+      <h3>原生级 IM 交互体验</h3>
+      <ul>
+        <li>飞书<strong>流式卡片</strong>、企业微信<strong>「正在思考中」</strong>原生显示</li>
+        <li>QQ 私聊<strong>「正在输入」</strong>、WhatsApp <strong>已读回执</strong></li>
+        <li>工具执行进度和回答<strong>逐字流式呈现</strong></li>
+      </ul>
+
+      <h3>安全架构</h3>
+      <ul>
+        <li>所有 Secret/Token 只写入本机凭据存储，AI Office 仅保存设备 ID 和 alias，<strong>绝无本机绝对路径外泄</strong></li>
+        <li>Telegram 机器人支持<strong>私聊白名单</strong>安全模式</li>
+      </ul>
+
+      <h3>AI Office Connector · 逆向连接</h3>
+      <ul>
+        <li>通过 <strong>Heartbeat 鉴权 + SSE 下行流</strong>，任务租约 90 秒、每 30 秒续租，断线自动重连</li>
+        <li>支持 <strong>5MB 内图片</strong>、多图合计 20MB 随消息发送给 Harness</li>
+      </ul>
+
+      <h3>17 条机器人命令</h3>
+      <p><code>/model</code> 切换模型、<code>/steer</code> 实时干预任务、<code>/compact</code> 压缩上下文、远程审批支持中英文回复，把 Harness 的全能力平移到了 IM 对话框。</p>
+
+      <h3>实战落地场景</h3>
+      <ul>
+        <li>技术团队把飞书群变成 AI 研发助理入口，@ 机器人就能让它读代码、跑工具、看测试输出，审批流直接在群里完成</li>
+        <li>知识博主把 Telegram/Discord 机器人开放给订阅者，私聊即享专属 AI 咨询，白名单模式防止骚扰</li>
+        <li>非技术团队在小程序里扫码一下，微信上就能聊 AI，<strong>彻底绕开内网穿透、公网部署这些术语</strong></li>
+      </ul>
+
+    </div>
+    <div class="news-meta">
+      <span class="pill">DeepSeek</span>
+      <span class="pill">IM Bot</span>
+      <span class="pill">飞书</span>
+      <span class="pill">微信</span>
+      <span class="pill">钉钉</span>
+      <span class="pill">Telegram</span>
+      <span class="pill">WhatsApp</span>
+      <span class="pill">Open Source</span>
+    </div>
+  </div>
+
+  <div class="news-card hot">
+    <div class="news-head">
+      <span class="fire">🔥</span>
+      <span class="tag">HOT</span>
+      <a class="link-ext" href="https://miora.design/" target="_blank">→ 官网</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      Miora —— 腾讯出品的「有记忆的」Agentic 创意工作室
+      <span class="en">Miora · The Agentic Creative Studio with Memory by Tencent</span>
+    </div>
+    <div class="news-subtitle">
+      一句话 Brief 进去，多模态成品（图片、视频、UI、3D）出来，而且越用越懂你。
+    </div>
+    <div class="news-body">
+
+      <p>Miora 是腾讯设计团队推出的 <strong>AI 原生创意工作室</strong>，不是普通的 AI 画图工具，而是一个真正能「记住你」的创意合伙人。</p>
+
+      <h3>Agent Memory · 核心亮点</h3>
+      <p>大多数 AI 工具每次对话都失忆。Miora 会记住你的<strong>品牌色、语气、审美偏好、创作规则</strong>，甚至「绝对不要做的事」。用得越久，越像你自己的风格。</p>
+
+      <h3>Specialist Network · 创意专家团队</h3>
+      <p>直接调用不同领域的专家 Agent：<strong>Brand、Storyboard、Illustration、UI/UX、Video、3D</strong>……它们协作完成完整项目，而不是单一生成一张图。</p>
+
+      <h3>Brief → Delivery · 一站式成品</h3>
+      <p>在同一个可编辑画布上，从概念、分镜、插画到视频、界面、3D 资产，全部搞定，产出可直接用于生产的素材包。</p>
+
+      <h3>Skills + Community · 社区生态</h3>
+      <p>把好用的工作流保存成可复用的「Skill」，下次一键调用。还能分享到社区，或从 Inspiration Box 里发现别人的优质流程。</p>
+
+      <h3>简单使用方法</h3>
+      <ul>
+        <li>打开官网 <code>https://miora.design/</code></li>
+        <li>点击 <strong>START CREATING</strong></li>
+        <li>在画布上直接输入 Brief（例如：「为一款黑暗奇幻 RPG 设计三名战士角色概念」）</li>
+        <li>系统自动读取你的记忆风格，调动相关专家 Agent 开始工作</li>
+        <li>在画布上迭代修改，导出多模态成品</li>
+        <li>满意的工作流可保存为 Skill，下次复用</li>
+      </ul>
+
+      <p><strong>适合：</strong>独立创作者、设计师、内容团队、游戏概念设计师、品牌方……一个人就能当整个创意工作室。</p>
+
+      <p>Miora 的定位很清晰——不是一次性生成工具，而是长期陪伴你、越用越懂你的创意工作室。喜欢做视觉、品牌、内容的朋友强烈建议亲自试一下。</p>
+    </div>
+    <div class="news-meta">
+      <span class="pill">Tencent</span>
+      <span class="pill">Agentic</span>
+      <span class="pill">Creative AI</span>
+      <span class="pill">Brand Design</span>
+      <span class="pill">Memory System</span>
+    </div>
+  </div>
+
+  <div class="news-card hot">
+    <div class="news-head">
+      <span class="fire">🔥</span>
+      <span class="tag">HOT</span>
+      <a class="link-ext" href="https://github.com/OpenHands/OpenHands" target="_blank">→ GitHub · 81k+</a>
+      <a class="link-ext" href="https://openhands.dev" target="_blank">官网</a>
+      <a class="link-ext" href="https://docs.openhands.dev" target="_blank">文档</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      OpenHands —— 开源 AI 软件工程师平台
+      <span class="en">OpenHands · Open Source AI Software Engineer Agent Platform</span>
+    </div>
+    <div class="news-subtitle">
+      不只是代码建议，而是能像初级工程师一样自主完成完整开发任务的 AI Agent 平台。
+    </div>
+    <div class="news-body">
+
+      <p>OpenHands（前身是 <strong>OpenDevin</strong>）是目前最受欢迎的开源 AI 编码 Agent 平台之一。它真正能像初级工程师一样<strong>自主完成完整开发任务</strong>：看代码、改代码、跑终端、开 PR、修漏洞、处理 Issue……</p>
+      <p>现在主推的入口是 <strong>Agent Canvas</strong>——一个可自托管的「AI 工程团队控制中心」。</p>
+
+      <h3>它能做什么</h3>
+      <ul>
+        <li><strong>真正动手写代码</strong>：规划任务、修改代码库、运行测试、提交 PR</li>
+        <li><strong>自动化工程工作流</strong>：自动分解 GitHub Issue、审查 PR、修安全漏洞、处理 Linear/Jira 工单</li>
+        <li><strong>多 Agent 后端切换</strong>：本地、Docker、云端、企业 VPC 随便切换，不中断工作</li>
+        <li><strong>深度集成工具</strong>：原生支持 GitHub / GitLab、Slack、Linear、Notion、CI/CD 等 <strong>70+ 工具</strong></li>
+        <li><strong>模型无关</strong>：支持任意 LLM，也可直接使用 Claude Code、Codex、Gemini 等 ACP 兼容 Agent</li>
+        <li><strong>安全可控</strong>：本地/自托管运行，数据不出你的环境，支持沙箱隔离</li>
+      </ul>
+      <p>把「写代码 + 修 Bug + Code Review + 处理工单」这些日常工作，交给 AI Agent 全自动完成。</p>
+
+      <h3>简单使用方法</h3>
+
+      <p><strong>方式一：最快速本地启动（推荐先试）</strong></p>
+      <p>需要 Node.js 22.12+ 和 <code>uv</code>：</p>
+      <pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:14px 18px;margin:10px 0;font-size:12px;color:#b8b8b8;font-family:'Courier New',monospace;line-height:1.8;overflow-x:auto;"><span style="color:#7a7a7a;"># 安装</span>
+npm install -g @openhands/agent-canvas
+agent-canvas
+
+<span style="color:#7a7a7a;"># 浏览器打开</span>
+http://localhost:8000</pre>
+
+      <p><strong>方式二：Docker 沙箱（更安全，推荐日常使用）</strong></p>
+      <pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:14px 18px;margin:10px 0;font-size:12px;color:#b8b8b8;font-family:'Courier New',monospace;line-height:1.8;overflow-x:auto;">export PROJECTS_PATH="$HOME/projects"
+mkdir -p "$PROJECTS_PATH" "$HOME/.openhands"
+
+docker run -it --rm \
+  -p 8000:8000 \
+  -v "$HOME/.openhands:/home/openhands/.openhands" \
+  -v "${PROJECTS_PATH}:/projects" \
+  ghcr.io/openhands/agent-canvas:1</pre>
+      <p>访问 <code>http://localhost:8000</code> 即可。</p>
+
+      <h3>适合谁用</h3>
+      <ul>
+        <li>想让 AI 真正「干活」而不是只聊天的开发者</li>
+        <li>希望自动化 Code Review、Issue 拆解、漏洞修复的团队</li>
+        <li>需要自托管、数据不出内网的企业用户</li>
+        <li>想搭建自己的 AI 工程流水线的人</li>
+      </ul>
+
+      <p><strong>核心组件 MIT 开源</strong>，社区活跃（81k+ Star），可本地跑、可上云、可企业私有化。感兴趣的直接去 GitHub 或官网试试，5 分钟就能跑起来。</p>
+    </div>
+    <div class="news-meta">
+      <span class="pill">Open Source</span>
+      <span class="pill">MIT</span>
+      <span class="pill">81k+ Star</span>
+      <span class="pill">Agent</span>
+      <span class="pill">Software Engineering</span>
+      <span class="pill">Self-hosted</span>
+    </div>
+  </div>
+
+  <div class="news-card hot">
+    <div class="news-head">
+      <span class="fire">🔥</span>
+      <span class="tag">HOT</span>
+      <a class="link-ext" href="https://github.com/vmoranv/jshookmcp" target="_blank">→ GitHub · 1.8k+</a>
+      <a class="link-ext" href="https://vmoranv.github.io/jshookmcp/" target="_blank">文档</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      JSHookMCP —— 给 AI 装上 600+ 工具的 JS 逆向与安全研究神器
+      <span class="en">JSHookMCP · 636 Hooks for AI Agents · JS Reversing &amp; Security Research</span>
+    </div>
+    <div class="news-subtitle">
+      专为 AI Agent 设计的 MCP 服务器——34 个技术域、636 个原子工具，AI 能直接动手做逆向。
+    </div>
+    <div class="news-body">
+
+      <p>一个专为 AI Agent 设计的 <strong>MCP 服务器</strong>，把 JavaScript 分析、安全研究、浏览器自动化、逆向工程整合成一套超级工具箱。</p>
+
+      <h3>它能做什么</h3>
+      <ul>
+        <li><strong>浏览器全栈自动化</strong>：Chromium / Camoufox + CDP 调试 + 反检测 + 验证码处理</li>
+        <li><strong>网络拦截与分析</strong>：HTTP/2 帧操作、中间人捕获、GraphQL 解析、Burp 桥接</li>
+        <li><strong>JS Hook 与动态分析</strong>：运行时 Hook、源码映射重建、AST 变换</li>
+        <li><strong>AI 智能分析</strong>：LLM 驱动的反混淆、加密算法识别、代码深度理解</li>
+        <li><strong>逆向与取证</strong>：WASM 反编译、二进制分析、Frida / Ghidra / IDA 桥接、进程内存取证、硬件断点</li>
+        <li><strong>复合工作流</strong>：声明式工作流、热重载插件、跨域编排</li>
+        <li><strong>高效搜索</strong>：混合 BM25 + 向量搜索，轻量模式仅需约 <strong>3K tokens</strong>（完整模式 40K+）</li>
+      </ul>
+      <p>以前需要人工写脚本、开浏览器、抓包、调试的活，现在直接让 AI 用自然语言调工具就能完成。</p>
+
+      <h3>简单使用方法</h3>
+
+      <p><strong>方式一：最快速接入（无需全局安装）</strong></p>
+      <p>在 Claude Desktop / Cursor 等 MCP 客户端的配置文件中加入：</p>
+      <pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:14px 18px;margin:10px 0;font-size:12px;color:#b8b8b8;font-family:'Courier New',monospace;line-height:1.8;overflow-x:auto;">{
+  "mcpServers": {
+    "jshook": {
+      "command": "npx",
+      "args": ["-y", "@jshookmcp/jshook@latest"],
+      "env": {
+        "MCP_TOOL_PROFILE": "search",
+        "npm_config_omit": "optional"
+      }
+    }
+  }
+}</pre>
+      <p>保存后重启客户端即可。<code>search</code> 档是轻量模式，启动快、占用低。</p>
+
+      <p><strong>方式二：多 AI 共用一个进程（推荐）</strong></p>
+      <pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:14px 18px;margin:10px 0;font-size:12px;color:#b8b8b8;font-family:'Courier New',monospace;line-height:1.8;overflow-x:auto;">pnpm build
+pnpm daemon</pre>
+      <p>所有客户端统一指向 <code>http://127.0.0.1:3000/mcp</code>，资源只加载一份，效率更高。</p>
+
+      <h3>适用人群</h3>
+      <ul>
+        <li>安全研究员 / 逆向工程师</li>
+        <li>需要让 AI 帮忙做浏览器自动化、抓包分析的人</li>
+        <li>想用 AI 做 JS 反混淆、加密定位、WASM 分析的开发者</li>
+        <li>做 Agent 工作流、想给大模型装上专业逆向能力的人</li>
+      </ul>
+
+      <p><strong>开源协议 AGPL-3.0</strong>，目前 1.8k+ Star，更新活跃。</p>
+    </div>
+    <div class="news-meta">
+      <span class="pill">MCP</span>
+      <span class="pill">JS Reversing</span>
+      <span class="pill">Security</span>
+      <span class="pill">636 Hooks</span>
+      <span class="pill">1.8k+ Star</span>
+      <span class="pill">AGPL-3.0</span>
+    </div>
+  </div>
+
+  <div class="news-card">
+    <div class="news-head">
+      <span class="fire">🎁</span>
+      <span class="tag" style="background:#ff9900;">粉丝福利</span>
+      <a class="link-ext" href="https://cutt.ly/aytpVurC" target="_blank">→ 下载</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      一站式视频下载 + 画质增强工具
+      <span class="en">All-in-One Video Downloader &amp; Enhancer</span>
+    </div>
+    <div class="news-subtitle">
+      支持 1000+ 视频站点下载，画质自动增强，Windows / Mac 双平台。
+    </div>
+    <div class="news-body">
+
+      <p><strong>下载：</strong><a href="https://cutt.ly/aytpVurC" target="_blank" style="color:#ff9900;">https://cutt.ly/aytpVurC</a>（繁体中文版本）</p>
+      <p><strong>支持站点参考：</strong><a href="https://github.com/yt-dlp/yt-dlp/blob/master/supportedsites.md" target="_blank" style="color:#8bc34a;">yt-dlp 支持站点列表（1000+ 站点）</a></p>
+
+      <h3>福利内容</h3>
+      <ul>
+        <li><strong>3 天免费试用</strong></li>
+        <li><strong>150 视频生成点数</strong></li>
+      </ul>
+
+      <h3>领取方式</h3>
+      <ul>
+        <li>使用上方链接下载繁体中文版本并成功安装</li>
+        <li>发送 <strong>电脑操作系统</strong>（Windows / Mac）及 <strong>软件成功安装界面截图</strong></li>
+        <li>发送至邮箱：<a href="mailto:cocozeng7997@gmail.com" style="color:#4fc3f7;">cocozeng7997@gmail.com</a></li>
+      </ul>
+    </div>
+    <div class="news-meta">
+      <span class="pill">Video Download</span>
+      <span class="pill">Enhancement</span>
+      <span class="pill">Windows / Mac</span>
+      <span class="pill">粉丝福利</span>
+    </div>
+  </div>
+
+  <div class="news-card">
+    <div class="news-head">
+      <span class="fire">💰</span>
+      <span class="tag" style="background:#4fc3f7;">免费</span>
+      <a class="link-ext" href="https://unorouter.com/" target="_blank">→ 官网</a>
+      <a class="link-ext" href="https://youtu.be/qes1zbVm2O8" target="_blank">视频教程</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      Unorouter —— 真正免费的 AI API 工具，生图/视频/对话一键用
+      <span class="en">Unorouter · Free AI API Gateway · Image, Video &amp; Chat Models</span>
+    </div>
+    <div class="news-subtitle">
+      只需用 GitHub 或 Discord 登录，即可使用千问、DeepSeek、混元 3、英伟达等大量免费模型。
+    </div>
+    <div class="news-body">
+
+      <p><strong>工具：</strong><a href="https://unorouter.com/" target="_blank" style="color:#4fc3f7;">https://unorouter.com/</a></p>
+      <p><strong>配套教程视频：</strong><a href="https://youtu.be/qes1zbVm2O8" target="_blank" style="color:#ff9900;">手把手教学</a></p>
+
+      <h3>核心亮点</h3>
+      <ul>
+        <li>支持 <strong>千问、DeepSeek、混元 3、英伟达</strong> 等大量主流模型</li>
+        <li>部分模型 <strong>完全无限制</strong>，部分有每周 Token 额度，日常使用完全够用</li>
+        <li>只需 <strong>GitHub / Discord 账号</strong> 登录，即可注册并创建 API 密钥</li>
+      </ul>
+
+      <h3>教程视频覆盖</h3>
+      <ul>
+        <li>如何注册并创建 API 密钥</li>
+        <li>如何用自制的 HTML 小工具一键生图</li>
+        <li>如何在 <strong>Cherry Studio</strong> 里配置对话模型</li>
+        <li>不同模型的接口选择与注意事项</li>
+      </ul>
+
+      <h3>相关链接</h3>
+      <ul>
+        <li>Unorouter 平台：<a href="https://unorouter.com/" target="_blank" style="color:#4fc3f7;">https://unorouter.com/</a></li>
+        <li>Cherry Studio 客户端：<a href="https://cherryai.com.cn/" target="_blank" style="color:#8bc34a;">https://cherryai.com.cn/</a></li>
+        <li>教程视频：<a href="https://youtu.be/qes1zbVm2O8" target="_blank" style="color:#ff9900;">https://youtu.be/qes1zbVm2O8</a></li>
+      </ul>
+
+      <p>日常使用 AI 生图、视频生成、对话模型不想掏钱的朋友，强烈推荐试一下！</p>
+    </div>
+    <div class="news-meta">
+      <span class="pill">Free API</span>
+      <span class="pill">Image Gen</span>
+      <span class="pill">Video Gen</span>
+      <span class="pill">Chat LLM</span>
+      <span class="pill">无门槛</span>
+    </div>
+  </div>
+
+  <div class="news-card hot">
+    <div class="news-head">
+      <span class="fire">🔥</span>
+      <span class="tag">HOT</span>
+      <a class="link-ext" href="http://github.com/JustVugg/colibri" target="_blank">→ GitHub</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      Colibri —— 用纯 C 语言在 25GB 内存的消费级电脑上跑 GLM-5.2 (744B MoE)
+      <span class="en">Colibri · Run GLM-5.2 (744B MoE) on 25GB RAM with Pure C, Zero Dependencies</span>
+    </div>
+    <div class="news-subtitle">
+      引擎小巧，模型强大——专家模型通过磁盘流式加载，消费级电脑也能跑 744B 模型。
+    </div>
+    <div class="news-body">
+
+      <p><a href="http://github.com/JustVugg/colibri" target="_blank" style="color:#ff9900;"><strong>Colibri</strong></a> 是一个用纯 C 语言编写的轻量推理引擎，能够在 <strong>25GB 内存的消费级电脑</strong>上运行 <strong>GLM-5.2（744B MoE）</strong>大模型。</p>
+
+      <h3>核心亮点</h3>
+      <ul>
+        <li><strong>纯 C 实现</strong>：无任何第三方依赖，编译即用，部署极其轻量</li>
+        <li><strong>磁盘流式加载专家</strong>：744B MoE 模型的各专家按需用磁盘流式加载，无需全部驻留内存</li>
+        <li><strong>25GB 内存即可运行</strong>：消费级电脑（如 MacBook Pro 16GB / 32GB + 虚拟内存）就能承载百亿级模型</li>
+        <li><strong>引擎小巧，模型强大</strong>：推理引擎本身极小，但能解锁 GLM-5.2 的完整能力</li>
+      </ul>
+
+      <p>对于想本地跑大模型但又受硬件限制的同学，Colibri 提供了一个非常另类的思路——用磁盘换内存，让消费级设备也能用上顶级 MoE 模型。</p>
+    </div>
+    <div class="news-meta">
+      <span class="pill">Local LLM</span>
+      <span class="pill">GLM-5.2</span>
+      <span class="pill">MoE</span>
+      <span class="pill">C Language</span>
+      <span class="pill">Zero Dependencies</span>
+      <span class="pill">Disk Streaming</span>
+    </div>
+  </div>
+
+  <div class="news-card hot">
+    <div class="news-head">
+      <span class="fire">🔥</span>
+      <span class="tag">HOT</span>
+      <a class="link-ext" href="https://github.com/emilkowalski/skills" target="_blank">→ GitHub · 29.5k+</a>
+      <span class="date">2026.08</span>
+    </div>
+    <div class="news-title">
+      emilkowalski/skills —— 去 AI 味的设计 Skill 库
+      <span class="en">Skills for Designers &amp; Engineers · De-AI Taste for UI Animation &amp; Design</span>
+    </div>
+    <div class="news-subtitle">
+      Agents 没有审美。来自 Vercel / Linear 的资深工程师用一套 skill 帮 AI 做出真正有品味的设计决策。
+    </div>
+    <div class="news-body">
+
+      <p>由 <strong>Emil Kowalski</strong>（Vercel / Linear 资深工程师）出品的 <strong>设计与动画专项 Skill 库</strong>，29.5k+ Star，MIT 开源。核心价值：让 AI Agent 不再选错缓动函数、用错阴影、做出「AI 味」的 UI。</p>
+
+      <h3>设计理念</h3>
+      <p>作者认为 <strong>"Agents 没有审美"</strong>——AI 会选 ease-in 做进入动画（应该用 ease-out）、用实线边框代替半透明阴影。这个 skill 库把他的领域经验编码成 Agent 可复用的判断规则。</p>
+
+      <h3>包含 Skills</h3>
+      <ul>
+        <li><strong>animate</strong> · 动画制作</li>
+        <li><strong>animation-vocabulary</strong> · 动画词汇表</li>
+        <li><strong>apple-design</strong> · Apple 设计规范</li>
+        <li><strong>ask-sonner</strong> · Sonner 通知</li>
+        <li><strong>emil-design-eng</strong> · Emil 的设计工程方法论</li>
+        <li><strong>find-animation-opportunities</strong> · 发现动画机会点</li>
+        <li><strong>improve-animations</strong> · 改进现有动画</li>
+        <li><strong>pick-ui-library</strong> · UI 库选型</li>
+        <li><strong>prototype</strong> · 原型制作</li>
+        <li><strong>review-animations</strong> · 动画审查</li>
+      </ul>
+
+      <h3>安装方式</h3>
+      <pre style="background:#0a0a0a;border:1px solid #1a1a1a;border-radius:4px;padding:14px 18px;margin:10px 0;font-size:12px;color:#b8b8b8;font-family:'Courier New',monospace;line-height:1.8;overflow-x:auto;">npx skills@latest add emilkowalski/skills</pre>
+
+      <h3>适合谁</h3>
+      <ul>
+        <li>有设计需求的领导 / 产品负责人——让 AI 直接产出有品味的 UI</li>
+        <li>前端工程师——快速对齐动画和 UI 规范</li>
+        <li>设计师——用 AI 辅助原型和动画审查</li>
+      </ul>
+
+      <p>一句话：如果 AI 是「有知识但没品味」的学生，这个 skill 库就是它的审美导师。</p>
+    </div>
+    <div class="news-meta">
+      <span class="pill">Design</span>
+      <span class="pill">Animation</span>
+      <span class="pill">De-AI Taste</span>
+      <span class="pill">29.5k+ Star</span>
+      <span class="pill">MIT</span>
+      <span class="pill">Vercel · Linear</span>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  EDY.AI.STUDIO · AI NEWS &nbsp;|&nbsp; <a href="https://github.com/michoney/edystudio" style="color:#ff4444;text-decoration:none;">michoney/edystudio</a>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.9.4/p5.min.js"></script>
+<script src="assets/vamoss-bg.js"></script>
+</body>
+</html>

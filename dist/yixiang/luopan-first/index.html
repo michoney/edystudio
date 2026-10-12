@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>八卦 · 以 JavaScript 写易象</title>
+<meta name="description" content="用网页 JavaScript 表示中国传统文化八卦：后天八卦天池罗盘、六十四卦京房八宫、铜钱摇卦。">
+<link rel="stylesheet" href="css/main.css">
+<link rel="stylesheet" href="css/dial.css">
+</head>
+<body>
+<div class="grain" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+
+<!-- ─────────────────────────── 侧栏目次 ─────────────────────────── -->
+<nav class="rail" aria-label="目次">
+  <a class="rail-mark" href="#hero">易</a>
+  <ul class="rail-list">
+    <li><a href="#luopan"    data-nav>壹<em>罗盘</em></a></li>
+    <li><a href="#liushiya"  data-nav>贰<em>六十四卦</em></a></li>
+    <li><a href="#yaogua"    data-nav>叁<em>摇卦</em></a></li>
+  </ul>
+  <span class="rail-foot">后天·坎艮震巽离坤兑乾</span>
+</nav>
+
+<main>
+
+<!-- ─────────────────────────── 序 ─────────────────────────── -->
+<section id="hero" class="scene hero">
+  <div class="hero-inner">
+
+    <div class="hero-title">
+      <h1 class="hero-h1"><span>八</span><span>卦</span></h1>
+      <p class="hero-latin">THE&nbsp;EIGHT&nbsp;TRIGRAMS</p>
+      <div class="hero-rule" aria-hidden="true"></div>
+      <p class="hero-sub">以 JavaScript 写易象</p>
+      <p class="hero-note">
+        乾、坤、震、巽、坎、离、艮、兑八象，各主天地雷风水火山泽。
+        此页以代码推演其方位、爻变与成卦之序，无一处图元出自图片，
+        皆由 SVG 路径与数据表实时生成。
+      </p>
+    </div>
+
+    <div class="hero-taiji">
+      <svg id="heroSvg" viewBox="0 0 620 620" role="img"
+           aria-label="太极图，外环绕八卦爻符缓转"></svg>
+      <p class="hero-caption">太极生两仪 · 两仪生四象 · 四象生八卦</p>
+    </div>
+
+  </div>
+
+  <a class="hero-scroll" href="#luopan">
+    <span>向下</span>
+    <i aria-hidden="true"></i>
+  </a>
+</section>
+
+<!-- ─────────────────────────── 壹 · 罗盘 ─────────────────────────── -->
+<section id="luopan" class="scene">
+  <header class="scene-head reveal">
+    <span class="scene-no">壹</span>
+    <h2 class="scene-title">天池罗盘</h2>
+    <p class="scene-sub">
+      后天八卦方位盘。自外向内：二十四山、刻度、八卦主环、八门、天池太极。
+      <b>悬停</b>可预览八卦，<b>点击</b>钉住，方向键亦可切换。
+    </p>
+  </header>
+
+  <div class="lp-grid">
+    <div class="lp-dial reveal">
+      <svg id="dial" role="application"
+           aria-label="后天八卦天池罗盘，可用 Tab 与方向键操作"></svg>
+    </div>
+
+    <aside class="lp-panel reveal" id="lpPanel" aria-live="polite">
+      <p class="lp-hint">将指针移至任一卦位，或以 Tab 键聚焦</p>
+    </aside>
+  </div>
+
+  <div class="lp-legend reveal">
+    <div class="legend-block">
+      <h4>五行</h4>
+      <ul class="legend-els">
+        <li><i style="--c:#cbb273"></i>金<span>乾兑</span></li>
+        <li><i style="--c:#6f9c5a"></i>木<span>震巽</span></li>
+        <li><i style="--c:#4f7fa8"></i>水<span>坎</span></li>
+        <li><i style="--c:#c24a3a"></i>火<span>离</span></li>
+        <li><i style="--c:#b8763e"></i>土<span>坤艮</span></li>
+      </ul>
+    </div>
+    <div class="legend-block">
+      <h4>二十四山</h4>
+      <p class="legend-p">自子起壬癸丑艮寅甲卯乙辰巽巳丙午丁未坤申庚酉辛戌乾亥，每山十五度，正合《周髀》度制。</p>
+    </div>
+    <div class="legend-block">
+      <h4>两套数序</h4>
+      <p class="legend-p">先天八卦数（伏羲）乾一兑二离三震四巽五坎六艮七坤八，取三爻之二进制；洛书九数（后天）坎一坤二震三巽四中五乾六兑七艮八离九，按方位排布。二者一纵一横，正合二进制位序之理。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ─────────────────────────── 贰 · 六十四卦 ─────────────────────────── -->
+<section id="liushiya" class="scene">
+  <header class="scene-head reveal">
+    <span class="scene-no">贰</span>
+    <h2 class="scene-title">六十四卦宫阵</h2>
+    <p class="scene-sub">
+      六十四卦非逐条硬写，而是由「上卦 × 下卦」八八相重，
+      再依京房变爻规则推出八宫次序。点任一卦可读卦辞、上下卦、互卦。
+    </p>
+  </header>
+
+  <div class="lx-tabs reveal" role="tablist" aria-label="卦阵视图">
+    <button class="lx-tab is-on" data-view="palace" role="tab" aria-selected="true">京房八宫</button>
+    <button class="lx-tab" data-view="order" role="tab" aria-selected="false">周易序 1–64</button>
+    <span class="lx-tabs-hint">行首「乾坤艮震巽离坤兑」可点亮该宫八卦</span>
+  </div>
+
+  <div class="lx-body">
+    <div class="lx-grid-wrap reveal">
+      <div class="lx-grid" id="hxGrid"></div>
+    </div>
+    <aside class="lx-detail reveal" id="hxDetail" aria-live="polite"></aside>
+  </div>
+</section>
+
+<!-- ─────────────────────────── 叁 · 摇卦 ─────────────────────────── -->
+<section id="yaogua" class="scene">
+  <header class="scene-head reveal">
+    <span class="scene-no">叁</span>
+    <h2 class="scene-title">铜钱摇卦</h2>
+    <p class="scene-sub">
+      三枚铜钱掷之，背为阳计三、字为阴计二，一掷成一爻，六掷成卦，
+      自初爻而上。得老阳老阴者为动爻，动则变，另有之卦；不拘泥摇法，
+      亦可直接点动下方六爻推演。
+    </p>
+  </header>
+
+  <div class="yg-stage reveal">
+    <div class="yg-coins" id="ygCoins" aria-hidden="true"></div>
+    <div class="yg-actions">
+      <button id="ygBtn" class="btn-primary">摇　卦</button>
+      <button id="ygReset" class="btn-ghost">重置</button>
+    </div>
+    <p class="yg-tip">
+      三背 <b>9</b> 老阳 ○ ｜ 两背一字 <b>8</b> 少阴 ｜ 一背两字 <b>7</b> 少阳 ｜ 三字 <b>6</b> 老阴 ×
+    </p>
+  </div>
+
+  <div class="yg-body">
+    <div class="yg-left reveal">
+      <h3 class="yg-h3">六爻 <small>自下而上，点击可改阴阳，点「动/静」可设动爻</small></h3>
+      <div id="ygLines"></div>
+      <div id="ygMoving"></div>
+    </div>
+    <div class="yg-right reveal">
+      <h3 class="yg-h3">成卦</h3>
+      <div class="yg-result" id="ygResult"></div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="foot-inner">
+    <p class="foot-lead">八卦</p>
+    <p class="foot-p">
+      卦爻符号与卦序出《周易》；后天方位出《说卦传》；先天八卦数与洛书九数出宋以前易学；
+      八门出《奇门遁甲》，为堪舆罗盘参考层，非《周易》经文，已于图中标注。
+      六十四卦辞用《周易》通行本。全部图元由 SVG 路径实时生成，无图片依赖。
+    </p>
+    <p class="foot-meta">Vanilla JS · 无框架 · 无构建 · 双击 index.html 即可打开</p>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/core.js"></script>
+<script src="js/glyph.js"></script>
+<script src="js/luopan.js"></script>
+<script src="js/liushiya.js"></script>
+<script src="js/yaogua.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

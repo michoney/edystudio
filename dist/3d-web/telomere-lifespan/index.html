@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="EdyStudio 端粒长度交互科学示意：观察染色体末端保护帽随细胞复制逐渐缩短。">
+  <title>Telomere Length — EdyStudio</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <main>
+    <canvas id="scene" aria-label="端粒长度与细胞复制的三维粒子示意"></canvas>
+    <div class="shade"></div>
+    <header>
+      <a href="../particle-dna/">← PARTICLE DNA</a>
+      <span>EDYSTUDIO / CELLULAR CLOCK</span>
+    </header>
+    <section class="copy">
+      <p class="kicker">CHROMOSOME END PROTECTION</p>
+      <h1>端粒长度<br><em>TELOMERE LENGTH</em></h1>
+      <p class="intro">端粒是染色体末端的保护结构。许多体细胞每次复制后，端粒会逐渐缩短。</p>
+    </section>
+    <section class="panel" aria-label="端粒长度控制">
+      <div class="metric"><span>模拟复制次数</span><b id="divisionValue">12</b></div>
+      <input id="division" type="range" min="0" max="80" value="12" step="1">
+      <div class="scale"><span>较长端粒</span><span>临界缩短</span></div>
+      <div class="bar"><i id="barFill"></i></div>
+      <div class="status"><span id="statusDot"></span><strong id="statusText">保护结构较完整</strong></div>
+      <p>拖动滑杆，观察四个染色体末端的发光粒子帽逐渐缩短。</p>
+    </section>
+    <aside>
+      <b>科学提示</b>
+      <p>端粒缩短与细胞衰老有关，但人类寿命同时受遗传、环境、疾病与生活方式影响；端粒不是唯一的“寿命开关”。</p>
+    </aside>
+  </main>
+  <script type="importmap">
+    {"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.168.0/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.168.0/examples/jsm/"}}
+  </script>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

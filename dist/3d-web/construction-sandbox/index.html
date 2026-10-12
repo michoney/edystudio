@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"><meta name="theme-color" content="#11150f"><meta name="apple-mobile-web-app-capable" content="yes"><title>筑城之间 · 施工沙盘</title></head>
+<body><div id="app">
+<canvas id="game"></canvas><div id="loading"><b>筑城之间</b><span>正在准备施工现场…</span></div>
+<header><div><small>LITTLE WORLD, BIG AMBITION</small><h1>筑城之间</h1></div><div id="mission">任务 01 · 配制第一罐混凝土</div></header>
+<button id="help">游玩流程 ?</button>
+<aside id="guide"><b>从沙堆到二层小楼</b><ol><li>W/S 前后、A/D 转向，E 降铲斗</li><li>沙堆旁按空格装沙，搅拌机旁按空格卸沙</li><li>加入水泥和水，推荐配比 200 / 100 / 50</li><li>搅拌后选择并放置地基、柱子或楼板</li><li>选择泵送浇筑，再点击模板灌入混凝土</li><li>等待构件变为灰白色，即已凝固</li></ol><p>放错了：右键点击构件拆除；混凝土不返还。</p></aside>
+<aside id="materials"></aside>
+<section id="toolbar"><button data-mode="drive" class="active">驾驶铲车</button><button data-mode="cement">加入水泥</button><button data-mode="water">打开水阀</button><button data-mode="mix">开始搅拌</button><button data-mode="foundation">放置地基</button><button data-mode="column">放置立柱</button><button data-mode="slab">放置楼板</button><button data-mode="pour">泵送浇筑</button></section>
+<div id="tip">W/S 前后 · A/D 转向 · Q/E 铲斗升降 · 空格装沙/卸沙 · 右键拆除</div><div id="toast"></div>
+<div id="touch-controls"><div id="joystick"><span></span></div><div id="touch-actions"><button data-touch="q">铲斗升</button><button data-touch="e">铲斗降</button><button data-touch="space" class="primary">装沙 / 卸沙</button></div></div>
+<div id="rotate"><b>请横屏游玩</b><span>旋转手机，进入完整施工现场</span></div>
+<button id="blueprint-open" type="button">▦ 蓝图工作台</button>
+<section id="blueprint" aria-hidden="true">
+  <div class="bp-shell">
+    <header class="bp-header"><div><small>PLAN BEFORE POUR</small><h2>蓝图工作台</h2></div><button id="blueprint-close" type="button" class="bp-close">×</button></header>
+    <aside class="bp-tools"><span class="bp-label">绘图工具</span><button class="bp-tool active" data-tool="wall">墙体线</button><button class="bp-tool" data-tool="room">房间框</button><button class="bp-tool" data-tool="door">门洞</button><button class="bp-tool" data-tool="erase">擦除</button><span class="bp-label">快速方案</span><button class="bp-preset" data-preset="courtyard">一层小院</button><button class="bp-preset" data-preset="studio">临街工作室</button><button class="bp-preset" data-preset="mall">四层商场</button><button id="blueprint-clear" type="button" class="bp-muted">清空画布</button></aside>
+    <main class="bp-board"><div class="bp-board-head"><span>施工平面 · 20 × 12 模块</span><span id="bp-status">可开始绘制</span></div><canvas id="blueprint-canvas" width="800" height="480"></canvas><p>拖动绘制，蓝线是墙体，青色是房间，金色是门洞。蓝图会自动保存在本机。</p></main>
+    <aside class="bp-summary"><span class="bp-label">蓝图统计</span><div class="bp-stats"><b id="bp-area">0</b><small>规划面积</small><b id="bp-walls">0</b><small>墙体线</small><b id="bp-doors">0</b><small>门洞</small></div><div id="bp-plan" class="bp-plan">画好布局后，生成自动施工序列。</div><button id="bp-build" type="button" class="bp-primary">生成自动施工序列</button><button id="bp-save" type="button" class="bp-muted">保存蓝图</button></aside>
+    <footer class="bp-footer"><span>施工领地已扩展至 64 × 44 米</span><span>点击“生成自动施工序列”后写入沙盘</span></footer>
+  </div>
+</section>
+</div><script type="module" src="/src/main.js"></script></body></html>

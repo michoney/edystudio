@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>头像 INS · Edy.Ai.Studio</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { background: #0a0a0c; min-height: 100vh; color: #e8e6e3; font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Segoe UI", sans-serif; }
+
+  .bg { position: fixed; inset: 0; z-index: -1;
+    background: radial-gradient(900px 500px at 85% -10%, rgba(196,124,40,.12), transparent 60%),
+                radial-gradient(800px 500px at -10% 40%, rgba(120,60,150,.10), transparent 60%),
+                linear-gradient(180deg, #0d0d10, #08080a); }
+
+  .bar {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    padding: 12px 16px;
+    background: rgba(10,10,12,.72); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(255,255,255,.07);
+  }
+  .bar .brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+  .bar .brand a { color: #e8a87c; text-decoration: none; font-weight: 700; font-size: 15px; letter-spacing: .02em; white-space: nowrap; }
+  .bar .brand span { color: #6d6d74; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar .cnt { font-size: 11px; color: #8a8a90; letter-spacing: .12em; white-space: nowrap; padding: 5px 12px; border: 1px solid rgba(255,255,255,.12); border-radius: 999px; background: rgba(255,255,255,.04); }
+
+  .wrap { max-width: 1240px; margin: 0 auto; padding: 14px 12px 60px; }
+
+  /* ins 风格方形网格 */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 3px;
+  }
+  @media (min-width: 560px)  { .grid { grid-template-columns: repeat(4, 1fr); } }
+  @media (min-width: 800px)  { .grid { grid-template-columns: repeat(5, 1fr); } }
+
+  .cell {
+    position: relative; aspect-ratio: 1; overflow: hidden; cursor: zoom-in;
+    background: #121216; border: none; padding: 0; display: block;
+  }
+  .cell img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+    transition: transform .35s ease, opacity .25s ease;
+  }
+  .cell:hover img { transform: scale(1.07); opacity: .92; }
+  .cell .tip {
+    position: absolute; left: 0; right: 0; bottom: 0; padding: 14px 8px 6px;
+    background: linear-gradient(180deg, transparent, rgba(4,4,6,.85));
+    font-size: 10px; letter-spacing: .04em; color: #eee; text-align: left;
+    opacity: 0; transition: opacity .2s ease; pointer-events: none;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .cell:hover .tip { opacity: 1; }
+
+  /* lightbox */
+  .lb {
+    position: fixed; inset: 0; z-index: 100; display: none;
+    align-items: center; justify-content: center;
+    background: rgba(4,4,6,.92); backdrop-filter: blur(6px);
+    padding: 30px; cursor: zoom-out;
+  }
+  .lb.open { display: flex; }
+  .lb img {
+    max-width: 92vw; max-height: 88vh; object-fit: contain;
+    border-radius: 10px; box-shadow: 0 30px 90px rgba(0,0,0,.6);
+    cursor: default;
+  }
+  .lb .info {
+    position: fixed; bottom: 22px; left: 0; right: 0; text-align: center;
+    font-size: 13px; color: #ccc; letter-spacing: .06em;
+  }
+  .lb .info b { color: #fff; }
+  .lb .x {
+    position: fixed; top: 16px; right: 20px; font-size: 26px; color: #aaa; cursor: pointer;
+    width: 42px; height: 42px; display: grid; place-items: center; border-radius: 50%;
+    background: rgba(255,255,255,.07); transition: .2s;
+  }
+  .lb .x:hover { color: #fff; background: rgba(255,255,255,.16); }
+
+  .foot { text-align: center; padding: 34px 10px 8px; color: #5d5d64; font-size: 11px; letter-spacing: .1em; }
+  .foot a { color: #8f8f96; text-decoration: none; border-bottom: 1px dashed #4a4a50; }
+</style>
+</head>
+<body>
+<div class="bg"></div>
+
+<div class="bar">
+  <div class="brand">
+    <a href="../index.html">← Edy Studio</a>
+    <span>头像 INS · Avatar Wall</span>
+  </div>
+  <div class="cnt" id="cnt"></div>
+</div>
+
+<div class="wrap">
+  <div class="grid" id="grid"></div>
+</div>
+
+<div class="lb" id="lb">
+  <div class="x" onclick="closeLB()">✕</div>
+  <img id="lbImg" alt="">
+  <div class="info" id="lbInfo"></div>
+</div>
+
+<div class="foot">
+  Edy.Ai.Studio · 头像灵感墙 · <a href="../gallery.html">Creative AI Studio</a>
+</div>
+
+<script>
+// ── 素材清单:新素材加一行 ──
+// { img, title, sub, ratio(h/w), href(可选原图链接) }
+const PINS = [
+  { img: "assets/hamster-travel-blogger.jpg", title: "Hamster Travel Blogger", sub: "仓鼠旅行博主 · 复古胶片", href: "https://www.pinterest.com/pin/1101411652628375899/", ratio: 1024/683 },
+  { img: "assets/vintage-cartoon-wall.jpg", title: "Jerry · 复古卡通", sub: "猫和老鼠 · Vintage Cartoon", href: "https://www.pinterest.com/pin/1114429870327672309/", ratio: 812/457 },
+  { img: "assets/pin-3.jpg", title: "Hamster Photographer · 雪地", sub: "仓鼠摄影师 · 复古胶片", ratio: 1024/683 },
+  { img: "assets/pin-4.jpg", title: "Relax · 酷小孩海报", sub: "复古胶片 · 文字海报", href: "https://www.pinterest.com/pin/1004513891909303309/", ratio: 945/736 },
+  { img: "assets/jerry-01.jpg", title: "Ski Kid · life update", sub: "滑雪小子 · 复古颗粒", ratio: 920/736 },
+  { img: "assets/jerry-02.jpg", title: "Raccoon at Work", sub: "浣熊上班 · 监控写实", ratio: 2133/1200 },
+  { img: "assets/jerry-03.jpg", title: "Chill Bro Kid", sub: "墨镜小孩 · 街头胶片", ratio: 920/736 },
+  { img: "assets/jerry-04.jpg", title: "Lounge Kid · I Luv M", sub: "躺椅小子 · 电影感", ratio: 789/736 },
+  { img: "assets/jerry-05.jpg", title: "Cool Kid · Orange Juice", sub: "墨镜小孩 · 生活写实", ratio: 736/736 },
+  { img: "assets/jerry-06.jpg", title: "Cruiser Kid", sub: "小车酷娃 · 日常胶片", ratio: 614/614 },
+  { img: "assets/jerry-07.jpg", title: "Goated Cows", sub: "墨镜牛群 · 胶片meme", ratio: 1308/736 },
+  { img: "assets/jerry-08.jpg", title: "Red Hood Baby", sub: "红帽酷婴 · 复古电影", ratio: 983/736 },
+  { img: "assets/jerry-09.jpg", title: "Rich Cat in Bath", sub: "浴缸富猫 · 复古胶片", ratio: 2048/1152 },
+  { img: "assets/jerry-10.jpg", title: "Thrasher Cat", sub: "炸毛橘猫 · 潮流极简", ratio: 2048/1152 },
+  { img: "assets/jerry-11.jpg", title: "Mr. Bean", sub: "憨豆先生 · 黑白肖像", ratio: 2048/1152 },
+  { img: "assets/jerry-12.jpg", title: "Patrick Star", sub: "派大星 · 毛毡3D", ratio: 1471/828 },
+  { img: "assets/jerry-13.jpg", title: "Frog Barista", sub: "青蛙玩偶 · 冰咖啡", ratio: 2400/1200 },
+  { img: "assets/jerry-14.jpg", title: "No Risk No Story", sub: "超现实婴儿 · 拼贴", ratio: 2048/1152 },
+  { img: "assets/jerry-15.jpg", title: "BOY'S TEARS", sub: "情绪瓶 · 文艺颓废", ratio: 2436/1125 },
+  { img: "assets/jerry-16.jpg", title: "Pink Queen Cat", sub: "粉色贵妇猫 · 奢华梦幻", ratio: 1920/1080 },
+  { img: "assets/jerry-17.jpg", title: "Diamond Bunny", sub: "钻石垂耳兔 · 奢华写实", ratio: 920/736 },
+  { img: "assets/jerry-18.jpg", title: "Couch Rabbit", sub: "沙发宅兔 · 复古电影", ratio: 1252/704 },
+  { img: "assets/jerry-19.jpg", title: "Office Bear", sub: "小熊上班 · 可爱手绘", ratio: 736/736 },
+  { img: "assets/jerry-20.jpg", title: "Hamster Agent", sub: "仓鼠特工 · 拟人写实", ratio: 736/736 },
+  { img: "assets/jerry-21.jpg", title: "Jerry · Noir", sub: "杰瑞 · 暗黑都市漫画", ratio: 1088/1199 },
+  { img: "assets/bear-bandanna.jpg", title: "Teddy Bear · Bandanna", sub: "泰迪熊 · 可爱卡通", href: "https://www.pinterest.com/pin/877427939877015242/", ratio: 736/736 },
+  { img: "assets/blanket-boy.jpg", title: "Red Blanket Boy", sub: "红毯男孩 · 圣诞复古", href: "https://www.pinterest.com/pin/989454980609849851/", ratio: 890/480 },
+  { img: "assets/cats-construction.jpg", title: "Cats Construction Crew", sub: "工地猫 · 七猫开会meme", href: "https://www.pinterest.com/pin/714172453459858399/", ratio: 1308/736 },
+  { img: "assets/dog-office-0d105b60.jpg", title: "Dog in Office · Coffee Charge", sub: "摸鱼狗 · 打工人meme", href: "https://www.pinterest.com/pin/371898881752296129/", ratio: 600/480 },
+  { img: "assets/rel-faec9b.jpg", title: "Cute Bunny", sub: "萌兔 · 可爱动物", ratio: 918/640 },
+  { img: "assets/rel-bec366.jpg", title: "Monkey Night Selfie", sub: "夜街猴 · 荒诞幽默", ratio: 680/736 },
+  { img: "assets/rel-7ea421.jpg", title: "Chihuahua at Desk", sub: "吉娃娃 · 办公摸鱼", ratio: 920/736 },
+  { img: "assets/rel-d03b85.jpg", title: "Chihuahua Tired", sub: "白吉娃 · 下班眼神", ratio: 923/736 },
+  { img: "assets/rel-f2476a.jpg", title: "Smoking Cat Laptop", sub: "灰猫 · 床上办公", ratio: 920/736 },
+  { img: "assets/rel-e15095.jpg", title: "Bunny Gym", sub: "举铁兔 · 健身萌宠", ratio: 736/736 },
+  { img: "assets/rel-10b507.jpg", title: "Chihuahua Dumbbell", sub: "吉娃娃 · 举哑铃", ratio: 600/480 },
+  { img: "assets/rel-53d239.jpg", title: "Cat Crosswalk", sub: "街拍猫 · 格子头巾", ratio: 656/736 },
+  { img: "assets/cow-desk-08214e.jpg", title: "Cow at Desk · Salad Break", sub: "奶牛办公 · 沙拉打工人", href: "https://www.pinterest.com/pin/979040406505476939/", ratio: 736/736 },
+  { img: "assets/rel-8c1f4a.jpg", title: "Crayon Shin-chan Chill", sub: "蜡笔小新 · 阳台可乐", ratio: 736/736 },
+  { img: "assets/rel-f2ccc9.jpg", title: "Cow Worker Laptop", sub: "眼镜牛 · 电脑办公", ratio: 1104/736 },
+  { img: "assets/rel-0a7e20.jpg", title: "Pigeon Smoker", sub: "鸽子 · 叼烟打工人", ratio: 962/720 },
+  { img: "assets/rel-44f319.jpg", title: "Horse Fairy Selfie", sub: "仙女裙马 · 自拍萌", ratio: 961/735 },
+  { img: "assets/rel-c72784.jpg", title: "Cow Tongue Out", sub: "奶牛 · 吐舌俏皮", ratio: 1308/736 },
+  { img: "assets/rel-f2759c.jpg", title: "Horse · ok fine", sub: "小马 · ok fine", ratio: 745/736 },
+  { img: "assets/rel-60ae3f.jpg", title: "Hiphop Cow", sub: "嘻哈牛 · 钻石墨镜", ratio: 1198/674 },
+  { img: "assets/rel-e3c55a.jpg", title: "Calf Office Worker", sub: "小牛 · 绿项圈办公", ratio: 736/736 },
+  { img: "assets/gangster-2ad210.jpg", title: "Gangster Duo · Dog & Cat", sub: "黑帮搭档 · 夜街酷炫", href: "https://www.pinterest.com/pin/970877632204988257/", ratio: 552/736 },
+  { img: "assets/rel-9fb2f6.jpg", title: "Chihuahua Crime Club", sub: "吉娃娃帮 · 街头硬汉", ratio: 777/736 },
+  { img: "assets/rel-cdb0a9.jpg", title: "Cuddly Dogs · Watermelon", sub: "西瓜犬 · 夏日萌趣", ratio: 736/736 },
+  { img: "assets/rel-051aea.jpg", title: "Cow Cats Cuddle", sub: "奶牛猫 · 依偎萌", ratio: 552/736 },
+  { img: "assets/rel-491192.jpg", title: "Diamond Gangster Cat", sub: "钻石黑帮猫 · 奢华", ratio: 1104/736 },
+  { img: "assets/rel-9ad939.jpg", title: "Yacht Party Animals", sub: "游艇派对 · 墨镜动物", ratio: 1218/688 },
+  { img: "assets/rel-d73ef9.jpg", title: "Fish Benjamin", sub: "鱼本杰明 · 叼烟荒诞", ratio: 613/541 },
+  { img: "assets/rel-8171ae.jpg", title: "Cat Selfie · Rottweilers", sub: "猫自拍 · 罗威纳围观", ratio: 649/735 },
+  { img: "assets/rel-006d7f.jpg", title: "Bulldogs Batman & Robin", sub: "斗牛犬 · 蝙蝠侠罗宾", ratio: 610/736 },
+  { img: "assets/rel-164d25.jpg", title: "Vintage Smoking Cat", sub: "复古烟猫 · 黑白爵士", ratio: 833/736 },
+  { img: "assets/rel-8e3620.jpg", title: "Cool Cats Fisheye", sub: "酷猫 · 鱼眼街头", ratio: 977/736 },
+  { img: "assets/rel-fbca77.jpg", title: "Shark Hat Piggies", sub: "鲨鱼帽小猪 · cosplay", ratio: 736/736 },
+  { img: "assets/snoop-dog-cb9417.jpg", title: "Dachshund Tech Dog", sub: "腊肠犬 · 科技狗复古", href: "https://www.pinterest.com/pin/1127518456793025817/", ratio: 736/736 },
+  { img: "assets/rel-b6a120.jpg", title: "Horse iPhone Selfie", sub: "马自拍 · 健身博主", ratio: 888/735 },
+  { img: "assets/rel-612c56.jpg", title: "Blanket Dog · Hot Drink", sub: "毯子狗 · 惬意午后", ratio: 816/736 },
+  { img: "assets/rel-27784a.jpg", title: "Monkey Phone Addict", sub: "猴 · 数码宅刷手机", ratio: 798/736 },
+  { img: "assets/rel-6d82df.jpg", title: "Mafia Mice", sub: "黑帮鼠 · 西装雪茄", ratio: 891/735 },
+  { img: "assets/rel-8813e6.jpg", title: "Gucci Pony", sub: "Gucci小马 · 街头时尚", ratio: 979/735 },
+  { img: "assets/gym-bear-2f149a.jpg", title: "Hamster Gym Bear", sub: "健身仓鼠 · 举杠铃", href: "https://www.pinterest.com/pin/998039967442980744/", ratio: 920/736 },
+  { img: "assets/rel-c4932a.jpg", title: "YOU vs YOU Gym", sub: "健身房 · YOU vs YOU", ratio: 991/736 },
+  { img: "assets/rel-2aa95d.jpg", title: "Pink Cap Hamster", sub: "粉帽仓鼠 · 举哑铃", ratio: 576/735 },
+  { img: "assets/rel-6bb0ae.jpg", title: "Hamster Lifting", sub: "仓鼠 · 杠铃训练", ratio: 1200/675 },
+  { img: "assets/rel-8c3ede.jpg", title: "Hamster Powerlift", sub: "仓鼠 · 力量举", ratio: 1307/736 },
+  { img: "assets/rel-41e9d9.jpg", title: "Hamster Duo Workout", sub: "双仓鼠 · 健身达人", ratio: 981/736 },
+  { img: "assets/rel-790ee0.jpg", title: "Hamster Lift 2", sub: "仓鼠 · 深蹲举", ratio: 1308/736 },
+  { img: "assets/rel-c09555.jpg", title: "Hamster Lift 3", sub: "仓鼠 · 力量训练", ratio: 720/720 },
+  { img: "assets/rel-f8032d.jpg", title: "Matcha Hamster Crosswalk", sub: "抹茶仓鼠 · 斑马线", ratio: 919/735 },
+  { img: "assets/cat-camera-dd5db0.jpg", title: "Cat Photographer", sub: "橘猫摄影师 · 复古人像", href: "https://www.pinterest.com/pin/916482592929392885/", ratio: 736/736 },
+];
+
+const grid = document.getElementById('grid');
+const cnt = document.getElementById('cnt');
+cnt.textContent = PINS.length + ' 张';
+
+function openLB(i) {
+  const p = PINS[i];
+  const img = document.getElementById('lbImg');
+  img.src = p.img;
+  img.alt = p.title;
+  document.getElementById('lbInfo').innerHTML = `<b>${p.title}</b> · ${p.sub}` + (p.href ? ` · <a href="${p.href}" target="_blank" style="color:#e8a87c">原图 ↗</a>` : '');
+  document.getElementById('lb').classList.add('open');
+}
+function closeLB() { document.getElementById('lb').classList.remove('open'); }
+document.getElementById('lb').addEventListener('click', e => { if (e.target.id === 'lb') closeLB(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLB(); });
+
+PINS.forEach((p, i) => {
+  const btn = document.createElement('button');
+  btn.className = 'cell';
+  btn.title = p.title;
+  const img = document.createElement('img');
+  img.loading = 'lazy';
+  img.src = p.img;
+  img.alt = p.title;
+  btn.appendChild(img);
+  const tip = document.createElement('div');
+  tip.className = 'tip';
+  tip.textContent = p.title;
+  btn.appendChild(tip);
+  btn.onclick = () => openLB(i);
+  grid.appendChild(btn);
+});
+</script>
+</body>
+</html>
