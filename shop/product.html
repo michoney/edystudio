@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>商品详情 · EDY STUDIO 选品</title>
+<meta name="description" content="Web3D 商品详情：360° 旋转查看，可换配色。">
+<meta name="theme-color" content="#0a0b0d">
+<link rel="stylesheet" href="css/shop.css">
+</head>
+<body>
+
+<header class="site-head">
+  <a class="brand" href="index.html">EDY<small>STUDIO</small></a>
+  <nav class="head-nav">
+    <a href="index.html">全部商品</a>
+    <button class="cart-btn" data-cart-btn aria-label="购物车">
+      🛒
+      <span class="cart-badge">0</span>
+    </button>
+  </nav>
+</header>
+
+<div class="pd-wrap">
+
+  <!-- ── 3D 展示台 ────────────────────────────────────── -->
+  <section class="pd-stage">
+    <div id="pdStage" style="position:absolute;inset:0"></div>
+    <p class="pd-stage-hint">拖动旋转　·　双指缩放</p>
+    <div class="pd-tools">
+      <button class="pd-tool" id="btnSpin">暂停旋转</button>
+      <button class="pd-tool" id="btnShot">保存 3D 图</button>
+    </div>
+  </section>
+
+  <!-- ── 商品信息 ──────────────────────────────────────── -->
+  <section class="pd-info">
+    <a class="back-home" href="index.html">← 返回全部商品</a>
+
+    <p class="hero-kicker" id="pdKicker">—</p>
+    <h1 class="pd-title" id="pdName">—</h1>
+    <p class="pd-tagline" id="pdTagline">—</p>
+
+    <div class="pd-price-row">
+      <span class="pd-price" id="pdPrice">—</span>
+      <span class="card-origin" id="pdOrigin"></span>
+      <span class="pd-stock" id="pdStock"></span>
+    </div>
+
+    <div id="pdOptions"></div>
+
+    <div class="pd-actions">
+      <div class="qty">
+        <button id="qtyMinus" aria-label="减少">−</button>
+        <span id="qtyVal">1</span>
+        <button id="qtyPlus" aria-label="增加">＋</button>
+      </div>
+      <button class="btn btn-gold" id="btnAdd">加入购物车</button>
+      <button class="btn btn-dark" id="btnBuy">直接下单</button>
+    </div>
+
+    <div class="pd-desc">
+      <h4>商品说明</h4>
+      <div id="pdDesc"></div>
+
+      <h4>参数</h4>
+      <table class="spec-table" id="pdSpecs"></table>
+
+      <div class="service-grid">
+        <div class="service">
+          <h5>正品保障</h5>
+          <p id="svcAuth">每件发货前拍照确认，验货满意后再寄出。</p>
+        </div>
+        <div class="service">
+          <h5>发货说明</h5>
+          <p id="svcShip">现货 24 小时内发出，非当日单次日处理。</p>
+        </div>
+        <div class="service">
+          <h5>关于色差</h5>
+          <p>本站 3D 渲染图为示意，实物以收到的为准；屏幕不同会有色差。</p>
+        </div>
+        <div class="service">
+          <h5>下单流程</h5>
+          <p>加微信发订单号 → 转账 → 确认地址 → 发货，全程可查。</p>
+        </div>
+      </div>
+    </div>
+
+    <h4 class="pd-desc" style="margin-top:40px">看了又看</h4>
+    <div class="grid" id="pdRelated" style="padding:0"></div>
+  </section>
+
+</div>
+
+<footer class="site-foot">
+  <p class="foot-title">EDY STUDIO</p>
+  <p>商品图为浏览器实时渲染的 3D 模型，仅作款式示意，尺寸与细节以实物为准。</p>
+  <p style="margin-top:14px"><a href="../index.html">← 回到 Edy.AI.Studio</a></p>
+</footer>
+
+<script src="vendor/three.min.js"></script>
+<script src="data/products.js"></script>
+<script src="js/models.js"></script>
+<script src="js/viewer.js"></script>
+<script src="js/store.js"></script>
+<script src="js/thumbs.js"></script>
+<script src="js/pd.js"></script>
+</body>
+</html>
