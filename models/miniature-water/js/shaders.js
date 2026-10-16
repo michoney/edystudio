@@ -268,14 +268,8 @@ void main(){
   vec2 wp = aXZ;
   vec2 uv = wp / uExtent + 0.5;
   vec4 w = texture(uWave, uv);
-  float h = (w.a - 0.5) * 4.0 * uWaveScale;      // alpha 是 ±2m 的 0..1 编码
-  vec3 n = normalize(w.rgb * 2.0 - 1.0);
-  float a = wp.x * .38 + wp.y * .23 - uTime * .85;
-  float b = wp.x * -.28 + wp.y * .51 - uTime * 1.12;
-  float c = wp.x * .79 + wp.y * .14 + uTime * .65;
-  h += (sin(a)*.16 + sin(b)*.10 + sin(c)*.035)*uWaveScale;
-  h += dot(wp/50.,uSlosh)*1.2;
-  n = normalize(n + vec3(-uSlosh.x*.024,0.,-uSlosh.y*.024) + vec3(-cos(a)*.061+cos(b)*.028-cos(c)*.028,0.,-cos(a)*.037-cos(b)*.051-cos(c)*.005));
+  float h = w.a;
+  vec3 n = normalize(w.rgb*2.-1.);
   vec3 p = vec3(wp.x, uSeaLevel + h, wp.y);
   vWorld = p;
   vLocal = wp;
@@ -321,8 +315,8 @@ float fresnelDiel(float cosT, float eta){
 void main(){
   vec2 uv = gl_FragCoord.xy / uRes;
   vec2 wuv = vLocal / uExtent + 0.5;
-  float bed = texture(uDepthTex, wuv).r * 60.0 - 20.0;   // 地表高度（海底 + 岛）
-  float depth = max(0.0, -bed);
+  float bed = texture(uDepthTex, wuv).r;   // 地表高度（海底 + 岛）
+  float depth = max(0.0, vWorld.y-bed);
   if (depth < 0.05) discard;                           // 岛上不画水
 
   vec3 V = normalize(uCamPos - vWorld);
@@ -333,7 +327,7 @@ void main(){
   vec2 rp = vLocal * 0.55;
   float n1 = fbm(rp + vec2(uTime * 0.25, uTime * 0.17), 2) - 0.5;
   float n2 = fbm(rp * 1.9 - vec2(uTime * 0.31, -uTime * 0.22), 2) - 0.5;
-  N = normalize(N + vec3(n1 * 0.055 + n2 * 0.022, 0.0, n2 * 0.045 - n1 * 0.018) * d);
+  N = normalize(N + vec3(n1 * 0.008 + n2 * 0.004, 0.0, n2 * 0.008 - n1 * 0.003) * d);
 
   vec3 Tv0 = refract(-V, N, 1.0 / 1.333);
   if (dot(Tv0, Tv0) < 0.25) Tv0 = vec3(0.0, -1.0, 0.0);
@@ -341,7 +335,7 @@ void main(){
   float F = fresnelDiel(ndv, 1.0 / 1.333);
 
   // 折射：按法线把水下画面推歪
-  vec2 roff = N.xz * (0.020 + 0.055 * smoothstep(0.0, 4.0, depth));
+  vec2 roff = N.xz * 0.006 * smoothstep(0.25, 3.0, depth);
   vec3 under = texture(uUnder, clamp(uv + roff, vec2(0.001), vec2(0.999))).rgb;
 
   // 反射：影棚柔光箱
@@ -362,8 +356,7 @@ void main(){
 
   vec3 col = mix(body, refl, F * 1.15);
   vec3 interactionNormal=texture(uWave,wuv).rgb*2.-1.;
-  float rippleSlope=abs(dot(interactionNormal.xz,vec2(.7,.7)));
-  col += vec3(.14,.26,.29)*rippleSlope*1.5;
+  float rippleSlope=length(interactionNormal.xz);
 
   /* 波坡明暗：深水区透射率已经趋近 0，水色几乎是常数，
      法线变不出颜色 —— 得显式给它一条「迎光亮背光暗」的通道，
@@ -376,35 +369,35 @@ void main(){
   col += uSunColor * slope * 0.07 * (0.25 + 0.75 * max(facing, 0.0));
   // 浪脊：正高度压一道细亮线，涟漪的「圈」就出来了
   float crestLine = smoothstep(0.04, 0.16, vH) * (1.0 - smoothstep(0.20, 0.42, vH));
-  col += vec3(0.55, 0.85, 0.92) * crestLine * 0.003 * d;
+  col += vec3(0.55, 0.85, 0.92) * crestLine * 0.0 * d;
 
   // 阳光在涟漪上的碎光：宽一点的瓣 + 一道窄高光，涟漪才读得出来
   vec3 H = normalize(normalize(uSunDir) + V);
-  float sp = pow(max(dot(N, H), 0.0), 320.0) * 0.08;
+  float sp = pow(max(dot(N, H), 0.0), 90.0) * 0.065;
   // Irregular, stretched capillary ripples break the broad periodic swells.
   vec2 wind=vec2(vLocal.x*.50+vLocal.y*.22,vLocal.y*1.30-vLocal.x*.15);
   float phase=fbm(wind*.34+vec2(uTime*.035,0.),3);
   float fil=sin(wind.x*2.5 + phase*14. + uTime*.8);
   float filament=pow(max(0.,1.-abs(fil)),14.) * smoothstep(.35,.74,fbm(wind*.9,2));
-  col += vec3(.24,.40,.44)*filament*.13*smoothstep(1.,8.,depth);
+  // Capillary detail changes normals, not white paint on the water.
   col += uSunColor * sp * 1.6 * (1.0 - F) * (0.30 + 0.70 * d);
 
   /* 岸边白沫：沿岛的轮廓铺一圈，被浪推着进退。
      高度纹理在这里当「离岸多远」的距离场用。 */
   float edgeD = 0.10;
   {
-    float hx = texture(uDepthTex, wuv + vec2(0.004, 0.0)).r * 60.0 - 20.0;
-    float hz = texture(uDepthTex, wuv + vec2(0.0, 0.004)).r * 60.0 - 20.0;
+    float hx = texture(uDepthTex, wuv + vec2(0.004, 0.0)).r;
+    float hz = texture(uDepthTex, wuv + vec2(0.0, 0.004)).r;
     vec2 grad = vec2(hx - bed, hz - bed) / 1.25;       // 地表梯度（差值，不是和！）≈ 离岸方向
     edgeD = depth / max(length(grad), 0.02);            // 沿梯度方向的岸距
   }
   float run = sin(uTime * 0.9 + vLocal.x * 0.10) * 0.25 + sin(uTime * 0.55 + vLocal.y * 0.13) * 0.2;
-  float wet = edgeD + run * 0.6 + vH * 0.55;            // 浪推上来的湿痕
+  float wet = edgeD + run * 0.12;            // 浪推上来的湿痕
   float lace = fbm(vLocal * 1.9 + vec2(uTime * 0.25, uTime * 0.17), 4);
   float lace2 = fbm(vLocal * 5.5 - vec2(uTime * 0.4, 0.0), 3);
   float foam = (1.0 - smoothstep(0.0, 1.8, wet)) * smoothstep(0.30, 0.70, lace * 0.6 + lace2 * 0.4);
   foam += (1.0 - smoothstep(0.0, 0.55, wet)) * 0.80;   // 贴岸那一条最白
-  foam += smoothstep(0.30, 0.85, abs(vH) * 2.2) * smoothstep(0.62, 0.88, lace) * 0.30;
+  // Elevation itself is not foam: a tilted, smooth surface must stay clear.
   foam = clamp(foam, 0.0, 1.0);
   col = mix(col, vec3(0.97, 0.98, 0.97), foam * 0.85);
 
@@ -438,10 +431,8 @@ out float vTop;        // 顶边离海平面多高（受波影响）
 void main(){
   vec4 wp = uModel * vec4(aPos, 1.0);
   vec2 uv = wp.xz / uExtent + 0.5;
-  float wh = (texture(uWave, uv).a - 0.5) * 4.0 * uWaveScale;
-  // aPos.y ∈ [0,1] 表示从壁顶到壁底
-  float wind=sin(wp.x*.38+wp.z*.23-uTime*.85)*.16+sin(wp.x*-.28+wp.z*.51-uTime*1.12)*.10+sin(wp.x*.79+wp.z*.14+uTime*.65)*.035;
-  float top = uSeaLevel + wh + wind*uWaveScale + dot(wp.xz/50.,uSlosh)*1.2;
+  float wh = texture(uWave, uv).a;
+  float top = uSeaLevel + wh;
   float bot = uBottomY;                // 壁底（立方体底面）
   float y = mix(top, bot, aPos.y);
   vec3 p = vec3(wp.x, y, wp.z);

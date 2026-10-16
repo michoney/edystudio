@@ -43,10 +43,11 @@
 
     $('bReset').onclick=()=>{ UI.spin=false;UI.calm=false;UI.strength=1;UI.exposure=1;
       $('bSpin').setAttribute('aria-pressed','false');$('bSpin').style.background='';
-      $('waveStrength').value='1';$('lightLevel').value='1';
+      $('tankTilt').value='0';$('waveStrength').value='1';$('lightLevel').value='1';
       __mini.camTo(.62,.64,300);__mini.wave.reset();
     };
     $('bTune').onclick=()=>{const panel=$('tuning'); panel.hidden=!panel.hidden;$('bTune').setAttribute('aria-expanded',String(!panel.hidden));};
+    $('tankTilt').oninput=e=>{__mini.cam.roll=Number(e.target.value);UI.calm=false;__mini.slosh.energy=.8;};
     $('waveStrength').oninput=e=>{UI.strength=Number(e.target.value);UI.calm=false;};
     $('lightLevel').oninput=e=>{UI.exposure=Number(e.target.value);};
     $('aboutLink').onclick=e=>{e.preventDefault();$('aboutWorld').showModal();};

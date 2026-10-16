@@ -84,20 +84,20 @@
      水面着色器靠它判水深、判岸线、决定哪里不该画水。 */
   function makeBedTexture(size) {
     const N = size || 256;
-    const data = new Uint8Array(N * N);
+    const data = new Float32Array(N * N);
     const half = MINI.ISL.EXTENT / 2;
     for (let j = 0; j < N; j++) {
       const z = (j / (N - 1) - 0.5) * 2 * half;
       for (let i = 0; i < N; i++) {
         const x = (i / (N - 1) - 0.5) * 2 * half;
         const h = clamp(MINI.surfaceHeight(x, z), -20, 40);
-        data[j * N + i] = Math.round(((h + 20) / 60) * 255);
+        data[j * N + i] = h;
       }
     }
     const t = gl.createTexture();
     gl.bindTexture(gl.TEXTURE_2D, t);
     gl.pixelStorei(gl.UNPACK_ALIGNMENT, 1);
-    gl.texImage2D(gl.TEXTURE_2D, 0, gl.R8, N, N, 0, gl.RED, gl.UNSIGNED_BYTE, data);
+    gl.texImage2D(gl.TEXTURE_2D, 0, gl.R16F, N, N, 0, gl.RED, gl.FLOAT, data);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
     gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
@@ -138,7 +138,7 @@
   /* ============================================================== 相机 */
   const cam = {
     yaw: 0.62, pitch: 0.64, dist: 300, target: [0, 1, 0],
-    pos: [0, 60, 100], fov: 0.55,
+    pos: [0, 60, 100], roll:0, fov: 0.55,
   };
   const mtx = {
     vp: M4.create(), proj: M4.create(), view: M4.create(), invVP: M4.create(),
@@ -155,7 +155,7 @@
       cam.target[2] - Math.cos(cam.yaw) * cp * fittedDist,
     ];
     M4.perspective(mtx.proj, cam.fov, W / H, 0.5, 2400);
-    M4.lookAt(mtx.view, cam.pos, cam.target, [0, 1, 0]);
+    M4.lookAt(mtx.view, cam.pos, cam.target, [Math.sin(cam.roll), Math.cos(cam.roll), 0]);
     M4.mul(mtx.vp, mtx.proj, mtx.view);
     M4.invert(mtx.invVP, mtx.vp);
     // 阴影盒跟着整块立方体
@@ -197,9 +197,10 @@
       cam.yaw -= dx * 0.006;
       // Camera rotation is coupled to an inertial water tank, with a damped
       // spring restoring the free surface when the pointer is released.
-      slosh.vx=clamp(slosh.vx+dx*.035,-5,5);
-      slosh.vz=clamp(slosh.vz+dy*.035,-5,5);
-      slosh.energy=Math.min(1,slosh.energy+Math.hypot(dx,dy)*.012);
+      if(wave && Math.hypot(dx,dy)>2){
+        const a=cam.yaw+Math.PI*.5;
+        wave.splash(Math.sin(a)*30,Math.cos(a)*30,clamp(dx*.012,-.3,.3),.10);
+      }
       UI.calm=false;
       cam.pitch = clamp(cam.pitch + dy * 0.005, 0.06, 1.32);
     }
@@ -217,7 +218,7 @@
   }, { passive: false });
 
   /* ============================================================ 初始化 */
-  let quad, wave, bedTexRef;
+  let quad, wave, bedTexRef, shipPose=M4.create();
   const stageErr = {};
   let t = 0, last = 0, frames = 0, fps = 60, fpsT = 0, fpsN = 0;
   let lastDt = 1 / 60;
@@ -231,9 +232,10 @@
     shadowFbo = GLU.shadowFbo(gl, 2048);
     buildWater(200);
     bedTexRef = makeBedTexture(320);
-    wave = WAVE.create(gl, GLU, quad);
+    wave = WAVE.create(gl, GLU, quad, bedTexRef);
 
     MINI.WORLD.init(scene);
+    SHIP.init(scene);
     pebbleGroups = [[], [], []];
     for (const p of MINI.WORLD.pebbles) {
       const i = p.mesh === 'pebble0' ? 0 : (p.mesh === 'pebble1' ? 1 : 2);
@@ -254,7 +256,7 @@
     UI.init({ gpu: GPU, fps: () => fps });
     requestAnimationFrame(frame);
     window.__mini = {
-      gl, scene, cam, wave, slosh,
+      gl, scene, cam, wave, slosh, ship:SHIP, paused:false,
       fps: () => fps, frames: () => frames, glErr: () => gl.getError(),
       stageErr: () => Object.assign({}, stageErr),
       camPos: () => cam.pos.slice(),
@@ -299,7 +301,7 @@
         return [+((q[0] * 0.5 + 0.5) * 100).toFixed(1), +((1 - (q[1] * 0.5 + 0.5)) * 100).toFixed(1)];
       },
       splash: (x, z, a) => wave.splash(x, z, a === undefined ? 0.25 : a),
-      camTo: (y, p, d) => { cam.yaw = y; cam.pitch = p; cam.dist = d; slosh.x=slosh.z=slosh.vx=slosh.vz=slosh.energy=0; },
+      camTo: (y, p, d) => { cam.yaw = y; cam.pitch = p; cam.dist = d; cam.roll=0; slosh.x=slosh.z=slosh.vx=slosh.vz=slosh.energy=0; },
       ready: true,
     };
   }
@@ -343,38 +345,28 @@
   }
 
   function renderFrame(dt) {
+    if(window.__mini?.paused)return;
     // ---- 1. 波浪 ----
-    const step=Math.min(dt,.035);
-    const drive=UI.spin?.16:0;
-    slosh.vx+=(-slosh.x*10-slosh.vx*1.6+Math.sin(cam.yaw*2)*drive)*step;
-    slosh.vz+=(-slosh.z*10-slosh.vz*1.6+Math.cos(cam.yaw*2)*drive)*step;
-    slosh.x=clamp(slosh.x+slosh.vx*step,-1.15,1.15);
-    slosh.z=clamp(slosh.z+slosh.vz*step,-1.15,1.15);
-    slosh.energy*=Math.exp(-step*1.5);
-    if(slosh.energy>.025 && frames%5===0){
-      const a=cam.yaw+Math.PI*.5;
-      wave.splash(Math.sin(a)*32,Math.cos(a)*32,slosh.energy*.22,.08);
-    }
+    // Tank orientation changes effective gravity; the fluid solver determines
+    // both the new surface and its inertia. No plane is added by the renderer.
+    const gx=Math.tan(cam.roll)*Math.cos(cam.yaw)-Math.sin(cam.pitch-.64)*Math.sin(cam.yaw)*.12;
+    const gz=Math.tan(cam.roll)*Math.sin(cam.yaw)+Math.sin(cam.pitch-.64)*Math.cos(cam.yaw)*.12;
+    slosh.x=gx;slosh.z=gz;
+    wave.setSlope(gx,gz);
     if (UI.spin && !keys.down) cam.yaw += dt * 0.12;
     if (hoverWorld && frames % 2 === 0) {
       const dx = hoverWorld[0] - lastSplash[0], dz = hoverWorld[1] - lastSplash[1];
       const speed = Math.hypot(dx, dz);
       if (speed > 0.25) {
         UI.calm=false;
-        wave.splash(hoverWorld[0], hoverWorld[1], clamp(-0.20 - speed * 0.06, -0.5, 0.5),
+        wave.splash(hoverWorld[0], hoverWorld[1], clamp((-0.12 - speed * 0.035)*(UI.strength||1), -.45, .45),
           clamp(0.030 + speed * 0.008, 0.026, 0.055));
         lastSplash = hoverWorld.slice();
       }
     }
-    // 没人动的时候也让它有轻微的自然起伏
-    idleTimer += dt;
-    if (!UI.calm && idleTimer > 1.8) {
-      idleTimer = 0;
-      const a = Math.random() * 6.28, r = Math.random() * 42;
-      wave.splash(Math.cos(a) * r, Math.sin(a) * r, 0.20, 0.035);
-    }
     wave.step(dt);          // 波动方程必须每帧推，否则水面永远是平的
 
+    shipPose=SHIP.update(dt,t,wave);
     updateCamera();
     chk('camera');
 
@@ -390,6 +382,7 @@
       progShadow.set({ uModel: M4.compose(mtx.model, p.pos, [0, p.rotY, 0], [p.scale, p.scale, p.scale]) });
       GLU.drawMesh(gl, scene.meshes[p.name]);
     }
+    progShadow.set({uModel:shipPose});GLU.drawMesh(gl,scene.meshes.pirateShip);
     progShadowI.use().set({ uLightVP: mtx.lightVP });
     for (let i = 0; i < 3; i++) {
       if (!pebbleGroups[i].length) continue;
@@ -413,6 +406,7 @@
       if (p.name === 'bottom' || p.name.indexOf('wall') === 0) continue;
       drawSolid(progSolid, p.name, M4.compose(mtx.model, p.pos, [0, p.rotY, 0], [p.scale, p.scale, p.scale]), p.tint);
     }
+    drawSolid(progSolid,'pirateShip',shipPose,[1,1,1]);
     progSolidI.use();
     progSolidI.set(Object.assign({}, solidUniforms, { uVP: mtx.vp, uCamPos: cam.pos, uTime: t }));
     progSolidI.tex('uShadowMap', shadowFbo.tex, 0);
@@ -457,6 +451,7 @@
       if (p.name === 'bottom' || p.name.indexOf('wall') === 0) continue;
       drawSolid(progSolid, p.name, M4.compose(mtx.model, p.pos, [0, p.rotY, 0], [p.scale, p.scale, p.scale]), p.tint);
     }
+    drawSolid(progSolid,'pirateShip',shipPose,[1,1,1]);
     progSolidI.use();
     progSolidI.set(Object.assign({}, solidUniforms, { uVP: mtx.vp, uCamPos: cam.pos, uTime: t }));
     progSolidI.tex('uShadowMap', shadowFbo.tex, 0);

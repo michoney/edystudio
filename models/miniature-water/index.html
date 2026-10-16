@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="build-version" content="miniature-water-20261016-v3">
+<meta name="build-version" content="miniature-water-20261016-v5-fluid">
 <title>一方水世界 · A World Within Water</title>
 <style>
   :root{
@@ -128,8 +128,9 @@
 <section id="tuning" hidden aria-label="海水与光线设置">
   <div class="panelTitle">这一刻，随你。<span>THE EMERALD COVE</span></div>
   <label for="waveStrength">海风与涟漪 <span>轻 ↔ 强</span></label><input id="waveStrength" type="range" min="0.2" max="2" step="0.1" value="1">
+  <label for="tankTilt">摆件倾斜 <span>左 ↔ 右</span></label><input id="tankTilt" type="range" min="-0.18" max="0.18" step="0.02" value="0">
   <label for="lightLevel">日光 <span>柔 ↔ 亮</span></label><input id="lightLevel" type="range" min="0.7" max="1.3" step="0.05" value="1">
-  <p>移动起波，拖拽环游。点 ↶ 回到最初。</p>
+  <p>移动起波，拖拽环游。调节倾斜，看海水和海盗船一起摆动。</p>
 </section>
 <dialog id="aboutWorld"><button id="closeAbout" aria-label="关闭">×</button><small>NATURE, IN MINIATURE</small><h2>一方海岸，<br>一刻自在。</h2><p>白沙、石灰岩与山林，被装进一方透明的海。<br>用指尖拨动水面，或绕到山的另一边。</p><p>这是一个可以交互的微缩水世界。<br>愿你在这里，慢下来一会儿。</p><span>EDY.AI.STUDIO · VOL. 003</span></dialog>
 <div class="dock">
@@ -164,6 +165,7 @@
 <script src="js/shaders.js"></script>
 <script src="js/wave.js"></script>
 <script src="js/island.js"></script>
+<script src="js/ship.js"></script>
 <script src="js/ui.js"></script>
 <script src="js/main.js"></script>
 </body>
