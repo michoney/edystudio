@@ -56,7 +56,7 @@
   const SKY_BOT = [0.20, 0.34, 0.43];
 
   /* ============================================================ 帧缓冲 */
-  let fboMain = null, fboUnder = null, shadowFbo = null;
+  let fboMain = null, fboUnder = null, fboReflection=null, shadowFbo = null;
   let W = 1, H = 1, DPR = 1;
 
   function resize() {
@@ -73,11 +73,12 @@
       if (f.depth) gl.deleteRenderbuffer(f.depth);
       gl.deleteFramebuffer(f.fbo);
     };
-    del(fboMain); del(fboUnder);
+    del(fboMain); del(fboUnder);del(fboReflection);
     const hdr = extCBF ? { internal: gl.RGBA16F, format: gl.RGBA, type: gl.HALF_FLOAT }
       : { internal: gl.RGBA8, format: gl.RGBA, type: gl.UNSIGNED_BYTE };
     fboMain = GLU.fbo(gl, W, H, Object.assign({ depth: true }, hdr));
     fboUnder = GLU.fbo(gl, W, H, Object.assign({ depth: true }, hdr));
+    fboReflection = GLU.fbo(gl, Math.max(2,Math.floor(W*.5)), Math.max(2,Math.floor(H*.5)), Object.assign({depth:true},hdr));
   }
 
   /* ================================== 地表高度贴图（海底 + 拱 + 矮崖）
@@ -335,7 +336,7 @@
 
   const solidUniforms = {
     uSunDir: SUN_DIR, uSunColor: SUN_COL, uSkyAmb: SKY_AMB, uGroundAmb: GND_AMB,
-    uFogDensity: 0.00015, uShadowTexel: 1 / 2048, uAlpha: 1, uSeaLevel: 0,
+    uReflectionPass:0,uFogDensity: 0.00015, uShadowTexel: 1 / 2048, uAlpha: 1, uSeaLevel: 0,
     uShallowTint: [0.36, 0.82, 0.80], uLightVP: mtx.lightVP,
   };
 
@@ -391,6 +392,21 @@
     }
     gl.enable(gl.CULL_FACE);
     chk('shadow');
+
+    // Mirror geometry across the mean water plane; this adds coherent island
+    // and sail reflections, rather than painting bright rings on the surface.
+    const mirror=M4.fromScale(M4.create(),[1,-1,1]);
+    const reflectedVP=M4.mul(M4.create(),mtx.vp,mirror);
+    const mirrorCamera=[cam.pos[0],-cam.pos[1],cam.pos[2]];
+    GLU.bindTarget(gl,fboReflection);gl.clearColor(.35,.48,.56,1);gl.clear(gl.COLOR_BUFFER_BIT|gl.DEPTH_BUFFER_BIT);
+    gl.enable(gl.DEPTH_TEST);gl.depthMask(true);gl.disable(gl.CULL_FACE);
+    const reflectUniforms=Object.assign({},solidUniforms,{uReflectionPass:1,uVP:reflectedVP,uCamPos:mirrorCamera,uTime:t});
+    progSolid.use().set(reflectUniforms);progSolid.tex('uShadowMap',shadowFbo.tex,0);
+    for(const p of scene.placements){if(p.name==='seabed')continue;drawSolid(progSolid,p.name,M4.compose(mtx.model,p.pos,[0,p.rotY,0],[p.scale,p.scale,p.scale]),p.tint);}
+    drawSolid(progSolid,'pirateShip',shipPose,[1,1,1]);
+    progSolidI.use().set(reflectUniforms);progSolidI.tex('uShadowMap',shadowFbo.tex,0);
+    for(let i=0;i<2;i++){if(!mossGroups[i].length)continue;const gm=scene.meshes['moss'+i];fillInstances(gm,mossGroups[i]);GLU.drawMesh(gl,gm,mossGroups[i].length);}
+    gl.enable(gl.CULL_FACE);chk('reflection');
 
     // ---- 3. 水下场景（给水面折射用）----
     gl.bindFramebuffer(gl.FRAMEBUFFER, fboUnder.fbo);
@@ -522,6 +538,8 @@
     progWater.tex('uWave', wave.normalTex, 0);
     progWater.tex('uUnder', fboUnder.color, 1);
     progWater.tex('uDepthTex', bedTexRef, 2);
+    progWater.tex('uFluid',wave.tex,3);
+    progWater.tex('uMirror',fboReflection.color,4);
     gl.disable(gl.CULL_FACE);
     gl.bindVertexArray(waterVAO);
     gl.drawElements(gl.TRIANGLES, waterCount, gl.UNSIGNED_INT, 0);

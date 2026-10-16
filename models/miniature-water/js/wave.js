@@ -50,7 +50,7 @@ void main(){
  vec4 d=texture(uState,vUv-vec2(0,uTexel.y)),u=texture(uState,vUv+vec2(0,uTexel.y));
  float hl=l.a>.01?l.r:c.r,hr=r.a>.01?r.r:c.r,hd=d.a>.01?d.r:c.r,hu=u.a>.01?u.r:c.r;
  vec3 n=normalize(vec3((hl-hr)/(2.*uDx),1.,(hd-hu)/(2.*uDx)));
- fragColor=vec4(n*.5+.5,c.r);
+ fragColor=vec4(n*.5+.5,c.a>.01?c.r:0.);
 }`;
 function create(gl,GLU,quad,bedTexture){
  if(!gl.getExtension('EXT_color_buffer_float'))throw Error('此水体需要浮点 WebGL2 支持，请使用较新的 Chrome / Safari。');

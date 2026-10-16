@@ -139,6 +139,7 @@ uniform vec3 uSunColor;
 uniform vec3 uSkyAmb;
 uniform vec3 uGroundAmb;
 uniform float uFogDensity;
+uniform float uReflectionPass;
 uniform mat4 uLightVP;
 uniform highp sampler2DShadow uShadowMap;
 uniform float uShadowTexel;
@@ -183,6 +184,7 @@ float caustics(vec2 p, float t){
 }
 
 void main(){
+  if(uReflectionPass>.5&&vWorld.y<.05)discard;
   vec3 N = normalize(vNrm);
   vec3 V = normalize(uCamPos - vWorld);
   if (!gl_FrontFacing) N = -N;
@@ -273,7 +275,7 @@ void main(){
   vec3 p = vec3(wp.x, uSeaLevel + h, wp.y);
   vWorld = p;
   vLocal = wp;
-  vNrm = normalize(vec3(n.x, 1.0, n.z));
+  vNrm = n;
   vH = h;
   gl_Position = uVP * vec4(p, 1.0);
 }`;
@@ -293,6 +295,8 @@ uniform vec3 uSkyTop;
 uniform vec3 uSkyBot;
 uniform vec3 uSkyAmb;
 uniform sampler2D uWave;
+uniform sampler2D uMirror;
+uniform sampler2D uFluid;
 uniform sampler2D uUnder;        // 水下场景（水面折射的来源）
 uniform sampler2D uDepthTex;     // 高度图，用来判岸线与水深
 uniform vec2 uRes;
@@ -315,6 +319,7 @@ float fresnelDiel(float cosT, float eta){
 void main(){
   vec2 uv = gl_FragCoord.xy / uRes;
   vec2 wuv = vLocal / uExtent + 0.5;
+  if(texture(uFluid,wuv).a<.025)discard;
   float bed = texture(uDepthTex, wuv).r;   // 地表高度（海底 + 岛）
   float depth = max(0.0, vWorld.y-bed);
   if (depth < 0.05) discard;                           // 岛上不画水
@@ -343,6 +348,8 @@ void main(){
   vec3 refl = mix(uSkyBot, uSkyTop, clamp(R.y * 0.5 + 0.5, 0.0, 1.0));
   float softbox=pow(max(0.,dot(R,normalize(vec3(-.8,1.,.35)))),12.);
   refl += vec3(.8,.86,.88)*softbox*.18;
+  vec3 mirror=texture(uMirror,clamp(uv+N.xz*.012,vec2(.001),vec2(.999))).rgb;
+  refl=mix(refl,mirror,.82);
 
   /* 关键：海底画面要沿水柱做 Beer-Lambert 衰减。
      没有这一步，25 米深的海底照样清清楚楚地透上来，整片海就成了浅绿玻璃。 */

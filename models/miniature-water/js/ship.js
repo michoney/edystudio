@@ -68,8 +68,10 @@ function make(){
 const SHIP={x:-21,z:-25,y:0,rx:0,rz:0,heading:-.58};
 SHIP.init=scene=>scene.mesh('pirateShip',make());
 SHIP.update=function(dt,t,water){
- const x=-21+Math.sin(t*.12)*.6,z=-25+Math.cos(t*.13)*.4;
- const surface=water.sample(x,z),n=surface.normal;
+ const surface=water.sample(SHIP.x,SHIP.z),n=surface.normal;
+ SHIP.vx=(SHIP.vx||0)+(surface.flow[0]*.35-(SHIP.vx||0)*1.3-(SHIP.x+21)*.40)*dt;
+ SHIP.vz=(SHIP.vz||0)+(surface.flow[1]*.35-(SHIP.vz||0)*1.3-(SHIP.z+25)*.40)*dt;
+ const x=clamp(SHIP.x+SHIP.vx*dt,-28,-14),z=clamp(SHIP.z+SHIP.vz*dt,-33,-18);
  const smooth=1-Math.exp(-dt*5);
  const heading=.15+Math.sin(t*.17)*.035;
  const dx=-n[0]/Math.max(n[1],.2),dz=-n[2]/Math.max(n[1],.2);
