@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#eee8dc" />
+  <title>山间慢车 · 双轨 8 字微缩铁路</title>
+  <link rel="stylesheet" href="./style.css" />
+  <script type="importmap">{"imports":{"three":"./vendor/three.module.js","three/addons/controls/OrbitControls.js":"./vendor/OrbitControls.js"}}</script>
+</head>
+<body>
+  <div id="scene" aria-label="可以拖动旋转的双轨8字微缩火车模型"></div>
+  <header class="topbar">
+    <a class="wordmark" href="./"><span class="brand-icon">∞</span><span>山间慢车<small>THE LITTLE RAILWAY</small></span></a>
+    <nav aria-label="场景控制">
+      <button id="referenceBtn" class="quiet">草图与灵感 <span>↗</span></button>
+      <button id="themeBtn" class="quiet">☀ <span id="themeName">秋日午后</span></button>
+      <button id="captureBtn" class="quiet" title="保存当前视角图片">保存视角 ↗</button>
+    </nav>
+  </header>
+  <section class="intro">
+    <div class="eyebrow"><span></span> A SMALL WORLD, IN MOTION</div>
+    <h1>把山野<br />装进一方。</h1>
+    <p>两条铁道，一场秋日出走。<br />拨动道岔，让小火车换条路。</p>
+    <div class="spec-label">01 / AUTUMN RAILWAY<br /><span>双轨 8 字 · 立体交叉</span></div>
+  </section>
+  <aside class="dispatch" aria-label="火车速度控制">
+    <div class="dispatch-heading"><span>运行调度</span><span class="tiny-label">ONE TRAIN, TWO ROUTES</span></div>
+    <div class="train-control red">
+      <div class="train-label"><span class="train-dot"></span><strong>秋叶号</strong><span id="routeName">当前 A 轨</span><output id="speedAValue">1.0×</output></div>
+      <label class="range-label" for="speedA"><span>停</span><input id="speedA" type="range" min="0" max="3" step="0.1" value="1" aria-label="秋叶号速度" /><span>快</span></label>
+    </div>
+    <div class="switch-controls"><span class="switch-heading">交叉道岔 · 经过时生效</span><button id="switch1Btn" class="switch-button" aria-pressed="false"><span>① 林边道岔</span><strong>直行 →</strong></button><button id="switch2Btn" class="switch-button" aria-pressed="false"><span>② 湖边道岔</span><strong>直行 →</strong></button></div>
+  </aside>
+  <div class="view-controls" aria-label="视角与运行控制">
+    <button id="playBtn" class="main-play" aria-label="暂停火车">Ⅱ</button>
+    <span class="control-divider"></span>
+    <button id="resetBtn">↺ <span>复位</span></button>
+    <button id="orbitBtn" aria-pressed="false">◎ <span>自动环绕</span></button>
+    <button id="followBtn" aria-pressed="false">↝ <span>跟随秋叶号</span></button>
+    <button id="whistleBtn" title="点击鸣笛">♬ <span>鸣笛</span></button>
+  </div>
+  <footer><span class="running"><i id="statusDot"></i><span id="statusText">秋叶号运行中</span></span><span class="hint">拖动旋转 <b>·</b> 滚轮缩放 <b>·</b> 点击道岔换轨</span><span class="edition">MINIATURE NO. 01</span></footer>
+  <button id="switch1Marker" class="switch-marker" aria-label="切换林边道岔">① <span>直行</span></button><button id="switch2Marker" class="switch-marker" aria-label="切换湖边道岔">② <span>直行</span></button>
+  <div id="loading" class="loading"><div class="loading-mark">∞</div><p>正在铺好最后一段铁道…</p></div>
+  <div id="toast" role="status"></div>
+  <div id="infoCard" class="info-card" hidden><button id="infoClose" aria-label="关闭建筑介绍">×</button><span class="eyebrow">A PLACE IN THIS WORLD</span><h2 id="infoTitle"></h2><p id="infoText"></p></div>
+  <dialog id="referenceDialog"><button id="referenceClose" class="dialog-close" aria-label="关闭参考图">×</button><div class="eyebrow">FROM A SKETCH TO A LITTLE WORLD</div><h2>一张草图，三份灵感。</h2><p>布局来自第一张手稿；后两张提供方块底座、微缩材质和互动展示的样式参考。</p><div class="references"><figure><img src="./参考图/01_布局草图.jpg" alt="山洞车站布局手稿" /><figcaption>01 · 布局手稿</figcaption></figure><figure><img src="./参考图/02_微缩样式参考.jpg" alt="微缩铁路样式" /><figcaption>02 · 微缩铁路样式</figcaption></figure><figure><img src="./参考图/03_方块水体样式参考.jpg" alt="方块海岛样式" /><figcaption>03 · 方块模型展示</figcaption></figure></div></dialog>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>
