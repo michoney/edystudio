@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="build-version" content="miniature-water-20261016-v3">
+<title>一方水世界 · A World Within Water</title>
+<style>
+  :root{
+    --ink:#20242a; --ink-2:#5c636c; --ink-3:#9aa1a8;
+    --paper:#f3f0ea; --line:rgba(32,36,42,.14);
+    --serif:"Baskerville","Iowan Old Style","Songti SC","Palatino Linotype",Georgia,serif;
+    --sans:"Avenir Next","Futura","PingFang SC","Helvetica Neue",sans-serif;
+    --mono:ui-monospace,Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%;overflow:hidden;background:var(--paper);color:var(--ink);
+    font-family:var(--sans);-webkit-font-smoothing:antialiased;user-select:none}
+  canvas#c{position:fixed;inset:0;width:100%;height:100%;display:block;cursor:crosshair;touch-action:none}
+  canvas#c.grabbing{cursor:grabbing}
+
+  #load{position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;
+    background:var(--paper);transition:opacity .7s ease}
+  #load.gone{opacity:0;pointer-events:none}
+  #load div{font-family:var(--serif);font-size:18px;letter-spacing:.16em;color:var(--ink-2)}
+
+  /* ---------------------------------------------------------- 顶栏 */
+  header{position:fixed;left:34px;top:26px;z-index:20;display:flex;align-items:center;gap:11px}
+  header .mark{width:20px;height:14px;flex:0 0 20px}
+  header .mark i{display:block;height:2px;background:var(--ink);margin:2px 0;border-radius:1px}
+  header .mark i:nth-child(2){width:14px}
+  header .mark i:nth-child(3){width:8px}
+  header b{font-weight:600;font-size:15px;letter-spacing:.02em}
+  header sup{font-size:7px;vertical-align:super;color:var(--ink-3)}
+
+  nav{position:fixed;right:34px;top:28px;z-index:20;display:flex;gap:28px;align-items:baseline}
+  nav span{font-size:9.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-3)}
+  nav a{color:var(--ink);text-decoration:none;font-size:10px;letter-spacing:.2em;
+    text-transform:uppercase;padding-bottom:3px;border-bottom:1px solid var(--ink)}
+
+  /* ---------------------------------------------------------- 文案 */
+  .blurb{position:fixed;left:34px;top:96px;z-index:18;width:min(38vw,330px)}
+  .blurb .kick{font-size:9.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--ink-2);
+    display:flex;align-items:center;gap:8px}
+  .blurb .kick i{width:4px;height:4px;border-radius:50%;background:var(--ink-3)}
+  .blurb h1{font-family:var(--serif);font-weight:400;font-size:clamp(30px,3.6vw,46px);
+    line-height:1.06;margin:14px 0 12px;letter-spacing:-.01em}
+  .blurb p{font-size:12.5px;line-height:1.95;color:var(--ink-2);margin:0}
+  .blurb .meta{margin-top:14px;font-family:var(--mono);font-size:10.5px;color:var(--ink-3);letter-spacing:.04em}
+
+  .side{position:fixed;right:30px;top:50%;transform:translateY(-50%) rotate(90deg);
+    transform-origin:right center;z-index:18;font-size:9px;letter-spacing:.42em;
+    text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+
+  .stamp{position:fixed;right:34px;bottom:96px;z-index:18;text-align:right}
+  .stamp .n{font-size:9px;letter-spacing:.34em;color:var(--ink-3);text-transform:uppercase}
+  .stamp .v{font-family:var(--mono);font-size:11px;margin-top:5px;color:var(--ink)}
+
+  /* ---------------------------------------------------------- 底栏 */
+  .dock{position:fixed;left:50%;bottom:34px;transform:translateX(-50%);z-index:22;
+    display:flex;align-items:center;gap:6px;background:rgba(255,255,255,.72);
+    border:1px solid var(--line);border-radius:26px;padding:7px 8px 7px 18px;
+    backdrop-filter:blur(16px);box-shadow:0 20px 44px -28px rgba(30,34,40,.55)}
+  .dock .btn{width:30px;height:30px;border-radius:50%;border:1px solid transparent;background:none;
+    cursor:pointer;color:var(--ink);display:grid;place-items:center;transition:.15s}
+  .dock .btn:hover{background:rgba(32,36,42,.07)}
+  .dock .btn.sq{border-radius:8px}
+  .dock .btn svg{width:15px;height:15px;stroke:currentColor;fill:none;stroke-width:1.5;
+    stroke-linecap:round;stroke-linejoin:round}
+  .dock .sep{width:1px;height:18px;background:var(--line);margin:0 4px}
+  .dock .label{font-size:11.5px;letter-spacing:.02em;padding:0 8px 0 6px;color:var(--ink)}
+  .dock .expand{margin-left:2px;border-radius:8px}
+
+  footer{position:fixed;left:34px;right:34px;bottom:22px;z-index:20;display:flex;
+    justify-content:space-between;align-items:center;font-size:9.5px;letter-spacing:.2em;
+    text-transform:uppercase;color:var(--ink-3)}
+  footer b{font-weight:500;color:var(--ink-2)}
+  footer .k{font-family:var(--mono);letter-spacing:.04em;text-transform:none;font-size:10.5px}
+
+  #fatal{position:fixed;inset:0;z-index:99;display:none;align-items:center;justify-content:center;
+    background:var(--paper);font-size:13px;letter-spacing:.1em}
+
+  button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #527568;outline-offset:4px}
+  .dock .tune{border:0;background:transparent;white-space:nowrap;cursor:pointer;font-family:var(--sans)}
+  .tune span{margin-left:8px;color:#7b8578}
+  #tuning{position:fixed;z-index:25;bottom:105px;left:50%;transform:translateX(-50%);width:min(320px,90vw);padding:24px;background:rgba(251,248,239,.97);border:1px solid #d9d5c8;border-radius:18px;box-shadow:0 16px 50px #302e2714}
+  #tuning[hidden]{display:none}
+  .panelTitle{font-family:var(--serif);font-size:22px;margin-bottom:24px}.panelTitle span{display:block;font:8px var(--sans);letter-spacing:.22em;margin-top:8px;color:#888c7e}
+  #tuning label{display:flex;justify-content:space-between;font-size:12px;color:#525c51;margin-top:16px}#tuning label span{font-size:10px;color:#90958a}
+  #tuning input{width:100%;accent-color:#527568;margin:12px 0 4px}#tuning p{font-size:10px;color:#8b9086;line-height:1.8;margin-bottom:0}
+  dialog{border:1px solid #d9d5c8;border-radius:18px;background:#f6f1e6;padding:44px;max-width:440px;color:#30372c;box-shadow:0 30px 120px #252a2529}
+  dialog::backdrop{background:#272c2533;backdrop-filter:blur(6px)}dialog small,dialog>span{font:9px var(--sans);letter-spacing:.2em;color:#858b7b}
+  dialog h2{font:36px/1.2 var(--serif);font-weight:400;margin:25px 0}dialog p{font-size:12px;line-height:2;color:#737969;margin-bottom:24px}
+  #closeAbout{position:absolute;right:16px;top:12px;border:0;background:none;color:#727b69;font-size:24px;cursor:pointer}
+  @media(max-width:700px){header{left:22px;top:22px}nav{right:22px;top:26px}nav span{display:none}nav a{font-size:9px;letter-spacing:.05em}.blurb{left:22px;top:90px;width:85vw}.blurb h1{font-size:34px;margin-top:12px}.blurb p{font-size:11px;line-height:1.9}.blurb .meta{font-size:9px}.side,.stamp{display:none}.dock{bottom:58px;padding:6px;gap:1px;max-width:95vw}.dock .btn{width:30px;flex-shrink:0}.dock .label{font-size:10px;padding:0 4px}.dock .sep{margin:0 2px}footer{left:22px;right:22px;bottom:20px;font-size:8px;letter-spacing:0}footer .k{font-size:9px}#tuning{bottom:120px}dialog{margin:auto 20px;padding:30px}}
+  @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="c"></canvas>
+
+<div id="load"><div>一方水世界 · 正在注水…</div></div>
+<div id="fatal">这个浏览器没有 WebGL2，换 Chrome / Edge / Safari 试试。</div>
+
+<header>
+  <div class="mark"><i></i><i></i><i></i></div>
+  <b>一方水世界<sup>®</sup></b>
+</header>
+<nav>
+  <span>一方小世界</span>
+  <a href="#about" id="aboutLink">关于这方世界</a>
+</nav>
+
+<div class="blurb">
+  <div class="kick"><i></i>自然 · 在方寸之间</div>
+  <h1>A world<br>within water.</h1>
+  <p>把一段海岸，收进方寸之间。<br>拨动海水，让时间慢下来。</p>
+  <div class="meta">100 × 100 × 17 m</div>
+</div>
+
+<div class="side">A STUDY OF WATER &amp; STILLNESS</div>
+
+<div class="stamp">
+  <div class="n">绿湾湾</div>
+  <div class="v" id="coords">25° 00′ N &nbsp; 17° 33′ E</div>
+</div>
+
+<section id="tuning" hidden aria-label="海水与光线设置">
+  <div class="panelTitle">这一刻，随你。<span>THE EMERALD COVE</span></div>
+  <label for="waveStrength">海风与涟漪 <span>轻 ↔ 强</span></label><input id="waveStrength" type="range" min="0.2" max="2" step="0.1" value="1">
+  <label for="lightLevel">日光 <span>柔 ↔ 亮</span></label><input id="lightLevel" type="range" min="0.7" max="1.3" step="0.05" value="1">
+  <p>移动起波，拖拽环游。点 ↶ 回到最初。</p>
+</section>
+<dialog id="aboutWorld"><button id="closeAbout" aria-label="关闭">×</button><small>NATURE, IN MINIATURE</small><h2>一方海岸，<br>一刻自在。</h2><p>白沙、石灰岩与山林，被装进一方透明的海。<br>用指尖拨动水面，或绕到山的另一边。</p><p>这是一个可以交互的微缩水世界。<br>愿你在这里，慢下来一会儿。</p><span>EDY.AI.STUDIO · VOL. 003</span></dialog>
+<div class="dock">
+  <button class="btn" id="bReset" title="回到初始视角" aria-label="回到初始视角"><svg viewBox="0 0 24 24"><path d="M4 11a8 8 0 1 1 2 6M4 5v6h6"/></svg></button><div class="sep"></div>
+  <button class="label tune" id="bTune" aria-expanded="false" aria-controls="tuning">调一调这方水 <span>⌃</span></button>
+  <button class="btn" id="bDrop" title="打一下水面" aria-label="打一下水面">
+    <svg viewBox="0 0 24 24"><path d="M12 3v11"/><path d="M7 11l5 5 5-5"/><path d="M4 20h16"/></svg>
+  </button>
+  <button class="btn" id="bRain" title="下一阵雨" aria-label="下一阵雨">
+    <svg viewBox="0 0 24 24"><path d="M7 15a4 4 0 010-8 5 5 0 019.6-1.4A3.6 3.6 0 0118 15"/><path d="M8 18l-1 3M12 18l-1 3M16 18l-1 3"/></svg>
+  </button>
+  <button class="btn" id="bCalm" title="平静下来" aria-label="平静下来">
+    <svg viewBox="0 0 24 24"><path d="M3 12h18"/><path d="M6 8h12M6 16h12"/></svg>
+  </button>
+  <div class="sep"></div>
+  <button class="btn sq" id="bSpin" title="自动转" aria-label="自动转">
+    <svg viewBox="0 0 24 24"><path d="M4 12a8 8 0 1114 5.6"/><path d="M18 12v5.6"/></svg>
+  </button>
+  <button class="btn expand" id="bFull" title="全屏" aria-label="全屏">
+    <svg viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+  </button>
+</div>
+
+<footer>
+  <span>移动起波 · 旋转晃动海水</span>
+  <span><b id="stat">WebGL2</b> &nbsp;·&nbsp; <span class="k" id="fps">– fps</span></span>
+</footer>
+
+<script src="js/math.js"></script>
+<script src="js/gl.js"></script>
+<script src="js/geom.js"></script>
+<script src="js/shaders.js"></script>
+<script src="js/wave.js"></script>
+<script src="js/island.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
