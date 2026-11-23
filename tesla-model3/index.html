@@ -150,6 +150,8 @@
 import * as THREE from 'three';
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 import { CSS2DRenderer, CSS2DObject } from 'three/addons/renderers/CSS2DRenderer.js';
+import { buildLowVoltage } from './views/front-detail/low-voltage.js';
+import { buildFrontDetail, buildWheelDetail } from './views/front-detail/model.js';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { initVRLocomotion, createVRButton } from '../assets/vr-controls.js';
 
@@ -245,8 +247,9 @@ const BRANCHES = [
   { id: 'drive',   name: '后桥电驱', en: 'Rear Drive Unit',   color: C_ORANGE, status: 'built', link: 'views/drive-unit/' },
   { id: 'battery', name: '电池包',   en: 'Battery Pack',      color: C_TEAL,   status: 'built', link: 'views/battery/' },
   { id: 'printer', name: '3D 打印机', en: '3D Printer',      color: C_ORANGE, status: 'built', link: 'views/printer/' },
-  { id: 'front',   name: '前悬挂/转向', en: 'Front Suspension', color: C_BLUE, status: 'wip',   note: '待建模' },
-  { id: 'wheels',  name: '车轮',     en: 'Wheels',            color: C_TEAL,   status: 'wip',   note: '待建模' },
+  { id: 'front',   name: '前悬挂/转向', en: 'Front Suspension', color: C_BLUE, status: 'built', detail: 'front', note: '原位 · 上下控制臂、减震支柱、球头和转向拉杆' },
+  { id: 'lv', name: '机舱盖 / 小电瓶', en: 'Hood / LV Power', color: C_TEAL, status: 'built', detail: 'lv', note: '供电原理示意 · 动力电池 → PCS 降压 → 低压母线，为小电瓶充电并给车载电器供电。制动回收时，驱动电机发电，经逆变器回充动力电池。' },
+  { id: 'wheels',  name: '车轮',     en: 'Wheels',            color: C_TEAL,   status: 'built', detail: 'wheels', note: '原位 · 四轮制动盘、卡钳、轴承内外圈与滚珠' },
 ];
 const byId = Object.fromEntries(BRANCHES.map(b => [b.id, b]));
 const pickMeshes = [];
@@ -397,6 +400,8 @@ gltfLoader.load('assets/model-y.glb',
     });
     bodyGroup.add(gltf.scene);
     proceduralBodyMeshes.forEach(c => c.visible = false);
+    if (xray) setXray(true);
+    if (wasInspectingDetail) fadeInspectionMaterials();
     console.log('✅ 已加载真实 Model Y 车身 (assets/model-y.glb)');
   },
   undefined,
@@ -463,6 +468,26 @@ function region(branchId, size, pos, color) {
 region('drive', [760, 360, 540], new THREE.Vector3(-1350, 400, 0), C_ORANGE);
 // 前悬挂（前轴）
 region('front', [760, 300, 540], new THREE.Vector3(1350, 360, 0), C_BLUE);
+function showDetail(group, visible) {
+  group.visible = visible;
+  group.traverse(object => {
+    if (object.isCSS2DObject) object.visible = visible;
+  });
+}
+const lowVoltage = buildLowVoltage(label);
+showDetail(lowVoltage, false);
+vrWorld.add(lowVoltage);
+const frontDetail = buildFrontDetail(AXLE_X, WHEEL_Y, AXLE_Z);
+label(frontDetail, '减震支柱 Damper', C_BLUE, new THREE.Vector3(AXLE_X+62, 601, 488), new THREE.Vector3(160, 395, 55));
+label(frontDetail, '转向拉杆 Tie Rod', C_BLUE, new THREE.Vector3(AXLE_X-102, 336, 533), new THREE.Vector3(-330, 5, 414));
+label(frontDetail, '轮端轴承 Bearing', C_BLUE, new THREE.Vector3(AXLE_X, WHEEL_Y, AXLE_Z-94), new THREE.Vector3(381, 42, 202));
+showDetail(frontDetail, false);
+vrWorld.add(frontDetail);
+const wheelDetail = buildWheelDetail(AXLE_X, WHEEL_Y, AXLE_Z);
+label(wheelDetail, '制动盘 Brake Rotor', C_TEAL, new THREE.Vector3(AXLE_X, WHEEL_Y+160, AXLE_Z-84), new THREE.Vector3(340, 131, 54));
+label(wheelDetail, '轮端轴承 Hub Bearing', C_TEAL, new THREE.Vector3(AXLE_X, WHEEL_Y, AXLE_Z-126), new THREE.Vector3(310, 19, 201));
+showDetail(wheelDetail, false);
+vrWorld.add(wheelDetail);
 // 电池包（车底）
 region('battery', [2200, 150, 820], new THREE.Vector3(0, 205, 0), C_TEAL);
 
@@ -486,18 +511,72 @@ for (const b of BRANCHES) {
 // ============================================================
 //  选中 / 拾取
 // ============================================================
-let selected = null, selBox = null;
+let selected = null, selBox = null, wasInspectingDetail = false;
+const inspectionMaterials = new Map();
+
+function fadeInspectionMaterials() {
+  for (const { mat, base } of matReg) {
+    if (!inspectionMaterials.has(mat)) {
+      inspectionMaterials.set(mat, { opacity: mat.opacity, transparent: mat.transparent, depthWrite: mat.depthWrite });
+    }
+    mat.opacity = base * 0.40;
+    mat.transparent = true;
+    mat.depthWrite = false;
+    mat.needsUpdate = true;
+  }
+}
+
+function restoreInspectionMaterials() {
+  for (const [mat, original] of inspectionMaterials) {
+    Object.assign(mat, original);
+    mat.needsUpdate = true;
+  }
+  inspectionMaterials.clear();
+}
 const infoName = document.getElementById('selname');
 const infoStatus = document.getElementById('selstatus');
 const infoEnter = document.getElementById('btnEnter');
+const enterLabel = infoEnter.textContent;
+let steeringView = null;
+
+function toggleSteeringView() {
+  if (renderer.xr.isPresenting) return;
+  if (steeringView) {
+    camera.position.copy(steeringView.position);
+    controls.target.copy(steeringView.target);
+    controls.minDistance = steeringView.minDistance;
+    steeringView = null;
+    infoEnter.textContent = '查看转向细节';
+  } else {
+    steeringView = {
+      position: camera.position.clone(), target: controls.target.clone(), minDistance: controls.minDistance
+    };
+    const target = new THREE.Vector3(AXLE_X - 25, WHEEL_Y + 90, 475);
+    const direction = new THREE.Vector3(1.10, .52, 1.33).normalize();
+    controls.minDistance = 360;
+    controls.target.copy(target);
+    camera.position.copy(target).addScaledVector(direction, 1530);
+    infoEnter.textContent = '返回整车视角';
+  }
+  controls.update();
+}
 
 function selectBranch(id) {
+  if (steeringView && id !== 'front') toggleSteeringView();
   selected = id ? byId[id] : null;
+  const inspecting = Boolean(selected?.detail);
+  showDetail(lowVoltage, id === 'lv');
+  showDetail(frontDetail, selected?.detail === 'front');
+  showDetail(wheelDetail, selected?.detail === 'wheels');
+  if (inspecting) fadeInspectionMaterials();
+  else if (wasInspectingDetail) restoreInspectionMaterials();
+  wasInspectingDetail = inspecting;
   if (selBox) { vrWorld.remove(selBox); selBox = null; }
   document.querySelectorAll('#branchList .branch').forEach(r => r.classList.toggle('sel', selected && r.dataset.id === id));
   infoName.textContent = selected ? selected.name : '无';
-  infoStatus.textContent = selected ? (selected.status === 'built' ? '已建模，可进入' : (selected.note || '待建模')) : '';
-  infoEnter.classList.toggle('show', !!(selected && selected.link));
+  infoStatus.textContent = selected ? (selected.detail ? selected.note : selected.status === 'built' ? '已建模，可进入' : (selected.note || '待建模')) : '';
+  infoEnter.textContent = id === 'front' ? (steeringView ? '返回整车视角' : '查看转向细节') : enterLabel;
+  infoEnter.classList.toggle('show', Boolean(selected?.link || id === 'front'));
   if (selected && id !== 'body') {
     // 高亮对应的区域（找该分支的可拾取网格包围盒）
     const meshes = pickMeshes.filter(m => meshToBranch.get(m)?.id === id);
@@ -514,11 +593,15 @@ function selectBranch(id) {
     }
   }
 }
-infoEnter.addEventListener('click', () => { if (selected && selected.link) location.href = selected.link; });
+infoEnter.addEventListener('click', () => {
+  if (selected?.id === 'front') toggleSteeringView();
+  else if (selected?.link) location.href = selected.link;
+});
 
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 renderer.domElement.addEventListener('pointerdown', (e) => {
+  if (steeringView || selected?.id === 'lv') return;
   pointer.x = (e.clientX / innerWidth) * 2 - 1;
   pointer.y = -(e.clientY / innerHeight) * 2 + 1;
   raycaster.setFromCamera(pointer, camera);
@@ -531,7 +614,13 @@ renderer.domElement.addEventListener('pointerdown', (e) => {
 // ============================================================
 let xray = false, labelsOn = true, autoRotate = false, lifted = false;
 const btnXray = document.getElementById('btnXray');
-btnXray.addEventListener('click', () => { xray = !xray; setXray(xray); btnXray.classList.toggle('on', xray); });
+btnXray.addEventListener('click', () => {
+  xray = !xray;
+  if (wasInspectingDetail) restoreInspectionMaterials();
+  setXray(xray);
+  if (wasInspectingDetail) fadeInspectionMaterials();
+  btnXray.classList.toggle('on', xray);
+});
 const btnLabel = document.getElementById('btnLabel');
 btnLabel.addEventListener('click', () => {
   labelsOn = !labelsOn; btnLabel.classList.toggle('on', !labelsOn);
@@ -608,6 +697,20 @@ document.getElementById('autonext-skip').addEventListener('click', () => locatio
 // 首次进入（开关开启）→ 自动倒计时；否则显示关闭态
 if (autoNext && !visited) startCountdown(); else stopCountdown();
 localStorage.setItem(K_VISITED, '1');
+
+if (new URLSearchParams(location.search).get('focus') === 'lv') {
+  stopCountdown();
+  selectBranch('lv');
+}
+if (new URLSearchParams(location.search).get('focus') === 'wheels') {
+  stopCountdown();
+  selectBranch('wheels');
+}
+if (new URLSearchParams(location.search).get('focus') === 'steering') {
+  stopCountdown();
+  selectBranch('front');
+  toggleSteeringView();
+}
 
 // —— 自动横屏：优先锁 orientation，iOS 不支持则用竖屏提示兜底 ——
 function tryLandscape() {
