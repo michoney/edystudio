@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#d9e5ec">
+  <link rel="icon" type="image/png" href="./models/poster.png">
+  <title>湖光雁影 · 西湖雷峰塔</title>
+  <script type="module" crossorigin src="./assets/index-N7l5eGG4.js"></script>
+  <link rel="stylesheet" crossorigin href="./assets/index-VEJJe-vf.css">
+</head>
+<body>
+  <main id="app">
+    <div id="viewport" aria-label="可旋转的西湖雷峰塔三维模型"></div>
+    <div class="grain" aria-hidden="true"></div>
+
+    <header class="masthead">
+      <div class="seal" aria-hidden="true">雷</div>
+      <div>
+        <p class="overline">杭州 · 西湖</p>
+        <h1>雷峰塔</h1>
+        <p class="subtitle">五层八面 · 湖光雁影 · 时间流转</p>
+      </div>
+    </header>
+
+    <div class="model-spec" aria-label="模型规格">
+      <span>289 × 289 × 375 mm</span>
+      <i aria-hidden="true"></i>
+      <span>12 件</span>
+      <i aria-hidden="true"></i>
+      <span>5 色</span>
+    </div>
+
+    <button id="time-toggle" class="scene-clock" type="button" aria-pressed="false" title="暂停环境时间">
+      <span class="live-dot" aria-hidden="true"></span>
+      <span id="scene-time">16:45</span>
+      <span id="time-flow-label">日光流转</span>
+    </button>
+
+    <aside class="control-panel" aria-label="模型查看控制">
+      <div class="panel-heading">
+        <div>
+          <p class="panel-kicker">ASSEMBLY STUDY</p>
+          <h2>装配观察</h2>
+        </div>
+        <span class="status-dot" id="ready-dot" aria-label="模型加载中"></span>
+      </div>
+
+      <div class="view-switch" role="group" aria-label="装配状态">
+        <button id="assembled-btn" class="switch active" type="button" aria-pressed="true">完整装配</button>
+        <button id="exploded-btn" class="switch" type="button" aria-pressed="false">爆炸视图</button>
+      </div>
+
+      <button id="assembly-btn" class="primary-action" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 17h16M6 13h12M8 9h8M10 5h4"/></svg>
+        分步装配演示
+        <span>12 步</span>
+      </button>
+
+      <div class="tool-grid">
+        <button id="rotate-btn" type="button" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 7v5h-5M4 17v-5h5M18.5 12a6.5 6.5 0 0 0-11-4.5L4 11m2 1a6.5 6.5 0 0 0 11 4.5L20 13"/></svg>
+          自动旋转
+        </button>
+        <button id="xray-btn" type="button" aria-pressed="false">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3 3 8l9 5 9-5-9-5Zm-9 9 9 5 9-5M3 16l9 5 9-5"/></svg>
+          半透明检查
+        </button>
+        <button id="isolate-btn" type="button" aria-pressed="false" disabled>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3H3v5m13-5h5v5M8 21H3v-5m13 5h5v-5M8 12h8"/></svg>
+          独立查看
+        </button>
+        <button id="reset-btn" type="button">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4v6h6M5.5 15a7 7 0 1 0 .5-7L4 10"/></svg>
+          复位视角
+        </button>
+        <button id="background-btn" type="button" aria-pressed="true" title="关闭西湖园林场景">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 17 8 9l4 5 3-4 6 7H3Zm2-12h.01M8 3a3 3 0 0 1 3 3M4 5a5 5 0 0 1 5-2"/></svg>
+          西湖场景
+        </button>
+      </div>
+
+      <section class="part-card" aria-live="polite">
+        <p class="part-label">当前零件</p>
+        <h3 id="part-name">完整雷峰塔</h3>
+        <p id="part-description">点击塔身、屋面或台基，可查看该装配件。</p>
+        <div class="part-meta">
+          <span id="part-index">12 个装配件</span>
+          <span id="part-path">竖直插接</span>
+        </div>
+      </section>
+
+      <div class="palette" aria-label="模型五色材料">
+        <span style="--swatch:#e5ddca">骨白</span>
+        <span style="--swatch:#93938c">岩灰</span>
+        <span style="--swatch:#303133">炭黑</span>
+        <span style="--swatch:#71383f">暗红</span>
+        <span style="--swatch:#c9a452">金色</span>
+      </div>
+    </aside>
+
+    <section id="step-panel" class="step-panel" aria-label="分步装配控制" hidden>
+      <div class="step-copy">
+        <p id="step-count">第 0 / 12 步</p>
+        <h2 id="step-name">从三重台基开始</h2>
+        <p id="step-note">按顺序安装；后续零件保持隐藏。</p>
+      </div>
+      <div class="step-actions">
+        <button id="prev-btn" type="button" disabled>上一步</button>
+        <button id="next-btn" class="next" type="button">安装台基</button>
+        <button id="exit-assembly-btn" class="exit" type="button">退出演示</button>
+      </div>
+      <div class="step-track" aria-hidden="true"><div id="step-progress"></div></div>
+    </section>
+
+    <footer class="hint">
+      <span>拖动旋转</span><span>滚轮缩放</span><span>点击选件</span>
+    </footer>
+
+    <div id="loading" class="loading" role="status">
+      <div class="loading-poster" aria-hidden="true"></div>
+      <div class="loading-card">
+        <p class="overline">LEIFENG PAGODA</p>
+        <h2>正在展开雷峰塔</h2>
+        <div class="loading-line"><span id="loading-bar"></span></div>
+        <p id="loading-text">载入五色模型…</p>
+      </div>
+    </div>
+
+    <div id="error" class="error" role="alert" hidden>
+      <h2>三维视图暂时无法显示</h2>
+      <p id="error-message">请使用支持 WebGL 的现代浏览器重新打开。</p>
+    </div>
+    <div id="status" class="sr-only" role="status">正在加载模型</div>
+  </main>
+</body>
+</html>
